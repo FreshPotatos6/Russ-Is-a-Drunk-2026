@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russ is a Drunk | League Headquarters</title>
+    <!-- YouTube API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        :root {
+            /* Chiefs Official Color Palette */
+            --chiefs-red: #E31837;
+            --chiefs-red-dark: #990B21;
+            --chiefs-gold: #FFB81C;
+            --chiefs-gold-light: #FFCF66;
+            --field-dark: #121810;
+            --card-bg: #1a0306;
+            --card-inner: #2d070c;
+            
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --text-main: #ffffff;
+            --text-muted: #f4d0cb;
+            --border-gold: #FFB81C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            /* Stadium Lights & Red Kingdom Gradient Background */
+            background: 
+                radial-gradient(circle at 50% 0%, rgba(255, 184, 28, 0.15) 0%, transparent 50%),
+                linear-gradient(180deg, var(--chiefs-red-dark) 0%, #170204 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--chiefs-red) 0%, var(--chiefs-red-dark) 100%);
+            border: 3px solid var(--chiefs-gold);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 184, 28, 0.3);
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.75rem;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.25rem;
+            color: #ffffff;
+            text-shadow: 3px 3px 0px #000, -2px -2px 0px var(--chiefs-gold);
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: var(--chiefs-gold);
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        /* Navigation / Tabs */
+        .tabs-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--chiefs-gold) transparent;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            min-width: max-content;
+        }
+
+        .tab-btn {
+            background-color: var(--card-inner);
+            color: #fff;
+            border: 2px solid var(--chiefs-red);
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--chiefs-red);
+            border-color: var(--chiefs-gold);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
+            color: #000000;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 184, 28, 0.6);
+            font-weight: 900;
+        }
+
+        .tab-btn.playoff-btn {
+            background-color: #3b0008;
+            border-color: var(--chiefs-gold);
+            color: var(--chiefs-gold);
+        }
+
+        .tab-btn.playoff-btn.active {
+            background: linear-gradient(180deg, #ffffff 0%, #e2e2e2 100%);
+            color: var(--chiefs-red-dark);
+            border-color: var(--chiefs-gold);
+        }
+
+        /* Main Content Container */
+        main {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .tab-content {
+            background: linear-gradient(180deg, rgba(45, 7, 12, 0.95) 0%, rgba(23, 2, 4, 0.98) 100%);
+            border: 3px solid var(--chiefs-gold);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .week-title {
+            font-size: 2.2rem;
+            margin-bottom: 0.25rem;
+            color: #fff;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0px var(--chiefs-red-dark);
+        }
+
+        .week-subtitle {
+            color: var(--chiefs-gold);
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--chiefs-red);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Draft Report Card / Backyard Kid Layout */
+        .team-report-card {
+            background: linear-gradient(135deg, var(--chiefs-red-dark) 0%, #1f0407 100%);
+            border: 2px solid var(--chiefs-gold);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Yellow Yard Line Stripe Accent */
+        .team-report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background-color: var(--chiefs-gold);
+        }
+
+        /* Side-by-Side Image Container with Sound Overlay */
+        .card-images-container {
+            position: relative;
+            display: flex;
+            gap: 0.5rem;
+            border: 3px solid var(--chiefs-gold);
+            border-radius: 8px;
+            padding: 0.5rem;
+            background: #000;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .card-img {
+            width: 50%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        /* Floating Audio Play Button */
+        .sound-clip-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
+            color: #000000;
+            border: 2px solid #ffffff;
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .sound-clip-btn:hover {
+            background: var(--chiefs-red);
+            color: #ffffff;
+            border-color: var(--chiefs-gold);
+            transform: scale(1.05);
+        }
+
+        /* Hidden YouTube Iframe Player */
+        .yt-hidden-player {
+            display: none;
+        }
+
+        .team-details h2 {
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            font-weight: 800;
+        }
+
+        .backyard-kid-tag {
+            display: inline-block;
+            background-color: var(--chiefs-red);
+            color: #ffffff;
+            padding: 0.3rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            border: 1px solid var(--chiefs-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .detail-block {
+            margin-bottom: 1rem;
+        }
+
+        .detail-block h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+            color: var(--chiefs-gold);
+            font-weight: 800;
+        }
+
+        .detail-block p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .detail-block.strengths p { color: var(--accent-green); font-weight: 600; }
+        .detail-block.weaknesses p { color: var(--accent-red); font-weight: 600; }
+
+        .projection-badge {
+            display: inline-block;
+            background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
+            color: #000000;
+            border: 2px solid #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Coming Soon Placeholder Style */
+        .coming-soon-box {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .coming-soon-box h3 {
+            font-size: 1.8rem;
+            color: var(--chiefs-gold);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .coming-soon-box p {
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .team-report-card {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏈 Russ is a Drunk</h1>
+        <p>Official Fantasy Football League Hub</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-wrapper">
+        <div class="tabs" id="tabs-container">
+            <button class="tab-btn active" onclick="loadWeek(event, 'week-1')">Week 1</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-2')">Week 2</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-3')">Week 3</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-4')">Week 4</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-5')">Week 5</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-6')">Week 6</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-7')">Week 7</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-8')">Week 8</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-9')">Week 9</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-10')">Week 10</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-11')">Week 11</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-12')">Week 12</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-13')">Week 13</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-14')">Week 14</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-15')">Week 15</button>
+            <button class="tab-btn playoff-btn" onclick="loadWeek(event, 'playoffs-w1')">Playoffs W1</button>
+            <button class="tab-btn playoff-btn" onclick="loadWeek(event, 'championship')">Championship</button>
+        </div>
+    </div>
+
+    <!-- Main Content Dynamic Container -->
+    <main>
+        <article id="content-area" class="tab-content">
+            <!-- Dynamic week fragments load here -->
+        </article>
+    </main>
+
+    <script>
+        // Dynamic Fragment Loader
+        async function loadWeek(evt, weekId) {
+            // Update Tab Active Styling
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if (evt) {
+                evt.currentTarget.classList.add('active');
+            } else {
+                // Initial load default highlight
+                const firstBtn = document.querySelector(`.tab-btn[onclick*="${weekId}"]`);
+                if (firstBtn) firstBtn.classList.add('active');
+            }
+
+            const contentArea = document.getElementById('content-area');
+
+            try {
+                const response = await fetch(`weeks/${weekId}.html`);
+                if (response.ok) {
+                    const html = await response.text();
+                    contentArea.innerHTML = html;
+                    initAudioPlayers(); // Re-initialize YouTube API for new elements
+                } else {
+                    // Fallback for weeks that do not have a file created yet
+                    const formattedTitle = weekId.replace('-', ' ').toUpperCase();
+                    contentArea.innerHTML = `
+                        <div class="coming-soon-box">
+                            <h3>${formattedTitle} Recap</h3>
+                            <p>Coming soon...</p>
+                        </div>`;
+                }
+            } catch (err) {
+                console.error("Error loading week fragment:", err);
+                contentArea.innerHTML = `<div class="coming-soon-box"><h3>Error Loading Content</h3></div>`;
+            }
+        }
+
+        // YouTube Audio Controller
+        let players = {};
+        let clipTimeouts = {};
+
+        const videoConfigs = {
+            'pablo-player': 'dQw4w9WgXcQ',
+            'pete-player': 'dQw4w9WgXcQ'
+        };
+
+        function onYouTubeIframeAPIReady() {
+            initAudioPlayers();
+        }
+
+        function initAudioPlayers() {
+            if (typeof YT === 'undefined' || !YT.Player) return;
+            
+            for (let playerId in videoConfigs) {
+                if (document.getElementById(playerId)) {
+                    players[playerId] = new YT.Player(playerId, {
+                        height: '0',
+                        width: '0',
+                        videoId: videoConfigs[playerId],
+                        playerVars: {
+                            'controls': 0,
+                            'disablekb': 1
+                        }
+                    });
+                }
+            }
+        }
+
+        function playAudioClip(playerId, startSec, endSec) {
+            const player = players[playerId];
+            if (player && typeof player.seekTo === 'function') {
+                if (clipTimeouts[playerId]) {
+                    clearTimeout(clipTimeouts[playerId]);
+                }
+
+                player.seekTo(startSec, true);
+                player.playVideo();
+
+                const duration = (endSec - startSec) * 1000;
+                clipTimeouts[playerId] = setTimeout(() => {
+                    player.pauseVideo();
+                }, duration);
+            }
+        }
+
+        // Automatically load Week 1 on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadWeek(null, 'week-1');
+        });
+    </script>
+</body>
+</html>
