@@ -355,9 +355,6 @@
                     gainNode.connect(audioCtx.destination);
                 }
             }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
         }
 
         function primeAllVideos() {
@@ -374,35 +371,51 @@
             });
         }
 
-        // Triggered immediately on the user's very first touch/click on screen
-        function unlockAudioOnFirstInteraction() {
+        // Synchronously unlocks audio context and starts BGM on mobile Chrome & Safari
+        function unlockAudioOnFirstInteraction(e) {
             if (hasUnlockedAudio) return;
 
             initWebAudio();
+
+            // Resume audio context synchronously in gesture handler for Chrome on iOS
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
             
             if (isBgmActive) {
-                bgm.play().then(() => {
-                    const btn = document.getElementById('bgm-toggle-btn');
-                    if (btn) btn.innerHTML = "🔊 ON";
-                }).catch(err => console.log("BGM playback blocked on first touch:", err));
+                const playPromise = bgm.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        const btn = document.getElementById('bgm-toggle-btn');
+                        if (btn) btn.innerHTML = "🔊 ON";
+                    }).catch(err => {
+                        console.log("BGM playback blocked:", err);
+                    });
+                }
             }
 
             primeAllVideos();
             hasUnlockedAudio = true;
 
-            // Remove event listeners once activated
-            window.removeEventListener('touchstart', unlockAudioOnFirstInteraction, true);
-            window.removeEventListener('click', unlockAudioOnFirstInteraction, true);
-            window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction, true);
+            // Remove all gesture listeners once activated
+            const events = ['touchstart', 'touchend', 'click', 'pointerdown'];
+            events.forEach(evt => {
+                window.removeEventListener(evt, unlockAudioOnFirstInteraction, true);
+            });
         }
 
-        // Capture phase listeners targeting touch/tap gestures only
-        window.addEventListener('touchstart', unlockAudioOnFirstInteraction, { capture: true, passive: true });
-        window.addEventListener('click', unlockAudioOnFirstInteraction, { capture: true, passive: true });
-        window.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { capture: true, passive: true });
+        // Multi-event registration to support Chrome/Safari gesture pipelines
+        const touchEvents = ['touchstart', 'touchend', 'click', 'pointerdown'];
+        touchEvents.forEach(evt => {
+            window.addEventListener(evt, unlockAudioOnFirstInteraction, { capture: true, passive: true });
+        });
 
         function toggleBGM() {
             initWebAudio();
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 isBgmActive = true;
@@ -418,7 +431,7 @@
 
         async function loadWeek(evt, weekId) {
             if (evt && !hasUnlockedAudio) {
-                unlockAudioOnFirstInteraction();
+                unlockAudioOnFirstInteraction(evt);
             }
 
             const buttons = document.querySelectorAll('.tab-btn');
@@ -515,7 +528,6 @@
 
                     if (entry.isIntersecting && video && !wrapper.dataset.hasPlayed) {
                         wrapper.dataset.hasPlayed = "true";
-                        // Play automatically only if the user has already touched the screen to unlock audio
                         if (hasUnlockedAudio) {
                             playVideo(wrapper, video, img);
                         }
@@ -541,7 +553,7 @@
                     wrapper.onclick = (e) => {
                         e.stopPropagation();
                         if (!hasUnlockedAudio) {
-                            unlockAudioOnFirstInteraction();
+                            unlockAudioOnFirstInteraction(e);
                         }
                         if (!video.paused && !video.classList.contains('hidden')) {
                             stopAndRevertToImage(video, img);
