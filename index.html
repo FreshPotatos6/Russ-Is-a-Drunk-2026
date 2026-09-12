@@ -335,7 +335,7 @@
         <source src="audio/backyard.mp3" type="audio/mpeg">
     </audio>
 
-    <button id="bgm-toggle-btn" onclick="toggleBGM()">🎶 ON</button>
+    <button id="bgm-toggle-btn" onclick="toggleBGM()">🔊 ON</button>
 
     <script>
         const bgm = document.getElementById('bgm-player');
@@ -349,7 +349,8 @@
                 if (AudioContext) {
                     audioCtx = new AudioContext();
                     gainNode = audioCtx.createGain();
-                    gainNode.gain.value = 0.03;
+                    // Increased volume slightly from 0.03 to 0.08
+                    gainNode.gain.value = 0.08;
                     sourceNode = audioCtx.createMediaElementSource(bgm);
                     sourceNode.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
@@ -360,6 +361,22 @@
             }
         }
 
+        // Properly prime all videos during an actual user interaction gesture
+        function primeAllVideos() {
+            const videos = document.querySelectorAll('.card-video');
+            videos.forEach(v => {
+                v.muted = false;
+                // Executing play() + immediate pause() during active user gesture unlocks full audio playback permissions
+                const p = v.play();
+                if (p !== undefined) {
+                    p.then(() => {
+                        v.pause();
+                        v.currentTime = 0;
+                    }).catch(() => {});
+                }
+            });
+        }
+
         // Global unlock on first user gesture (click, tap, scroll)
         function unlockAudioOnFirstInteraction() {
             initWebAudio();
@@ -367,16 +384,11 @@
             if (isBgmActive && bgm.paused) {
                 bgm.play().then(() => {
                     const btn = document.getElementById('bgm-toggle-btn');
-                    if (btn) btn.innerHTML = "🎶 ON";
+                    if (btn) btn.innerHTML = "🔊 ON";
                 }).catch(() => {});
             }
 
-            // Prime all character videos so browser permits unmuted playback during scrolling
-            const videos = document.querySelectorAll('.card-video');
-            videos.forEach(v => {
-                v.muted = false;
-            });
-
+            primeAllVideos();
             hasUnlockedAudio = true;
 
             // Clean up listeners once unlocked
@@ -395,12 +407,12 @@
             if (bgm.paused) {
                 isBgmActive = true;
                 bgm.play().then(() => {
-                    btn.innerHTML = "🎶 ON";
+                    btn.innerHTML = "🔊 ON";
                 }).catch(err => console.log("Audio play blocked by browser:", err));
             } else {
                 isBgmActive = false;
                 bgm.pause();
-                btn.innerHTML = "🎵 OFF";
+                btn.innerHTML = "🔇 OFF";
             }
         }
 
@@ -423,6 +435,9 @@
                     const html = await response.text();
                     contentArea.innerHTML = html;
                     initScrollMedia();
+                    if (hasUnlockedAudio) {
+                        primeAllVideos();
+                    }
                 } else {
                     const formattedTitle = weekId.replace('-', ' ').toUpperCase();
                     contentArea.innerHTML = `
@@ -468,10 +483,7 @@
                         bgm.play().catch(() => {});
                     }
                 }).catch(err => {
-                    console.warn("Unmuted autoplay rejected by browser:", err);
-                    // Retain unmuted state for manual clicks, fallback muted only for strict browser policy
-                    video.muted = true;
-                    video.play();
+                    console.warn("Autoplay rejected by browser:", err);
                 });
             }
         }
@@ -483,10 +495,16 @@
             img.classList.remove('hidden');
         }
 
+        let mediaObserver = null;
+
         function initScrollMedia() {
+            if (mediaObserver) {
+                mediaObserver.disconnect();
+            }
+
             const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
 
-            const observer = new IntersectionObserver((entries) => {
+            mediaObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const wrapper = entry.target;
                     const video = wrapper.querySelector('.card-video');
@@ -508,7 +526,7 @@
 
                 if (video && img) {
                     video.load();
-                    observer.observe(wrapper);
+                    mediaObserver.observe(wrapper);
 
                     video.addEventListener('ended', () => {
                         stopAndRevertToImage(video, img);
