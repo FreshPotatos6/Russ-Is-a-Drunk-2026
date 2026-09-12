@@ -8,13 +8,13 @@
         :root {
             /* Chiefs Official Color Palette */
             --chiefs-red: #E31837;
-            --chiefs-red-dark: #800619;
+            --chiefs-red-dark: #660312;
             --chiefs-gold: #FFB81C;
             --chiefs-gold-light: #FFDF80;
-            --card-bg-dark: #121614;
-            --card-inner-dark: #1c221e;
+            --card-bg-dark: #120306;
+            --card-inner-dark: #1c080d;
             --text-main: #ffffff;
-            --text-muted: #d1d5db;
+            --text-muted: #e2e8f0;
             --accent-green: #4ade80;
             --accent-red: #f87171;
         }
@@ -28,8 +28,8 @@
 
         body {
             background: 
-                radial-gradient(circle at 50% 0%, rgba(255, 184, 28, 0.12) 0%, transparent 50%),
-                linear-gradient(180deg, var(--chiefs-red-dark) 0%, #0d0103 100%);
+                radial-gradient(circle at 50% 0%, rgba(255, 184, 28, 0.15) 0%, transparent 60%),
+                linear-gradient(180deg, var(--chiefs-red-dark) 0%, #080102 100%);
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
@@ -64,7 +64,7 @@
         /* Navigation Tabs */
         .tabs-wrapper {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
             overflow-x: auto;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
@@ -112,23 +112,28 @@
             color: var(--chiefs-gold);
         }
 
-        /* Main Container: Dark Charcoal Turf style to break up red gradient */
+        /* Main Container: Textured Dark Field & Gold Grid pattern */
         main {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
         }
 
         .tab-content {
-            background: linear-gradient(180deg, var(--card-bg-dark) 0%, #090c0a 100%);
+            background-color: var(--card-bg-dark);
+            background-image: 
+                radial-gradient(ellipse at top, rgba(227, 24, 55, 0.25) 0%, transparent 70%),
+                linear-gradient(rgba(255, 184, 28, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 184, 28, 0.05) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
             border: 3px solid var(--chiefs-gold);
             border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85);
             animation: fadeIn 0.3s ease;
         }
 
         .week-title {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             margin-bottom: 0.25rem;
             color: #fff;
             font-weight: 900;
@@ -138,7 +143,7 @@
 
         .week-subtitle {
             color: var(--chiefs-gold);
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -147,17 +152,17 @@
             padding-bottom: 0.75rem;
         }
 
-        /* Card Layout */
+        /* Enlarged Card & Visual Overhaul */
         .team-report-card {
-            background: linear-gradient(135deg, var(--card-inner-dark) 0%, #111512 100%);
+            background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
             border: 2px solid var(--chiefs-gold);
-            border-radius: 12px;
-            padding: 1.5rem;
+            border-radius: 14px;
+            padding: 1.75rem;
             margin-bottom: 2rem;
             display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 1.5rem;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+            grid-template-columns: 380px 1fr;
+            gap: 1.75rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
         }
@@ -169,18 +174,20 @@
             left: 0;
             width: 8px;
             height: 100%;
-            background-color: var(--chiefs-red);
+            background: linear-gradient(180deg, var(--chiefs-gold) 0%, var(--chiefs-red) 100%);
         }
 
+        /* Larger Media Box */
         .card-media-wrapper {
             position: relative;
             width: 100%;
-            height: 220px;
+            height: 300px;
             border: 3px solid var(--chiefs-gold);
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             background: #000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+            cursor: pointer;
         }
 
         .card-video, .card-image {
@@ -195,7 +202,7 @@
         }
 
         .team-details h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: #fff;
             margin-bottom: 0.4rem;
             font-weight: 900;
@@ -207,7 +214,7 @@
             display: inline-block;
             background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
             color: #111111;
-            padding: 0.4rem 1rem;
+            padding: 0.45rem 1.1rem;
             border-radius: 6px;
             font-size: 0.95rem;
             font-weight: 900;
@@ -233,8 +240,8 @@
 
         .detail-block p {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: 0.98rem;
+            line-height: 1.55;
         }
 
         .detail-block.strengths p { color: var(--accent-green); font-weight: 600; }
@@ -262,14 +269,16 @@
             background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
             color: #000;
             border: 2px solid #fff;
-            padding: 0.6rem 1.2rem;
+            padding: 0.65rem 1.25rem;
             border-radius: 30px;
             font-weight: 900;
-            font-size: 0.85rem;
+            font-size: 1rem;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 1000;
-            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         #bgm-toggle-btn:hover {
@@ -281,9 +290,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 850px) {
             .team-report-card {
                 grid-template-columns: 1fr;
+            }
+            .card-media-wrapper {
+                height: 260px;
             }
         }
     </style>
@@ -330,7 +342,7 @@
         <source src="videos/backyard.mp3" type="audio/mpeg">
     </audio>
 
-    <button id="bgm-toggle-btn" onclick="toggleBGM()">🔊 BGM: OFF</button>
+    <button id="bgm-toggle-btn" onclick="toggleBGM()">🎵 OFF</button>
 
     <script>
         const bgm = document.getElementById('bgm-player');
@@ -340,11 +352,11 @@
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 bgm.play().then(() => {
-                    btn.innerHTML = "🔊 BGM: ON";
+                    btn.innerHTML = "🎶 ON";
                 }).catch(err => console.log("Audio play blocked:", err));
             } else {
                 bgm.pause();
-                btn.innerHTML = "🔊 BGM: OFF";
+                btn.innerHTML = "🎵 OFF";
             }
         }
 
@@ -381,7 +393,17 @@
             }
         }
 
-        // Scroll observer to unmute sound & play media when scrolled into view
+        function stopAllVideosExcept(currentVideo) {
+            const allVideos = document.querySelectorAll('.card-video');
+            allVideos.forEach(vid => {
+                if (vid !== currentVideo && !vid.paused) {
+                    vid.pause();
+                    vid.currentTime = 0;
+                }
+            });
+        }
+
+        // Scroll observer: Plays active video while stopping all previous videos
         function initScrollMedia() {
             const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
 
@@ -389,14 +411,13 @@
                 entries.forEach(entry => {
                     const wrapper = entry.target;
                     const video = wrapper.querySelector('.card-video');
-                    const img = wrapper.querySelector('.card-image');
 
                     if (entry.isIntersecting) {
                         if (video && !wrapper.dataset.hasPlayed) {
+                            stopAllVideosExcept(video); // Stop all other running clips
                             wrapper.dataset.hasPlayed = "true";
-                            video.muted = false; // Unmute sound when scrolling into view
+                            video.muted = false;
                             video.play().catch(() => {
-                                // If unmuted autoplay is blocked by browser, fallback to muted play
                                 video.muted = true;
                                 video.play();
                             });
@@ -418,6 +439,7 @@
                     });
 
                     img.addEventListener('click', () => {
+                        stopAllVideosExcept(video);
                         img.classList.add('hidden');
                         video.classList.remove('hidden');
                         video.currentTime = 0;
@@ -428,12 +450,10 @@
             });
         }
 
-        // Try playing BGM on first user click anywhere on page
+        // Auto-enable BGM on first user interaction if toggle was turned ON
         document.addEventListener('click', () => {
-            if (bgm.paused && document.getElementById('bgm-toggle-btn').innerText.includes("OFF")) {
-                bgm.play().then(() => {
-                    document.getElementById('bgm-toggle-btn').innerText = "🔊 BGM: ON";
-                }).catch(() => {});
+            if (bgm.paused && document.getElementById('bgm-toggle-btn').innerText.includes("ON")) {
+                bgm.play().catch(() => {});
             }
         }, { once: true });
 
