@@ -290,14 +290,16 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 850px) {
-            .team-report-card {
-                grid-template-columns: 1fr;
-            }
-            .card-media-wrapper {
-                height: 260px;
-            }
-        }
+@media (max-width: 850px) {
+    .team-report-card {
+        grid-template-columns: 1fr;
+        padding: 1.25rem;
+    }
+    .card-media-wrapper {
+        height: 240px;
+        max-height: 35vh;
+    }
+}
     </style>
 </head>
 <body>
@@ -338,8 +340,8 @@
 
     <!-- Audio Element for Soft Ambient Background Music -->
     <audio id="bgm-player" loop preload="auto">
-        <source src="videos/backyard.mp4" type="audio/mp4">
-        <source src="videos/backyard.mp3" type="audio/mpeg">
+        <source src="audio/backyard.mp3" type="audio/mp3">
+        <source src="audio/backyard.mp3" type="audio/mpeg">
     </audio>
 
     <button id="bgm-toggle-btn" onclick="toggleBGM()">🎵 OFF</button>
