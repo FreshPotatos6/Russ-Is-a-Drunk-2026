@@ -39,7 +39,6 @@
             padding: 2rem 1rem;
         }
 
-        /* Yellow Header Box without Subtitle */
         header {
             text-align: center;
             margin-bottom: 2rem;
@@ -61,7 +60,6 @@
             text-transform: uppercase;
         }
 
-        /* Navigation Tabs */
         .tabs-wrapper {
             width: 100%;
             max-width: 1050px;
@@ -112,7 +110,6 @@
             color: var(--chiefs-gold);
         }
 
-        /* Main Container: Textured Dark Field & Gold Grid pattern */
         main {
             width: 100%;
             max-width: 1050px;
@@ -152,7 +149,6 @@
             padding-bottom: 0.75rem;
         }
 
-        /* Enlarged Card & Visual Overhaul */
         .team-report-card {
             background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
             border: 2px solid var(--chiefs-gold);
@@ -177,7 +173,6 @@
             background: linear-gradient(180deg, var(--chiefs-gold) 0%, var(--chiefs-red) 100%);
         }
 
-        /* Larger Media Box */
         .card-media-wrapper {
             position: relative;
             width: 100%;
@@ -185,15 +180,19 @@
             border: 3px solid var(--chiefs-gold);
             border-radius: 10px;
             overflow: hidden;
-            background: #000;
+            background: #0a0204;
             box-shadow: 0 6px 16px rgba(0,0,0,0.6);
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* Fixed Image/Video Sizing to fit whole card without cropping */
         .card-video, .card-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
         }
 
@@ -209,7 +208,6 @@
             text-transform: uppercase;
         }
 
-        /* Yellow Highlight Tag */
         .backyard-kid-tag {
             display: inline-block;
             background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
@@ -261,7 +259,6 @@
             text-transform: uppercase;
         }
 
-        /* Floating Background Music Control Button */
         #bgm-toggle-btn {
             position: fixed;
             bottom: 20px;
@@ -290,16 +287,16 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-@media (max-width: 850px) {
-    .team-report-card {
-        grid-template-columns: 1fr;
-        padding: 1.25rem;
-    }
-    .card-media-wrapper {
-        height: 240px;
-        max-height: 35vh;
-    }
-}
+        @media (max-width: 850px) {
+            .team-report-card {
+                grid-template-columns: 1fr;
+                padding: 1.25rem;
+            }
+            .card-media-wrapper {
+                height: 240px;
+                max-height: 35vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -308,7 +305,6 @@
         <h1>🏈 Russ is a Drunk</h1>
     </header>
 
-    <!-- Navigation Tabs -->
     <div class="tabs-wrapper">
         <div class="tabs" id="tabs-container">
             <button class="tab-btn active" onclick="loadWeek(event, 'week-1')">Week 1</button>
@@ -331,16 +327,14 @@
         </div>
     </div>
 
-    <!-- Main Content Container -->
     <main>
         <article id="content-area" class="tab-content">
             <!-- Dynamic week fragments load here -->
         </article>
     </main>
 
-    <!-- Audio Element for Soft Ambient Background Music -->
+    <!-- Audio Element pointing to audio/backyard.mp3 -->
     <audio id="bgm-player" loop preload="auto">
-        <source src="audio/backyard.mp3" type="audio/mp3">
         <source src="audio/backyard.mp3" type="audio/mpeg">
     </audio>
 
@@ -348,14 +342,14 @@
 
     <script>
         const bgm = document.getElementById('bgm-player');
-        bgm.volume = 0.15; // Soft volume
+        bgm.volume = 0.15;
 
         function toggleBGM() {
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 bgm.play().then(() => {
                     btn.innerHTML = "🎶 ON";
-                }).catch(err => console.log("Audio play blocked:", err));
+                }).catch(err => console.log("Audio play blocked by browser:", err));
             } else {
                 bgm.pause();
                 btn.innerHTML = "🎵 OFF";
@@ -380,7 +374,7 @@
                 if (response.ok) {
                     const html = await response.text();
                     contentArea.innerHTML = html;
-                    initScrollMedia(); // Init audio and video playback on scroll
+                    initScrollMedia();
                 } else {
                     const formattedTitle = weekId.replace('-', ' ').toUpperCase();
                     contentArea.innerHTML = `
@@ -405,7 +399,6 @@
             });
         }
 
-        // Scroll observer: Plays active video while stopping all previous videos
         function initScrollMedia() {
             const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
 
@@ -416,7 +409,7 @@
 
                     if (entry.isIntersecting) {
                         if (video && !wrapper.dataset.hasPlayed) {
-                            stopAllVideosExcept(video); // Stop all other running clips
+                            stopAllVideosExcept(video);
                             wrapper.dataset.hasPlayed = "true";
                             video.muted = false;
                             video.play().catch(() => {
@@ -451,13 +444,6 @@
                 }
             });
         }
-
-        // Auto-enable BGM on first user interaction if toggle was turned ON
-        document.addEventListener('click', () => {
-            if (bgm.paused && document.getElementById('bgm-toggle-btn').innerText.includes("ON")) {
-                bgm.play().catch(() => {});
-            }
-        }, { once: true });
 
         document.addEventListener('DOMContentLoaded', () => {
             loadWeek(null, 'week-1');
