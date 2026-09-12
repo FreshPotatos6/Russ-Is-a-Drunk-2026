@@ -173,7 +173,6 @@
             background: linear-gradient(180deg, var(--chiefs-gold) 0%, var(--chiefs-red) 100%);
         }
 
-        /* Scaled down to 220px height with object-fit: contain to prevent image cutoff */
         .card-media-wrapper {
             position: relative;
             width: 100%;
@@ -332,7 +331,6 @@
         </article>
     </main>
 
-    <!-- Audio Element pointing to audio/backyard.mp3 -->
     <audio id="bgm-player" loop preload="auto">
         <source src="audio/backyard.mp3" type="audio/mpeg">
     </audio>
@@ -341,10 +339,55 @@
 
     <script>
         const bgm = document.getElementById('bgm-player');
-        // Reduced BGM volume significantly so character videos are much louder
-        bgm.volume = 0.04;
+        let audioCtx, gainNode, sourceNode;
+        let isUserUnlocked = false;
+
+        // Force hardware gain reduction for mobile browsers via Web Audio API
+        function initWebAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                    gainNode = audioCtx.createGain();
+                    gainNode.gain.value = 0.015; // Set volume output level
+                    sourceNode = audioCtx.createMediaElementSource(bgm);
+                    sourceNode.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Global touch handler to unlock mobile audio context on first screen tap
+        function unlockMobileAudio() {
+            if (isUserUnlocked) return;
+            isUserUnlocked = true;
+            initWebAudio();
+
+            // Quietly play and pause all card videos once to grant audio permission on mobile
+            document.querySelectorAll('.card-video').forEach(v => {
+                v.muted = false;
+                const p = v.play();
+                if (p !== undefined) {
+                    p.then(() => {
+                        if (v.classList.contains('hidden') || v.paused) {
+                            v.pause();
+                        }
+                    }).catch(() => {});
+                }
+            });
+
+            window.removeEventListener('touchstart', unlockMobileAudio);
+            window.removeEventListener('click', unlockMobileAudio);
+        }
+
+        window.addEventListener('touchstart', unlockMobileAudio, { passive: true });
+        window.addEventListener('click', unlockMobileAudio, { passive: true });
 
         function toggleBGM() {
+            initWebAudio();
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 bgm.play().then(() => {
@@ -392,9 +435,12 @@
         function stopAllVideosExcept(currentVideo) {
             const allVideos = document.querySelectorAll('.card-video');
             allVideos.forEach(vid => {
-                if (vid !== currentVideo && !vid.paused) {
+                if (vid !== currentVideo) {
                     vid.pause();
                     vid.currentTime = 0;
+                    vid.classList.add('hidden');
+                    const img = vid.parentElement ? vid.parentElement.querySelector('.card-image') : null;
+                    if (img) img.classList.remove('hidden');
                 }
             });
         }
@@ -409,11 +455,18 @@
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.catch(err => {
-                    console.warn("Autoplay/play retry fallback:", err);
+                    console.warn("Autoplay fallback to muted:", err);
                     video.muted = true;
                     video.play();
                 });
             }
+        }
+
+        function stopAndRevertToImage(video, img) {
+            video.pause();
+            video.currentTime = 0;
+            video.classList.add('hidden');
+            img.classList.remove('hidden');
         }
 
         function initScrollMedia() {
@@ -440,12 +493,18 @@
                     observer.observe(wrapper);
 
                     video.addEventListener('ended', () => {
-                        video.classList.add('hidden');
-                        img.classList.remove('hidden');
+                        stopAndRevertToImage(video, img);
                     });
 
-                    // Ensure clicking either image or wrapper re-plays video every time
-                    wrapper.onclick = () => playVideo(wrapper, video, img);
+                    // Toggle play / stop on click
+                    wrapper.onclick = (e) => {
+                        e.stopPropagation();
+                        if (!video.paused && !video.classList.contains('hidden')) {
+                            stopAndRevertToImage(video, img);
+                        } else {
+                            playVideo(wrapper, video, img);
+                        }
+                    };
                 }
             });
         }
