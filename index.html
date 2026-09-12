@@ -156,7 +156,7 @@
             padding: 1.75rem;
             margin-bottom: 2rem;
             display: grid;
-            grid-template-columns: 380px 1fr;
+            grid-template-columns: 320px 1fr;
             gap: 1.75rem;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
             position: relative;
@@ -173,10 +173,11 @@
             background: linear-gradient(180deg, var(--chiefs-gold) 0%, var(--chiefs-red) 100%);
         }
 
+        /* Scaled down to 220px height with object-fit: contain to prevent image cutoff */
         .card-media-wrapper {
             position: relative;
             width: 100%;
-            height: 300px;
+            height: 220px;
             border: 3px solid var(--chiefs-gold);
             border-radius: 10px;
             overflow: hidden;
@@ -188,7 +189,6 @@
             justify-content: center;
         }
 
-        /* Fixed Image/Video Sizing to fit whole card without cropping */
         .card-video, .card-image {
             width: 100%;
             height: 100%;
@@ -293,8 +293,7 @@
                 padding: 1.25rem;
             }
             .card-media-wrapper {
-                height: 240px;
-                max-height: 35vh;
+                height: 220px;
             }
         }
     </style>
@@ -342,7 +341,8 @@
 
     <script>
         const bgm = document.getElementById('bgm-player');
-        bgm.volume = 0.15;
+        // Reduced BGM volume significantly so character videos are much louder
+        bgm.volume = 0.04;
 
         function toggleBGM() {
             const btn = document.getElementById('bgm-toggle-btn');
@@ -399,6 +399,23 @@
             });
         }
 
+        function playVideo(wrapper, video, img) {
+            stopAllVideosExcept(video);
+            img.classList.add('hidden');
+            video.classList.remove('hidden');
+            video.currentTime = 0;
+            video.muted = false;
+            
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(err => {
+                    console.warn("Autoplay/play retry fallback:", err);
+                    video.muted = true;
+                    video.play();
+                });
+            }
+        }
+
         function initScrollMedia() {
             const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
 
@@ -406,17 +423,11 @@
                 entries.forEach(entry => {
                     const wrapper = entry.target;
                     const video = wrapper.querySelector('.card-video');
+                    const img = wrapper.querySelector('.card-image');
 
-                    if (entry.isIntersecting) {
-                        if (video && !wrapper.dataset.hasPlayed) {
-                            stopAllVideosExcept(video);
-                            wrapper.dataset.hasPlayed = "true";
-                            video.muted = false;
-                            video.play().catch(() => {
-                                video.muted = true;
-                                video.play();
-                            });
-                        }
+                    if (entry.isIntersecting && video && !wrapper.dataset.hasPlayed) {
+                        wrapper.dataset.hasPlayed = "true";
+                        playVideo(wrapper, video, img);
                     }
                 });
             }, { threshold: 0.6 });
@@ -433,14 +444,8 @@
                         img.classList.remove('hidden');
                     });
 
-                    img.addEventListener('click', () => {
-                        stopAllVideosExcept(video);
-                        img.classList.add('hidden');
-                        video.classList.remove('hidden');
-                        video.currentTime = 0;
-                        video.muted = false;
-                        video.play();
-                    });
+                    // Ensure clicking either image or wrapper re-plays video every time
+                    wrapper.onclick = () => playVideo(wrapper, video, img);
                 }
             });
         }
