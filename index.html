@@ -222,6 +222,12 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
+        .backyard-kid-tag .kid-label {
+            text-decoration: underline;
+            display: inline-block;
+            margin-bottom: 0.25rem;
+        }
+
         .detail-block {
             margin-bottom: 1rem;
         }
@@ -349,7 +355,6 @@
                 if (AudioContext) {
                     audioCtx = new AudioContext();
                     gainNode = audioCtx.createGain();
-                    // Increased volume slightly from 0.03 to 0.08
                     gainNode.gain.value = 0.08;
                     sourceNode = audioCtx.createMediaElementSource(bgm);
                     sourceNode.connect(gainNode);
@@ -366,7 +371,6 @@
             const videos = document.querySelectorAll('.card-video');
             videos.forEach(v => {
                 v.muted = false;
-                // Executing play() + immediate pause() during active user gesture unlocks full audio playback permissions
                 const p = v.play();
                 if (p !== undefined) {
                     p.then(() => {
@@ -390,6 +394,20 @@
 
             primeAllVideos();
             hasUnlockedAudio = true;
+
+            // Trigger scroll check to immediate trigger top video (Sally) on initial scroll
+            if (mediaObserver) {
+                const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
+                mediaWrappers.forEach(wrapper => {
+                    const rect = wrapper.getBoundingClientRect();
+                    const video = wrapper.querySelector('.card-video');
+                    const img = wrapper.querySelector('.card-image');
+                    if (rect.top < window.innerHeight && rect.bottom > 0 && video && !wrapper.dataset.hasPlayed) {
+                        wrapper.dataset.hasPlayed = "true";
+                        playVideo(wrapper, video, img);
+                    }
+                });
+            }
 
             // Clean up listeners once unlocked
             window.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
@@ -475,7 +493,6 @@
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    // Ensure BGM continues playing simultaneously when video starts
                     if (isBgmActive && bgm.paused) {
                         if (audioCtx && audioCtx.state === 'suspended') {
                             audioCtx.resume();
@@ -516,8 +533,8 @@
                     }
                 });
             }, { 
-                threshold: 0.25,
-                rootMargin: '0px 0px -10% 0px' 
+                threshold: 0.01,
+                rootMargin: '100px 0px 0px 0px' 
             });
 
             mediaWrappers.forEach(wrapper => {
