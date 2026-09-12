@@ -340,7 +340,7 @@
     <script>
         const bgm = document.getElementById('bgm-player');
         let audioCtx, gainNode, sourceNode;
-        let isBgmActive = true; // Default ON
+        let isBgmActive = true;
         let hasUnlockedAudio = false;
 
         function initWebAudio() {
@@ -349,7 +349,6 @@
                 if (AudioContext) {
                     audioCtx = new AudioContext();
                     gainNode = audioCtx.createGain();
-                    // Increased volume slightly from 0.03 to 0.08
                     gainNode.gain.value = 0.08;
                     sourceNode = audioCtx.createMediaElementSource(bgm);
                     sourceNode.connect(gainNode);
@@ -361,23 +360,6 @@
             }
         }
 
-        // Properly prime all videos during an actual user interaction gesture
-        function primeAllVideos() {
-            const videos = document.querySelectorAll('.card-video');
-            videos.forEach(v => {
-                v.muted = false;
-                // Executing play() + immediate pause() during active user gesture unlocks full audio playback permissions
-                const p = v.play();
-                if (p !== undefined) {
-                    p.then(() => {
-                        v.pause();
-                        v.currentTime = 0;
-                    }).catch(() => {});
-                }
-            });
-        }
-
-        // Global unlock on first user gesture (click, tap, scroll)
         function unlockAudioOnFirstInteraction() {
             initWebAudio();
             
@@ -388,10 +370,8 @@
                 }).catch(() => {});
             }
 
-            primeAllVideos();
             hasUnlockedAudio = true;
 
-            // Clean up listeners once unlocked
             window.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
             window.removeEventListener('click', unlockAudioOnFirstInteraction);
             window.removeEventListener('scroll', unlockAudioOnFirstInteraction);
@@ -435,9 +415,6 @@
                     const html = await response.text();
                     contentArea.innerHTML = html;
                     initScrollMedia();
-                    if (hasUnlockedAudio) {
-                        primeAllVideos();
-                    }
                 } else {
                     const formattedTitle = weekId.replace('-', ' ').toUpperCase();
                     contentArea.innerHTML = `
@@ -475,7 +452,6 @@
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    // Ensure BGM continues playing simultaneously when video starts
                     if (isBgmActive && bgm.paused) {
                         if (audioCtx && audioCtx.state === 'suspended') {
                             audioCtx.resume();
@@ -497,6 +473,22 @@
 
         let mediaObserver = null;
 
+        function checkVisibleMedia() {
+            const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
+            mediaWrappers.forEach(wrapper => {
+                const rect = wrapper.getBoundingClientRect();
+                const video = wrapper.querySelector('.card-video');
+                const img = wrapper.querySelector('.card-image');
+
+                const isVisible = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+
+                if (isVisible && video && !wrapper.dataset.hasPlayed) {
+                    wrapper.dataset.hasPlayed = "true";
+                    playVideo(wrapper, video, img);
+                }
+            });
+        }
+
         function initScrollMedia() {
             if (mediaObserver) {
                 mediaObserver.disconnect();
@@ -516,8 +508,7 @@
                     }
                 });
             }, { 
-                threshold: 0.25,
-                rootMargin: '0px 0px -10% 0px' 
+                threshold: 0.05
             });
 
             mediaWrappers.forEach(wrapper => {
@@ -545,6 +536,9 @@
                     };
                 }
             });
+
+            window.removeEventListener('scroll', checkVisibleMedia);
+            window.addEventListener('scroll', checkVisibleMedia, { passive: true });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
