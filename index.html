@@ -349,7 +349,6 @@
                 if (AudioContext) {
                     audioCtx = new AudioContext();
                     gainNode = audioCtx.createGain();
-                    // Increased volume slightly from 0.03 to 0.08
                     gainNode.gain.value = 0.08;
                     sourceNode = audioCtx.createMediaElementSource(bgm);
                     sourceNode.connect(gainNode);
@@ -361,12 +360,10 @@
             }
         }
 
-        // Properly prime all videos during an actual user interaction gesture
         function primeAllVideos() {
             const videos = document.querySelectorAll('.card-video');
             videos.forEach(v => {
                 v.muted = false;
-                // Executing play() + immediate pause() during active user gesture unlocks full audio playback permissions
                 const p = v.play();
                 if (p !== undefined) {
                     p.then(() => {
@@ -377,29 +374,32 @@
             });
         }
 
-        // Global unlock on first user gesture (click, tap, scroll)
+        // Triggered immediately on the user's very first touch/click on screen
         function unlockAudioOnFirstInteraction() {
+            if (hasUnlockedAudio) return;
+
             initWebAudio();
             
-            if (isBgmActive && bgm.paused) {
+            if (isBgmActive) {
                 bgm.play().then(() => {
                     const btn = document.getElementById('bgm-toggle-btn');
                     if (btn) btn.innerHTML = "🔊 ON";
-                }).catch(() => {});
+                }).catch(err => console.log("BGM playback blocked on first touch:", err));
             }
 
             primeAllVideos();
             hasUnlockedAudio = true;
 
-            // Clean up listeners once unlocked
-            window.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
-            window.removeEventListener('click', unlockAudioOnFirstInteraction);
-            window.removeEventListener('scroll', unlockAudioOnFirstInteraction);
+            // Remove event listeners once activated
+            window.removeEventListener('touchstart', unlockAudioOnFirstInteraction, true);
+            window.removeEventListener('click', unlockAudioOnFirstInteraction, true);
+            window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction, true);
         }
 
-        window.addEventListener('touchstart', unlockAudioOnFirstInteraction, { passive: true });
-        window.addEventListener('click', unlockAudioOnFirstInteraction, { passive: true });
-        window.addEventListener('scroll', unlockAudioOnFirstInteraction, { passive: true });
+        // Capture phase listeners targeting touch/tap gestures only
+        window.addEventListener('touchstart', unlockAudioOnFirstInteraction, { capture: true, passive: true });
+        window.addEventListener('click', unlockAudioOnFirstInteraction, { capture: true, passive: true });
+        window.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { capture: true, passive: true });
 
         function toggleBGM() {
             initWebAudio();
@@ -417,6 +417,10 @@
         }
 
         async function loadWeek(evt, weekId) {
+            if (evt && !hasUnlockedAudio) {
+                unlockAudioOnFirstInteraction();
+            }
+
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
@@ -475,7 +479,6 @@
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    // Ensure BGM continues playing simultaneously when video starts
                     if (isBgmActive && bgm.paused) {
                         if (audioCtx && audioCtx.state === 'suspended') {
                             audioCtx.resume();
@@ -512,7 +515,10 @@
 
                     if (entry.isIntersecting && video && !wrapper.dataset.hasPlayed) {
                         wrapper.dataset.hasPlayed = "true";
-                        playVideo(wrapper, video, img);
+                        // Play automatically only if the user has already touched the screen to unlock audio
+                        if (hasUnlockedAudio) {
+                            playVideo(wrapper, video, img);
+                        }
                     }
                 });
             }, { 
