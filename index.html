@@ -335,21 +335,21 @@
         <source src="audio/backyard.mp3" type="audio/mpeg">
     </audio>
 
-    <button id="bgm-toggle-btn" onclick="toggleBGM()">🎵 OFF</button>
+    <button id="bgm-toggle-btn" onclick="toggleBGM()">🎶 ON</button>
 
     <script>
         const bgm = document.getElementById('bgm-player');
         let audioCtx, gainNode, sourceNode;
-        let isBgmActive = false;
+        let isBgmActive = true; // Default ON
+        let hasUnlockedAudio = false;
 
-        // Web Audio API setup with slightly boosted gain (0.03 instead of 0.015)
         function initWebAudio() {
             if (!audioCtx) {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (AudioContext) {
                     audioCtx = new AudioContext();
                     gainNode = audioCtx.createGain();
-                    gainNode.gain.value = 0.03; // Increased background volume slightly
+                    gainNode.gain.value = 0.03;
                     sourceNode = audioCtx.createMediaElementSource(bgm);
                     sourceNode.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
@@ -360,15 +360,34 @@
             }
         }
 
-        function unlockMobileAudio() {
+        // Global unlock on first user gesture (click, tap, scroll)
+        function unlockAudioOnFirstInteraction() {
             initWebAudio();
+            
             if (isBgmActive && bgm.paused) {
-                bgm.play().catch(() => {});
+                bgm.play().then(() => {
+                    const btn = document.getElementById('bgm-toggle-btn');
+                    if (btn) btn.innerHTML = "🎶 ON";
+                }).catch(() => {});
             }
+
+            // Prime all character videos so browser permits unmuted playback during scrolling
+            const videos = document.querySelectorAll('.card-video');
+            videos.forEach(v => {
+                v.muted = false;
+            });
+
+            hasUnlockedAudio = true;
+
+            // Clean up listeners once unlocked
+            window.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
+            window.removeEventListener('click', unlockAudioOnFirstInteraction);
+            window.removeEventListener('scroll', unlockAudioOnFirstInteraction);
         }
 
-        window.addEventListener('touchstart', unlockMobileAudio, { passive: true });
-        window.addEventListener('click', unlockMobileAudio, { passive: true });
+        window.addEventListener('touchstart', unlockAudioOnFirstInteraction, { passive: true });
+        window.addEventListener('click', unlockAudioOnFirstInteraction, { passive: true });
+        window.addEventListener('scroll', unlockAudioOnFirstInteraction, { passive: true });
 
         function toggleBGM() {
             initWebAudio();
@@ -449,7 +468,8 @@
                         bgm.play().catch(() => {});
                     }
                 }).catch(err => {
-                    console.warn("Autoplay fallback to muted:", err);
+                    console.warn("Unmuted autoplay rejected by browser:", err);
+                    // Retain unmuted state for manual clicks, fallback muted only for strict browser policy
                     video.muted = true;
                     video.play();
                 });
@@ -466,7 +486,6 @@
         function initScrollMedia() {
             const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
 
-            // Set lower threshold (0.25) so videos trigger reliable scrolling playback
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const wrapper = entry.target;
@@ -488,18 +507,18 @@
                 const img = wrapper.querySelector('.card-image');
 
                 if (video && img) {
-                    // Preload video metadata
                     video.load();
-
                     observer.observe(wrapper);
 
                     video.addEventListener('ended', () => {
                         stopAndRevertToImage(video, img);
                     });
 
-                    // Toggle play / stop on click
                     wrapper.onclick = (e) => {
                         e.stopPropagation();
+                        if (!hasUnlockedAudio) {
+                            unlockAudioOnFirstInteraction();
+                        }
                         if (!video.paused && !video.classList.contains('hidden')) {
                             stopAndRevertToImage(video, img);
                         } else {
