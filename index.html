@@ -331,7 +331,7 @@
         </article>
     </main>
 
-    <audio id="bgm-player" loop preload="auto">
+    <audio id="bgm-player" loop preload="auto" playsinline>
         <source src="audio/backyard.mp3" type="audio/mpeg">
     </audio>
 
@@ -340,16 +340,16 @@
     <script>
         const bgm = document.getElementById('bgm-player');
         let audioCtx, gainNode, sourceNode;
-        let isUserUnlocked = false;
+        let isBgmActive = false;
 
-        // Force hardware gain reduction for mobile browsers via Web Audio API
+        // Web Audio API setup with slightly boosted gain (0.03 instead of 0.015)
         function initWebAudio() {
             if (!audioCtx) {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (AudioContext) {
                     audioCtx = new AudioContext();
                     gainNode = audioCtx.createGain();
-                    gainNode.gain.value = 0.015; // Set volume output level
+                    gainNode.gain.value = 0.03; // Increased background volume slightly
                     sourceNode = audioCtx.createMediaElementSource(bgm);
                     sourceNode.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
@@ -360,27 +360,11 @@
             }
         }
 
-        // Global touch handler to unlock mobile audio context on first screen tap
         function unlockMobileAudio() {
-            if (isUserUnlocked) return;
-            isUserUnlocked = true;
             initWebAudio();
-
-            // Quietly play and pause all card videos once to grant audio permission on mobile
-            document.querySelectorAll('.card-video').forEach(v => {
-                v.muted = false;
-                const p = v.play();
-                if (p !== undefined) {
-                    p.then(() => {
-                        if (v.classList.contains('hidden') || v.paused) {
-                            v.pause();
-                        }
-                    }).catch(() => {});
-                }
-            });
-
-            window.removeEventListener('touchstart', unlockMobileAudio);
-            window.removeEventListener('click', unlockMobileAudio);
+            if (isBgmActive && bgm.paused) {
+                bgm.play().catch(() => {});
+            }
         }
 
         window.addEventListener('touchstart', unlockMobileAudio, { passive: true });
@@ -390,10 +374,12 @@
             initWebAudio();
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
+                isBgmActive = true;
                 bgm.play().then(() => {
                     btn.innerHTML = "🎶 ON";
                 }).catch(err => console.log("Audio play blocked by browser:", err));
             } else {
+                isBgmActive = false;
                 bgm.pause();
                 btn.innerHTML = "🎵 OFF";
             }
@@ -454,7 +440,15 @@
             
             const playPromise = video.play();
             if (playPromise !== undefined) {
-                playPromise.catch(err => {
+                playPromise.then(() => {
+                    // Ensure BGM continues playing simultaneously when video starts
+                    if (isBgmActive && bgm.paused) {
+                        if (audioCtx && audioCtx.state === 'suspended') {
+                            audioCtx.resume();
+                        }
+                        bgm.play().catch(() => {});
+                    }
+                }).catch(err => {
                     console.warn("Autoplay fallback to muted:", err);
                     video.muted = true;
                     video.play();
@@ -472,6 +466,7 @@
         function initScrollMedia() {
             const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
 
+            // Set lower threshold (0.25) so videos trigger reliable scrolling playback
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const wrapper = entry.target;
@@ -483,13 +478,19 @@
                         playVideo(wrapper, video, img);
                     }
                 });
-            }, { threshold: 0.6 });
+            }, { 
+                threshold: 0.25,
+                rootMargin: '0px 0px -10% 0px' 
+            });
 
             mediaWrappers.forEach(wrapper => {
                 const video = wrapper.querySelector('.card-video');
                 const img = wrapper.querySelector('.card-image');
 
                 if (video && img) {
+                    // Preload video metadata
+                    video.load();
+
                     observer.observe(wrapper);
 
                     video.addEventListener('ended', () => {
