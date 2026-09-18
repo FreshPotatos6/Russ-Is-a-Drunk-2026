@@ -1,7 +1,142 @@
+<style>
+    /* Locked Self-Contained Styles for Week 1 */
+    .week-title {
+        font-size: 2.4rem;
+        margin-bottom: 0.25rem;
+        color: #ffffff;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0px #E31837;
+    }
+
+    .week-subtitle {
+        color: #FFB81C;
+        font-size: 1.05rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 2rem;
+        border-bottom: 3px solid #E31837;
+        padding-bottom: 0.75rem;
+    }
+
+    .week-description {
+        color: #e2e8f0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        background: rgba(0,0,0,0.4);
+        padding: 1rem 1.25rem;
+        border-radius: 8px;
+        border-left: 4px solid #FFB81C;
+    }
+
+    .team-report-card {
+        background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+        border: 2px solid #FFB81C;
+        border-radius: 14px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 1.75rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .team-report-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 8px;
+        height: 100%;
+        background: linear-gradient(180deg, #FFB81C 0%, #E31837 100%);
+    }
+
+    .card-media-wrapper {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        border: 3px solid #FFB81C;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #0a0204;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-video, .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    .team-details h2 {
+        font-size: 2rem;
+        color: #ffffff;
+        margin-bottom: 0.4rem;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .backyard-kid-tag {
+        display: inline-block;
+        background: linear-gradient(180deg, #FFDF80 0%, #FFB81C 100%);
+        color: #111111;
+        padding: 0.45rem 1.1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 900;
+        margin-bottom: 1.25rem;
+        border: 2px solid #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .detail-block {
+        margin-bottom: 1rem;
+    }
+
+    .detail-block h4 {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+        color: #FFB81C;
+        font-weight: 800;
+    }
+
+    .detail-block p {
+        color: #e2e8f0;
+        font-size: 0.98rem;
+        line-height: 1.55;
+    }
+
+    .detail-block.strengths p { color: #4ade80; font-weight: 600; }
+    .detail-block.weaknesses p { color: #f87171; font-weight: 600; }
+
+    @media (max-width: 850px) {
+        .team-report-card {
+            grid-template-columns: 1fr;
+            padding: 1.25rem;
+        }
+        .card-media-wrapper {
+            height: 220px;
+        }
+    }
+</style>
+
 <h2 class="week-title">Week 1</h2>
 <div class="week-subtitle">Backyard Football Draft Grades</div>
 
-<div class="week-description" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem; background: rgba(0,0,0,0.3); padding: 1rem 1.25rem; border-radius: 8px; border-left: 3px solid var(--chiefs-gold);">
+<div class="week-description">
     <p>As a kid I spent hundreds of hours playing backyard sports games on my computer. I loved these games and I thought it would be fun to compare each team's draft to a backyard kid. These comparisons have nothing to do with appearance, it is strictly based on the kids personality/skills. Every backyard kid is somebody's favorite, but every kid is also somebody's least favorite so if you hate who I assigned you... too bad! If you don't know the backyard kids then I feel bad for you because these were the most fun games. Also, special shoutout to Vicki Kawaguchi who was one of my favorites but I didn't feel like she fit anyone's draft.</p>
 </div>
 
