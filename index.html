@@ -12,25 +12,22 @@
     <link rel="icon" type="image/png" href="images/Favre.png">
     <link rel="apple-touch-icon" href="images/Favre.png">
 
-    <!-- Open Graph / Link Sharing Metadata -->
-    <meta property="og:type" content="website">
+    <!-- Open Graph / Link Sharing Metadata (iMessage, WhatsApp, Discord, Slack) -->
     <meta property="og:title" content="Russ is a Drunk | Weekly Recaps">
     <meta property="og:description" content="Week 1 Overreactions: 2 Truths and a Lie">
-    <meta property="og:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Favre.png?v=2">
-    <meta property="og:image:secure_url" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Favre.png?v=2">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Favre.png">
     <meta property="og:url" content="https://freshpotatos6.github.io/russ-is-a-drunk/">
+    <meta property="og:type" content="website">
 
     <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Russ is a Drunk | Fantasy Football Recap">
     <meta name="twitter:description" content="Week 1 Overreactions: 2 Truths and a Lie">
-    <meta name="twitter:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Favre.png?v=2">
+    <meta name="twitter:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Favre.png">
 
     <style>
         :root {
+            /* Chiefs Official Color Palette */
             --chiefs-red: #E31837;
             --chiefs-red-dark: #660312;
             --chiefs-gold: #FFB81C;
@@ -153,49 +150,63 @@
             animation: fadeIn 0.3s ease;
         }
 
-        #content-area img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        /* --- Team Report Card & Media Styling --- */
         .week-title {
-            font-size: 2.2rem;
-            color: var(--chiefs-gold);
-            text-transform: uppercase;
-            font-weight: 900;
+            font-size: 2.4rem;
             margin-bottom: 0.25rem;
+            color: #fff;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0px var(--chiefs-red);
         }
 
         .week-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
+            color: var(--chiefs-gold);
+            font-size: 1.05rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--chiefs-red);
+            padding-bottom: 0.75rem;
         }
 
         .team-report-card {
-            display: flex;
-            flex-direction: row;
-            gap: 1.5rem;
-            background: var(--card-inner-dark);
-            border: 2px solid rgba(255, 184, 28, 0.25);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            align-items: flex-start;
+            background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+            border: 2px solid var(--chiefs-gold);
+            border-radius: 14px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.75rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--chiefs-gold) 0%, var(--chiefs-red) 100%);
         }
 
         .card-media-wrapper {
-            flex: 0 0 220px;
-            width: 220px;
-            max-width: 100%;
-            border-radius: 8px;
+            position: relative;
+            width: 100%;
+            height: 220px;
+            border: 3px solid var(--chiefs-gold);
+            border-radius: 10px;
             overflow: hidden;
-            background: #000;
-            border: 2px solid var(--chiefs-gold);
+            background: #0a0204;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .card-video, .card-image {
@@ -209,69 +220,50 @@
             display: none !important;
         }
 
-        .team-details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
         .team-details h2 {
-            font-size: 1.5rem;
-            color: var(--chiefs-gold);
-            font-weight: 800;
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            font-weight: 900;
+            text-transform: uppercase;
         }
 
         .backyard-kid-tag {
             display: inline-block;
-            background: var(--chiefs-red);
-            color: #fff;
-            padding: 0.25rem 0.65rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 700;
+            background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
+            color: #111111;
+            padding: 0.45rem 1.1rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            margin-bottom: 1.25rem;
+            border: 2px solid #ffffff;
             text-transform: uppercase;
-            align-self: flex-start;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .detail-block {
-            background: rgba(0, 0, 0, 0.35);
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            border-left: 3px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 1rem;
         }
 
         .detail-block h4 {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 0.25rem;
             letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+            color: var(--chiefs-gold);
+            font-weight: 800;
         }
 
         .detail-block p {
-            font-size: 0.95rem;
-            line-height: 1.5;
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            line-height: 1.55;
         }
 
-        .detail-block.strengths {
-            border-left-color: var(--accent-green);
-        }
-
-        .detail-block.weaknesses {
-            border-left-color: var(--accent-red);
-        }
-
-        @media (max-width: 768px) {
-            .team-report-card {
-                flex-direction: column;
-            }
-            .card-media-wrapper {
-                width: 100%;
-                flex: none;
-                height: auto;
-            }
-        }
+        .detail-block.strengths p { color: var(--accent-green); font-weight: 600; }
+        .detail-block.weaknesses p { color: var(--accent-red); font-weight: 600; }
 
         .coming-soon-box {
             text-align: center;
@@ -313,6 +305,16 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 850px) {
+            .team-report-card {
+                grid-template-columns: 1fr;
+                padding: 1.25rem;
+            }
+            .card-media-wrapper {
+                height: 220px;
+            }
         }
     </style>
 </head>
@@ -359,7 +361,7 @@
     <script>
         const bgm = document.getElementById('bgm-player');
         let audioCtx, gainNode, sourceNode;
-        let isBgmActive = true;
+        let isBgmActive = true; // User preference (ON/OFF)
         let hasUnlockedAudio = false;
         let currentWeek = 'week-1';
 
@@ -377,6 +379,20 @@
             }
         }
 
+        function primeAllVideos() {
+            const videos = document.querySelectorAll('.card-video');
+            videos.forEach(v => {
+                v.muted = false;
+                const p = v.play();
+                if (p !== undefined) {
+                    p.then(() => {
+                        v.pause();
+                        v.currentTime = 0;
+                    }).catch(() => {});
+                }
+            });
+        }
+
         function unlockAudioOnFirstInteraction(e) {
             if (hasUnlockedAudio) return;
 
@@ -386,16 +402,20 @@
                 audioCtx.resume();
             }
             
+            // Play BGM only if user is on Week 1
             if (isBgmActive && currentWeek === 'week-1') {
                 const playPromise = bgm.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
                         const btn = document.getElementById('bgm-toggle-btn');
                         if (btn) btn.innerHTML = "🔊 ON";
-                    }).catch(err => console.log("BGM playback blocked:", err));
+                    }).catch(err => {
+                        console.log("BGM playback blocked:", err);
+                    });
                 }
             }
 
+            primeAllVideos();
             hasUnlockedAudio = true;
 
             const events = ['touchstart', 'touchend', 'click', 'pointerdown'];
@@ -421,7 +441,7 @@
                 if (currentWeek === 'week-1') {
                     bgm.play().then(() => {
                         btn.innerHTML = "🔊 ON";
-                    }).catch(err => console.log("Audio play blocked:", err));
+                    }).catch(err => console.log("Audio play blocked by browser:", err));
                 }
             } else {
                 isBgmActive = false;
@@ -447,6 +467,7 @@
                 if (firstBtn) firstBtn.classList.add('active');
             }
 
+            // Handle BGM isolation for Week 1
             const bgmBtn = document.getElementById('bgm-toggle-btn');
             if (weekId === 'week-1') {
                 if (bgmBtn) bgmBtn.style.display = 'flex';
@@ -469,21 +490,10 @@
                 if (response.ok) {
                     const html = await response.text();
                     contentArea.innerHTML = html;
-
-                    const scripts = contentArea.querySelectorAll('script');
-                    scripts.forEach(oldScript => {
-                        const newScript = document.createElement('script');
-                        Array.from(oldScript.attributes).forEach(attr => {
-                            newScript.setAttribute(attr.name, attr.value);
-                        });
-                        
-                        let code = oldScript.innerHTML;
-                        // Strip DOMContentLoaded wrappers so script runs immediately on injection
-                        code = code.replace(/document\.addEventListener\(['"]DOMContentLoaded['"]\s*,\s*(?:function\s*\(\)|snippet|\(\)\s*=>)?\s*\{?/g, '(function(){');
-                        
-                        newScript.appendChild(document.createTextNode(`(function(){\n${code}\n})();`));
-                        oldScript.parentNode.replaceChild(newScript, oldScript);
-                    });
+                    initScrollMedia();
+                    if (hasUnlockedAudio) {
+                        primeAllVideos();
+                    }
                 } else {
                     const formattedTitle = weekId.replace('-', ' ').toUpperCase();
                     contentArea.innerHTML = `
@@ -496,6 +506,103 @@
                 console.error("Error loading week fragment:", err);
                 contentArea.innerHTML = `<div class="coming-soon-box"><h3>Error Loading Content</h3></div>`;
             }
+        }
+
+        function stopAllVideosExcept(currentVideo) {
+            const allVideos = document.querySelectorAll('.card-video');
+            allVideos.forEach(vid => {
+                if (vid !== currentVideo) {
+                    vid.pause();
+                    vid.currentTime = 0;
+                    vid.classList.add('hidden');
+                    const img = vid.parentElement ? vid.parentElement.querySelector('.card-image') : null;
+                    if (img) img.classList.remove('hidden');
+                }
+            });
+        }
+
+        function playVideo(wrapper, video, img) {
+            stopAllVideosExcept(video);
+            img.classList.add('hidden');
+            video.classList.remove('hidden');
+            video.currentTime = 0;
+            video.muted = false;
+            
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Maintain BGM if active and on week-1
+                    if (isBgmActive && currentWeek === 'week-1' && bgm.paused) {
+                        if (audioCtx && audioCtx.state === 'suspended') {
+                            audioCtx.resume();
+                        }
+                        bgm.play().catch(() => {});
+                    }
+                }).catch(err => {
+                    console.warn("Autoplay rejected by browser:", err);
+                });
+            }
+        }
+
+        function stopAndRevertToImage(video, img) {
+            video.pause();
+            video.currentTime = 0;
+            video.classList.add('hidden');
+            img.classList.remove('hidden');
+        }
+
+        let mediaObserver = null;
+
+        function initScrollMedia() {
+            if (mediaObserver) {
+                mediaObserver.disconnect();
+            }
+
+            const mediaWrappers = document.querySelectorAll('.card-media-wrapper');
+
+            mediaObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const wrapper = entry.target;
+                    const video = wrapper.querySelector('.card-video');
+                    const img = wrapper.querySelector('.card-image');
+
+                    if (entry.isIntersecting && video && !wrapper.dataset.hasPlayed) {
+                        wrapper.dataset.hasPlayed = "true";
+                        if (hasUnlockedAudio) {
+                            playVideo(wrapper, video, img);
+                        }
+                    }
+                });
+            }, { 
+                threshold: 0.25,
+                rootMargin: '0px 0px -10% 0px' 
+            });
+
+            mediaWrappers.forEach(wrapper => {
+                const video = wrapper.querySelector('.card-video');
+                const img = wrapper.querySelector('.card-image');
+
+                if (video && img) {
+                    video.load();
+                    mediaObserver.observe(wrapper);
+
+                    video.addEventListener('ended', () => {
+                        stopAndRevertToImage(video, img);
+                    });
+
+                    wrapper.onclick = (e) => {
+                        e.stopPropagation();
+                        if (!hasUnlockedAudio) {
+                            unlockAudioOnFirstInteraction(e);
+                        }
+                        if (!video.paused && !video.classList.contains('hidden')) {
+                            stopAndRevertToImage(video, img);
+                        } else {
+                            playVideo(wrapper, video, img);
+                        }
+                    };
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
