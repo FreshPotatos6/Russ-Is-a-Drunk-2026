@@ -1,0 +1,476 @@
+<style>
+    .quiz-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .quiz-card {
+        background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+        border: 2px solid var(--chiefs-gold);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
+
+    .quiz-card h3 {
+        color: #ffffff;
+        font-size: 1.4rem;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+    }
+
+    .quiz-prompt {
+        color: var(--chiefs-gold);
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1rem;
+    }
+
+    .options-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .option-label {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: #0a0204;
+        border: 1px solid rgba(255, 184, 28, 0.3);
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+    .option-label:hover {
+        border-color: var(--chiefs-gold);
+        background: #180509;
+        color: #fff;
+    }
+
+    .option-label input[type="radio"] {
+        accent-color: var(--chiefs-gold);
+        transform: scale(1.2);
+    }
+
+    .option-label.correct-target {
+        border-color: var(--accent-green) !important;
+        background: rgba(74, 222, 128, 0.15) !important;
+        color: #ffffff !important;
+    }
+
+    .option-label.wrong-selection {
+        border-color: var(--accent-red) !important;
+        background: rgba(248, 113, 113, 0.15) !important;
+        color: #ffffff !important;
+    }
+
+    .explanation-text {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--chiefs-gold-light);
+        display: none;
+    }
+
+    .submit-quiz-btn {
+        background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
+        color: #000;
+        border: 2px solid #fff;
+        padding: 0.9rem 2rem;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Modal Styling for Share Graphic */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        padding: 1rem;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-content {
+        background: #120406;
+        border: 2px solid var(--chiefs-gold);
+        border-radius: 12px;
+        padding: 1.5rem;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+    }
+
+    .modal-content canvas {
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid var(--chiefs-gold);
+        margin: 1rem 0;
+    }
+
+    .modal-btn-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .modal-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 6px;
+        font-weight: 800;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+
+    .share-btn {
+        background: var(--chiefs-gold);
+        color: #000;
+    }
+
+    .close-btn {
+        background: #333;
+        color: #fff;
+    }
+</style>
+
+<div class="week-header">
+    <h1 class="week-title">Week 2 Recap</h1>
+    <p class="week-subtitle">2 Truths & A Lie: Spot the Week 1 BS</p>
+</div>
+
+<form id="week2-quiz-form" class="quiz-container">
+
+    <div class="name-input-group">
+        <label for="player-name" style="display: block; color: var(--chiefs-gold); font-weight: 800; margin-bottom: 0.5rem; text-transform: uppercase;">Enter Your Name / Team Name:</label>
+        <input type="text" id="player-name" placeholder="e.g. Russ" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 2px solid var(--chiefs-gold); background: #0a0204; color: #fff; font-size: 1rem;" required>
+    </div>
+
+    <!-- 12 Questions -->
+    <div class="quiz-card" data-lie-index="2" data-explanation="LIE EXPLANATION: Russ actually drank 6 beers, not 8!">
+        <h3>Team 1: Russ's Squad</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_1" value="0"><span>Scored 142 points despite starting a bye-week kicker.</span></label>
+            <label class="option-label"><input type="radio" name="team_1" value="1"><span>Completed 4 trades during Monday Night Football.</span></label>
+            <label class="option-label"><input type="radio" name="team_1" value="2"><span>Drank 8 beers before halftime in Week 1.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="0" data-explanation="LIE EXPLANATION: Pete Wheeler didn't bench Jefferson; he started him for 28 pts.">
+        <h3>Team 2: Pete Wheeler All-Stars</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_2" value="0"><span>Benched Justin Jefferson on opening night.</span></label>
+            <label class="option-label"><input type="radio" name="team_2" value="1"><span>Won their matchup by less than 0.5 points.</span></label>
+            <label class="option-label"><input type="radio" name="team_2" value="2"><span>Drafted 3 defense units in the top 10 rounds.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="1" data-explanation="LIE EXPLANATION: Team 3 did not propose 15 trades—they proposed 2.">
+        <h3>Team 3: Gridiron Greats</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_3" value="0"><span>Started two injured running backs.</span></label>
+            <label class="option-label"><input type="radio" name="team_3" value="1"><span>Sent 15 trade offers on Tuesday morning.</span></label>
+            <label class="option-label"><input type="radio" name="team_3" value="2"><span>Scored the lowest points in league history.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="0" data-explanation="LIE EXPLANATION: Team 4's quarterback scored 32 points, not zero.">
+        <h3>Team 4: Touchdown Titans</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_4" value="0"><span>QB scored 0 fantasy points.</span></label>
+            <label class="option-label"><input type="radio" name="team_4" value="1"><span>Won despite losing 2 starters to injuries.</span></label>
+            <label class="option-label"><input type="radio" name="team_4" value="2"><span>Changed team name 4 times in 24 hours.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="2" data-explanation="LIE EXPLANATION: Team 5 actually picked up their kicker off waivers on Friday.">
+        <h3>Team 5: Blitz Brigade</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_5" value="0"><span>Had 5 touchdowns called back by penalties.</span></label>
+            <label class="option-label"><input type="radio" name="team_5" value="1"><span>Left 60 points on the bench.</span></label>
+            <label class="option-label"><input type="radio" name="team_5" value="2"><span>Drafted a kicker in the 3rd round.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="1" data-explanation="LIE EXPLANATION: Team 6 lost by 40 points, not 1.">
+        <h3>Team 6: Endzone Elite</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_6" value="0"><span>Forgot to set their lineup before Thursday night.</span></label>
+            <label class="option-label"><input type="radio" name="team_6" value="1"><span>Lost by exactly 0.1 points.</span></label>
+            <label class="option-label"><input type="radio" name="team_6" value="2"><span>Had 3 players score zero points.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="0" data-explanation="LIE EXPLANATION: Team 7 scored 115 points total.">
+        <h3>Team 7: Hail Marys</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_7" value="0"><span>Scored over 180 points.</span></label>
+            <label class="option-label"><input type="radio" name="team_7" value="1"><span>Started a defense that scored negative points.</span></label>
+            <label class="option-label"><input type="radio" name="team_7" value="2"><span>Spent 90% of FAAB budget in Week 1.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="2" data-explanation="LIE EXPLANATION: Team 8 started 1 tight end.">
+        <h3>Team 8: Red Zone Raiders</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_8" value="0"><span>Had the highest bench scoring in the league.</span></label>
+            <label class="option-label"><input type="radio" name="team_8" value="1"><span>Made 12 waiver claims this week.</span></label>
+            <label class="option-label"><input type="radio" name="team_8" value="2"><span>Started 3 tight ends in the lineup.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="1" data-explanation="LIE EXPLANATION: Team 9 won their match comfortably.">
+        <h3>Team 9: Pigskin Power</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_9" value="0"><span>Drafted 2 quarterbacks in the first 4 rounds.</span></label>
+            <label class="option-label"><input type="radio" name="team_9" value="1"><span>Cried in the league group chat after losing.</span></label>
+            <label class="option-label"><input type="radio" name="team_9" value="2"><span>Started 4 running backs.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="0" data-explanation="LIE EXPLANATION: Team 10's kicker missed 0 field goals.">
+        <h3>Team 10: Sunday Funday</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_10" value="0"><span>Kicker missed 4 field goals.</span></label>
+            <label class="option-label"><input type="radio" name="team_10" value="1"><span>Opponent had 2 players get ejected.</span></label>
+            <label class="option-label"><input type="radio" name="team_10" value="2"><span>Won despite 5 turnovers from their QB.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="2" data-explanation="LIE EXPLANATION: Team 11 traded away their backup QB, not starter.">
+        <h3>Team 11: Fantasy Phenoms</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_11" value="0"><span>Scored exactly 100 points.</span></label>
+            <label class="option-label"><input type="radio" name="team_11" value="1"><span>Had 0 bench players score over 5 points.</span></label>
+            <label class="option-label"><input type="radio" name="team_11" value="2"><span>Traded away their 1st round pick after Week 1.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <div class="quiz-card" data-lie-index="1" data-explanation="LIE EXPLANATION: Team 12 is currently in 1st place.">
+        <h3>Team 12: Gridiron Gurus</h3>
+        <p class="quiz-prompt">Which of these statements is a LIE?</p>
+        <div class="options-group">
+            <label class="option-label"><input type="radio" name="team_12" value="0"><span>Benched their highest scoring receiver.</span></label>
+            <label class="option-label"><input type="radio" name="team_12" value="1"><span>Is currently in last place in the standings.</span></label>
+            <label class="option-label"><input type="radio" name="team_12" value="2"><span>Has 4 players from the same NFL team.</span></label>
+        </div>
+        <div class="explanation-text"></div>
+    </div>
+
+    <button type="button" class="submit-quiz-btn" onclick="gradeQuiz()">Submit Quiz & Check Results</button>
+</form>
+
+<!-- Modal Share Popup -->
+<div id="share-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="color: var(--chiefs-gold); margin-bottom: 0.5rem;">QUIZ RESULTS</h2>
+        <p style="color: #aaa; font-size: 0.9rem;">Your graphic card is ready! Save or share it with the league.</p>
+        
+        <canvas id="score-card-canvas" width="600" height="400"></canvas>
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn share-btn" onclick="shareOrDownload()">Share / Save Card</button>
+            <button class="modal-btn close-btn" onclick="closeModal()">Review Answers</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+    async function getUserIP() {
+        try {
+            const res = await fetch("https://api.ipify.org?format=json");
+            const data = await res.json();
+            return data.ip;
+        } catch (e) {
+            return "IP Unavailable";
+        }
+    }
+
+    async function gradeQuiz() {
+        const nameInput = document.getElementById('player-name').value.trim();
+        if (!nameInput) {
+            alert("Please enter your name/team name before submitting!");
+            return;
+        }
+
+        const cards = document.querySelectorAll('.quiz-card');
+        let totalQuestions = cards.length;
+        let score = 0;
+
+        cards.forEach((card) => {
+            const lieIndex = parseInt(card.getAttribute('data-lie-index'));
+            const explanation = card.getAttribute('data-explanation');
+            const options = card.querySelectorAll('.option-label');
+            const selectedRadio = card.querySelector('input[type="radio"]:checked');
+            const expDiv = card.querySelector('.explanation-text');
+
+            options.forEach(opt => opt.classList.remove('correct-target', 'wrong-selection'));
+            options[lieIndex].classList.add('correct-target');
+
+            if (selectedRadio) {
+                const selectedVal = parseInt(selectedRadio.value);
+                if (selectedVal === lieIndex) {
+                    score++;
+                } else {
+                    options[selectedVal].classList.add('wrong-selection');
+                }
+            }
+
+            expDiv.textContent = explanation;
+            expDiv.style.display = 'block';
+        });
+
+        // Fetch IP and submit to Google Sheet
+        const userIP = await getUserIP();
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: nameInput,
+                score: score,
+                total: totalQuestions,
+                ip: userIP
+            })
+        }).catch(err => console.error("Error logging score:", err));
+
+        // Generate dynamic canvas image card and show modal
+        generateScoreCard(nameInput, score, totalQuestions);
+        document.getElementById('share-modal').classList.add('active');
+    }
+
+    function generateScoreCard(name, score, total) {
+        const canvas = document.getElementById('score-card-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Card background gradient
+        const bgGrad = ctx.createLinearGradient(0, 0, 600, 400);
+        bgGrad.addColorStop(0, '#1e090d');
+        bgGrad.addColorStop(1, '#0a0204');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 600, 400);
+
+        // Gold border
+        ctx.strokeStyle = '#ffb81c';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(10, 10, 580, 380);
+
+        // Header
+        ctx.fillStyle = '#ffb81c';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("WEEK 2 RECAP: 2 TRUTHS & A LIE", 300, 60);
+
+        // Player Name
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 32px sans-serif';
+        ctx.fillText(name.toUpperCase(), 300, 130);
+
+        // Score display
+        ctx.fillStyle = '#e31837';
+        ctx.font = '900 70px sans-serif';
+        ctx.fillText(`${score} / ${total}`, 300, 220);
+
+        // Dynamic status badge
+        let badgeText = " certified league detective!";
+        if (score < 6) badgeText = " Total blackout! Re-read Week 1.";
+        else if (score < 12) badgeText = " A few drinks threw off your memory.";
+
+        ctx.fillStyle = '#ffb81c';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText(badgeText, 300, 290);
+
+        // Footer brand
+        ctx.fillStyle = '#888888';
+        ctx.font = 'italic 16px sans-serif';
+        ctx.fillText("Fantasy League Recap Quiz", 300, 350);
+    }
+
+    function shareOrDownload() {
+        const canvas = document.getElementById('score-card-canvas');
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], 'quiz-score.png', { type: 'image/png' });
+            
+            // Try native mobile web share (text/image) if browser supports it
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'My Fantasy Quiz Score',
+                        text: 'Check out my Week 2 Quiz score!'
+                    });
+                    return;
+                } catch (err) {
+                    console.log("Share dismissed");
+                }
+            }
+
+            // Fallback: download image directly
+            const link = document.createElement('a');
+            link.download = 'quiz-score.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+
+    function closeModal() {
+        document.getElementById('share-modal').classList.remove('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
