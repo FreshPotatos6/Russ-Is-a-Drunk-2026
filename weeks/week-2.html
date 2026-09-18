@@ -380,6 +380,7 @@
     // Render cards on page load in randomized order
     function renderQuizCards() {
         const wrapper = document.getElementById('cards-wrapper');
+        if (!wrapper) return;
         wrapper.innerHTML = '';
 
         // Shuffle questions
@@ -571,6 +572,10 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Initialize randomized cards on page load
-    window.addEventListener('DOMContentLoaded', renderQuizCards);
+    // Initialize cards immediately or on DOM load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderQuizCards);
+    } else {
+        renderQuizCards();
+    }
 </script>
