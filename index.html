@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Russ is a Drunk</title>
 
-<!-- Social Media & iMessage / Text Sharable Thumbnail Meta Tags -->
-<meta property="og:title" content="Russ is a Drunk - Fantasy Football Recap">
-<meta property="og:description" content="Week 1 Overreactions: Two Truths and a Lie">
-<meta property="og:image" content="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
+    <!-- Social Media & iMessage / Text Sharable Thumbnail Meta Tags -->
+    <meta property="og:title" content="Russ is a Drunk - Fantasy Football Recap">
+    <meta property="og:description" content="Week 1 Overreactions: Two Truths and a Lie">
+    <meta property="og:image" content="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
 
-<!-- Primary Favicons & Touch Icons (with Cache Buster + Sizes) -->
-<link rel="icon" type="image/png" sizes="32x32" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
-<link rel="icon" type="image/png" sizes="16x16" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
-<link rel="shortcut icon" type="image/png" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
-<link rel="apple-touch-icon" sizes="180x180" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
+    <!-- Primary Favicons & Touch Icons (with Cache Buster + Sizes) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
+    <link rel="shortcut icon" type="image/png" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png?v=4">
 
     <style>
         :root {
@@ -194,8 +194,8 @@
 
     <div class="tabs-wrapper">
         <div class="tabs" id="tabs-container">
-            <button class="tab-btn active" onclick="loadWeek(event, 'week-1')">Week 1</button>
-            <button class="tab-btn" onclick="loadWeek(event, 'week-2')">Week 2</button>
+            <button class="tab-btn" onclick="loadWeek(event, 'week-1')">Week 1</button>
+            <button class="tab-btn active" onclick="loadWeek(event, 'week-2')">Week 2</button>
             <button class="tab-btn" onclick="loadWeek(event, 'week-3')">Week 3</button>
             <button class="tab-btn" onclick="loadWeek(event, 'week-4')">Week 4</button>
             <button class="tab-btn" onclick="loadWeek(event, 'week-5')">Week 5</button>
@@ -231,6 +231,7 @@
         bgm.volume = 0.08;
         let isBgmActive = true;
         let hasUnlockedAudio = false;
+        let currentActiveWeek = 'week-2';
 
         function primeAllVideos() {
             const videos = document.querySelectorAll('.card-video');
@@ -254,7 +255,7 @@
             window.removeEventListener('click', unlockAudioOnFirstInteraction, true);
             window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction, true);
 
-            if (isBgmActive) {
+            if (isBgmActive && currentActiveWeek === 'week-1') {
                 bgm.play().then(() => {
                     const btn = document.getElementById('bgm-toggle-btn');
                     if (btn) btn.innerHTML = "🔊 ON";
@@ -276,9 +277,10 @@
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 isBgmActive = true;
-                bgm.play().then(() => {
-                    btn.innerHTML = "🔊 ON";
-                }).catch(err => console.log("Audio play blocked by browser:", err));
+                btn.innerHTML = "🔊 ON";
+                if (currentActiveWeek === 'week-1') {
+                    bgm.play().catch(err => console.log("Audio play blocked by browser:", err));
+                }
             } else {
                 isBgmActive = false;
                 bgm.pause();
@@ -288,7 +290,19 @@
 
         async function loadWeek(evt, weekId) {
             window.location.hash = weekId;
-            
+            currentActiveWeek = weekId;
+
+            // BGM playback restriction: Only play on Week 1
+            if (weekId === 'week-1') {
+                if (isBgmActive && hasUnlockedAudio && bgm.paused) {
+                    bgm.play().catch(err => console.log("BGM play error:", err));
+                }
+            } else {
+                if (!bgm.paused) {
+                    bgm.pause();
+                }
+            }
+
             if (evt && !hasUnlockedAudio) {
                 unlockAudioOnFirstInteraction();
             }
@@ -366,7 +380,7 @@
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    if (isBgmActive && bgm.paused) {
+                    if (isBgmActive && bgm.paused && currentActiveWeek === 'week-1') {
                         bgm.play().catch(() => {});
                     }
                 }).catch(err => {
@@ -436,13 +450,12 @@
             });
         }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Read #week-X from URL if present; otherwise default to 'week-2'
-    const currentHash = window.location.hash.replace('#', '');
-    const targetWeek = currentHash ? currentHash : 'week-2';
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentHash = window.location.hash.replace('#', '');
+            const targetWeek = currentHash ? currentHash : 'week-2';
 
-    loadWeek(null, targetWeek);
-});
+            loadWeek(null, targetWeek);
+        });
     </script>
 </body>
 </html>
