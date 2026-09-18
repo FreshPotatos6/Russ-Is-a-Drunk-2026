@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Title & Basic Meta -->
     <title>Russ is a Drunk</title>
+    <meta name="description" content="Backyard Football draft grades and weekly fantasy football recaps.">
+
+    <!-- Tab Icon / Favicon -->
+    <link rel="icon" type="image/png" href="images/Sally.png">
+    <link rel="apple-touch-icon" href="images/Sally.png">
+
+    <!-- Open Graph / Link Sharing Metadata (iMessage, WhatsApp, Discord, Slack) -->
+    <meta property="og:title" content="Russ is a Drunk | Fantasy Football Recap">
+    <meta property="og:description" content="Backyard Football draft grades and weekly fantasy football recaps.">
+    <meta property="og:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Sally.png">
+    <meta property="og:url" content="https://freshpotatos6.github.io/russ-is-a-drunk/">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Russ is a Drunk | Fantasy Football Recap">
+    <meta name="twitter:description" content="Backyard Football draft grades and weekly fantasy football recaps.">
+    <meta name="twitter:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Sally.png">
+
     <style>
         :root {
             /* Chiefs Official Color Palette */
@@ -340,8 +361,9 @@
     <script>
         const bgm = document.getElementById('bgm-player');
         let audioCtx, gainNode, sourceNode;
-        let isBgmActive = true; // Default ON
+        let isBgmActive = true; // User preference (ON/OFF)
         let hasUnlockedAudio = false;
+        let currentWeek = 'week-1';
 
         function initWebAudio() {
             if (!audioCtx) {
@@ -371,18 +393,17 @@
             });
         }
 
-        // Synchronously unlocks audio context and starts BGM on mobile Chrome & Safari
         function unlockAudioOnFirstInteraction(e) {
             if (hasUnlockedAudio) return;
 
             initWebAudio();
 
-            // Resume audio context synchronously in gesture handler for Chrome on iOS
             if (audioCtx && audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
             
-            if (isBgmActive) {
+            // Play BGM only if user is on Week 1
+            if (isBgmActive && currentWeek === 'week-1') {
                 const playPromise = bgm.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
@@ -397,14 +418,12 @@
             primeAllVideos();
             hasUnlockedAudio = true;
 
-            // Remove all gesture listeners once activated
             const events = ['touchstart', 'touchend', 'click', 'pointerdown'];
             events.forEach(evt => {
                 window.removeEventListener(evt, unlockAudioOnFirstInteraction, true);
             });
         }
 
-        // Multi-event registration to support Chrome/Safari gesture pipelines
         const touchEvents = ['touchstart', 'touchend', 'click', 'pointerdown'];
         touchEvents.forEach(evt => {
             window.addEventListener(evt, unlockAudioOnFirstInteraction, { capture: true, passive: true });
@@ -419,9 +438,11 @@
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 isBgmActive = true;
-                bgm.play().then(() => {
-                    btn.innerHTML = "🔊 ON";
-                }).catch(err => console.log("Audio play blocked by browser:", err));
+                if (currentWeek === 'week-1') {
+                    bgm.play().then(() => {
+                        btn.innerHTML = "🔊 ON";
+                    }).catch(err => console.log("Audio play blocked by browser:", err));
+                }
             } else {
                 isBgmActive = false;
                 bgm.pause();
@@ -430,6 +451,8 @@
         }
 
         async function loadWeek(evt, weekId) {
+            currentWeek = weekId;
+
             if (evt && !hasUnlockedAudio) {
                 unlockAudioOnFirstInteraction(evt);
             }
@@ -442,6 +465,22 @@
             } else {
                 const firstBtn = document.querySelector(`.tab-btn[onclick*="${weekId}"]`);
                 if (firstBtn) firstBtn.classList.add('active');
+            }
+
+            // Handle BGM isolation for Week 1
+            const bgmBtn = document.getElementById('bgm-toggle-btn');
+            if (weekId === 'week-1') {
+                if (bgmBtn) bgmBtn.style.display = 'flex';
+                if (isBgmActive && hasUnlockedAudio) {
+                    if (audioCtx && audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                    bgm.play().catch(err => console.log("BGM resume blocked:", err));
+                }
+            } else {
+                bgm.pause();
+                bgm.currentTime = 0;
+                if (bgmBtn) bgmBtn.style.display = 'none';
             }
 
             const contentArea = document.getElementById('content-area');
@@ -492,7 +531,8 @@
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    if (isBgmActive && bgm.paused) {
+                    // Maintain BGM if active and on week-1
+                    if (isBgmActive && currentWeek === 'week-1' && bgm.paused) {
                         if (audioCtx && audioCtx.state === 'suspended') {
                             audioCtx.resume();
                         }
