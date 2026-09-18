@@ -270,7 +270,7 @@
             team: "Nick: Taylor's Cardigan",
             options: [
                 "Ashton Jeanty is a top 5 RB in fantasy football",
-                "Carnell Tate is this years Calvin Ridley",
+                "The Titans offense is too bad for Carnell Tate to have fantasy football value",
                 "Nick once took a day off work to watch children ride their bikes and play Dungeons and Dragons and claimed it was not a weird thing to do."
             ],
             lieIndex: 1
@@ -278,7 +278,7 @@
         {
             team: "Chris: Chris's Crazy Team",
             options: [
-                "Brian Thomas Jr. is actually a terrible WR",
+                "Brian Thomas Jr. is a terrible WR with no fantasy football value",
                 "Devonta Smith is too small to be a true alpha in the NFL",
                 "Chris and I once got the never ending pasta bowl at Olive Garden but they cut Chris off after 8 bowls due to \"health concerns\" from eating too much."
             ],
@@ -332,7 +332,7 @@
         {
             team: "Dan: Squirtle Squad",
             options: [
-                "Tyler Algier is actually the starting RB for the Cardinals, not Love",
+                "Tyler Algier is actually the starting RB and will receive over 50% of the carries",
                 "Bucky Irving is back to being a top 10 RB in fantasy football",
                 "In high school Dan had a huge afro and loved listening to and reciting gangster rap. He was particularly famous for his rendetion of \"My Band\" by D-12."
             ],
@@ -494,15 +494,24 @@
         ctx.font = '900 80px sans-serif';
         ctx.fillText(`${score} / ${total}`, 300, 210);
 
-        // Rating subtext
-        let badgeText = "🔍 Master League Detective!";
-        if (score < 4) badgeText = "🥴 Total Blackout!";
-        else if (score < 8) badgeText = "🍻 Too many drinks during Week 1!";
-        else if (score < 11) badgeText = "🏈 Solid League Knowledge!";
+        // Score Commentary logic
+        let commentary = "";
+        if (score === 12) {
+            commentary = "Perfect! You are as smart as Luke.";
+        } else if (score >= 9) {
+            commentary = "Wow, you aren't as dumb as you look.";
+        } else if (score >= 6) {
+            commentary = "You passed, but that is not saying much.";
+        } else if (score >= 1) {
+            commentary = "Everyone in the league is now dumber for playing fantasy football with you.";
+        } else {
+            commentary = "Incredible you got every single one wrong, that is truly impressive";
+        }
 
         ctx.fillStyle = '#ffb81c';
-        ctx.font = 'bold 22px sans-serif';
-        ctx.fillText(badgeText, 300, 280);
+        // Dynamically scale font size so longer messages stay within canvas borders
+        ctx.font = commentary.length > 50 ? 'bold 15px sans-serif' : (commentary.length > 35 ? 'bold 18px sans-serif' : 'bold 22px sans-serif');
+        ctx.fillText(commentary, 300, 280);
 
         // Footer brand
         ctx.fillStyle = '#888888';
