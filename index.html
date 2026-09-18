@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Russ is a Drunk</title>
+
+    <!-- Social Media & iMessage / Text Sharable Thumbnail Meta Tags -->
+    <meta property="og:title" content="Russ is a Drunk - Fantasy Football Recap">
+    <meta property="og:description" content="Week 1 Overreactions: Two Truths and a Lie">
+    <meta property="og:image" content="images/Favre.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="images/Favre.png">
+    <link rel="icon" type="image/png" href="images/Favre.png">
+    <link rel="apple-touch-icon" href="images/Favre.png">
+
     <style>
         :root {
-            /* Chiefs Official Color Palette */
             --chiefs-red: #E31837;
             --chiefs-red-dark: #660312;
             --chiefs-gold: #FFB81C;
@@ -129,121 +139,6 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .week-title {
-            font-size: 2.4rem;
-            margin-bottom: 0.25rem;
-            color: #fff;
-            font-weight: 900;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 0px var(--chiefs-red);
-        }
-
-        .week-subtitle {
-            color: var(--chiefs-gold);
-            font-size: 1.05rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 2rem;
-            border-bottom: 3px solid var(--chiefs-red);
-            padding-bottom: 0.75rem;
-        }
-
-        .team-report-card {
-            background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
-            border: 2px solid var(--chiefs-gold);
-            border-radius: 14px;
-            padding: 1.75rem;
-            margin-bottom: 2rem;
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 1.75rem;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .team-report-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 8px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--chiefs-gold) 0%, var(--chiefs-red) 100%);
-        }
-
-        .card-media-wrapper {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            border: 3px solid var(--chiefs-gold);
-            border-radius: 10px;
-            overflow: hidden;
-            background: #0a0204;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-video, .card-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .team-details h2 {
-            font-size: 2rem;
-            color: #fff;
-            margin-bottom: 0.4rem;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-
-        .backyard-kid-tag {
-            display: inline-block;
-            background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
-            color: #111111;
-            padding: 0.45rem 1.1rem;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            font-weight: 900;
-            margin-bottom: 1.25rem;
-            border: 2px solid #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-
-        .detail-block {
-            margin-bottom: 1rem;
-        }
-
-        .detail-block h4 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-            color: var(--chiefs-gold);
-            font-weight: 800;
-        }
-
-        .detail-block p {
-            color: var(--text-muted);
-            font-size: 0.98rem;
-            line-height: 1.55;
-        }
-
-        .detail-block.strengths p { color: var(--accent-green); font-weight: 600; }
-        .detail-block.weaknesses p { color: var(--accent-red); font-weight: 600; }
-
         .coming-soon-box {
             text-align: center;
             padding: 4rem 1rem;
@@ -285,22 +180,12 @@
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        @media (max-width: 850px) {
-            .team-report-card {
-                grid-template-columns: 1fr;
-                padding: 1.25rem;
-            }
-            .card-media-wrapper {
-                height: 220px;
-            }
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🏈 Russ is a Drunk</h1>
+        <h1>🍺 Russ is a Drunk</h1>
     </header>
 
     <div class="tabs-wrapper">
@@ -340,7 +225,7 @@
     <script>
         const bgm = document.getElementById('bgm-player');
         let audioCtx, gainNode, sourceNode;
-        let isBgmActive = true; // Default ON
+        let isBgmActive = true;
         let hasUnlockedAudio = false;
 
         function initWebAudio() {
@@ -374,7 +259,6 @@
             });
         }
 
-        // Triggered immediately on the user's very first touch/click on screen
         function unlockAudioOnFirstInteraction() {
             if (hasUnlockedAudio) return;
 
@@ -390,13 +274,11 @@
             primeAllVideos();
             hasUnlockedAudio = true;
 
-            // Remove event listeners once activated
             window.removeEventListener('touchstart', unlockAudioOnFirstInteraction, true);
             window.removeEventListener('click', unlockAudioOnFirstInteraction, true);
             window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction, true);
         }
 
-        // Capture phase listeners targeting touch/tap gestures only
         window.addEventListener('touchstart', unlockAudioOnFirstInteraction, { capture: true, passive: true });
         window.addEventListener('click', unlockAudioOnFirstInteraction, { capture: true, passive: true });
         window.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { capture: true, passive: true });
@@ -438,6 +320,21 @@
                 if (response.ok) {
                     const html = await response.text();
                     contentArea.innerHTML = html;
+
+                    // Execute scripts embedded inside loaded fragments
+                    const scripts = contentArea.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
+
+                    // Re-initialize week specific hooks if available
+                    if (weekId === 'week-2' && typeof window.initWeek2Quiz === 'function') {
+                        window.initWeek2Quiz();
+                    }
+
                     initScrollMedia();
                     if (hasUnlockedAudio) {
                         primeAllVideos();
@@ -515,7 +412,6 @@
 
                     if (entry.isIntersecting && video && !wrapper.dataset.hasPlayed) {
                         wrapper.dataset.hasPlayed = "true";
-                        // Play automatically only if the user has already touched the screen to unlock audio
                         if (hasUnlockedAudio) {
                             playVideo(wrapper, video, img);
                         }
