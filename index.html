@@ -7,11 +7,11 @@
 
     <!-- Social Media & iMessage / Text Sharable Thumbnail Meta Tags -->
     <meta property="og:title" content="Russ is a Drunk - Fantasy Football Recap">
-    <meta property="og:description" content="Week 1 Overreactions: Two Truths and a Lie">
-    <meta property="og:image" content="images/Favre.png">
+    <meta property="og:description" content="Backyard Football Draft Grades & League Recaps">
+    <meta property="og:image" content="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="images/Favre.png">
+    <meta name="twitter:image" content="https://freshpotatos6.github.io/Russ-Is-a-Drunk-2026/images/Favre.png">
     <link rel="icon" type="image/png" href="images/Favre.png">
     <link rel="apple-touch-icon" href="images/Favre.png">
 
@@ -224,26 +224,9 @@
 
     <script>
         const bgm = document.getElementById('bgm-player');
-        let audioCtx, gainNode, sourceNode;
+        bgm.volume = 0.08;
         let isBgmActive = true;
         let hasUnlockedAudio = false;
-
-        function initWebAudio() {
-            if (!audioCtx) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (AudioContext) {
-                    audioCtx = new AudioContext();
-                    gainNode = audioCtx.createGain();
-                    gainNode.gain.value = 0.08;
-                    sourceNode = audioCtx.createMediaElementSource(bgm);
-                    sourceNode.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-                }
-            }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
 
         function primeAllVideos() {
             const videos = document.querySelectorAll('.card-video');
@@ -261,9 +244,12 @@
 
         function unlockAudioOnFirstInteraction() {
             if (hasUnlockedAudio) return;
+            hasUnlockedAudio = true;
 
-            initWebAudio();
-            
+            window.removeEventListener('touchstart', unlockAudioOnFirstInteraction, true);
+            window.removeEventListener('click', unlockAudioOnFirstInteraction, true);
+            window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction, true);
+
             if (isBgmActive) {
                 bgm.play().then(() => {
                     const btn = document.getElementById('bgm-toggle-btn');
@@ -272,11 +258,6 @@
             }
 
             primeAllVideos();
-            hasUnlockedAudio = true;
-
-            window.removeEventListener('touchstart', unlockAudioOnFirstInteraction, true);
-            window.removeEventListener('click', unlockAudioOnFirstInteraction, true);
-            window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction, true);
         }
 
         window.addEventListener('touchstart', unlockAudioOnFirstInteraction, { capture: true, passive: true });
@@ -284,7 +265,10 @@
         window.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { capture: true, passive: true });
 
         function toggleBGM() {
-            initWebAudio();
+            if (!hasUnlockedAudio) {
+                unlockAudioOnFirstInteraction();
+                return;
+            }
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 isBgmActive = true;
@@ -377,9 +361,6 @@
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     if (isBgmActive && bgm.paused) {
-                        if (audioCtx && audioCtx.state === 'suspended') {
-                            audioCtx.resume();
-                        }
                         bgm.play().catch(() => {});
                     }
                 }).catch(err => {
