@@ -3,28 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Title & Basic Meta -->
     <title>Russ is a Drunk</title>
-    <meta name="description" content="Week 1 Overreactions: 2 Truths and a Lie">
-
-    <!-- Tab Icon / Favicon -->
-    <link rel="icon" type="image/png" href="images/Favre.png">
-    <link rel="apple-touch-icon" href="images/Favre.png">
-
-    <!-- Open Graph / Link Sharing Metadata (iMessage, WhatsApp, Discord, Slack) -->
-    <meta property="og:title" content="Russ is a Drunk | Weekly Recaps">
-    <meta property="og:description" content="Week 1 Overreactions: 2 Truths and a Lie">
-    <meta property="og:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Favre.png">
-    <meta property="og:url" content="https://freshpotatos6.github.io/russ-is-a-drunk/">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Card Metadata -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Russ is a Drunk | Fantasy Football Recap">
-    <meta name="twitter:description" content="Week 1 Overreactions: 2 Truths and a Lie">
-    <meta name="twitter:image" content="https://freshpotatos6.github.io/russ-is-a-drunk/images/Favre.png">
-
     <style>
         :root {
             /* Chiefs Official Color Palette */
@@ -361,9 +340,8 @@
     <script>
         const bgm = document.getElementById('bgm-player');
         let audioCtx, gainNode, sourceNode;
-        let isBgmActive = true; // User preference (ON/OFF)
+        let isBgmActive = true; // Default ON
         let hasUnlockedAudio = false;
-        let currentWeek = 'week-1';
 
         function initWebAudio() {
             if (!audioCtx) {
@@ -376,6 +354,9 @@
                     sourceNode.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
                 }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
@@ -393,56 +374,41 @@
             });
         }
 
-        function unlockAudioOnFirstInteraction(e) {
+        // Triggered immediately on the user's very first touch/click on screen
+        function unlockAudioOnFirstInteraction() {
             if (hasUnlockedAudio) return;
 
             initWebAudio();
-
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
             
-            // Play BGM only if user is on Week 1
-            if (isBgmActive && currentWeek === 'week-1') {
-                const playPromise = bgm.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        const btn = document.getElementById('bgm-toggle-btn');
-                        if (btn) btn.innerHTML = "🔊 ON";
-                    }).catch(err => {
-                        console.log("BGM playback blocked:", err);
-                    });
-                }
+            if (isBgmActive) {
+                bgm.play().then(() => {
+                    const btn = document.getElementById('bgm-toggle-btn');
+                    if (btn) btn.innerHTML = "🔊 ON";
+                }).catch(err => console.log("BGM playback blocked on first touch:", err));
             }
 
             primeAllVideos();
             hasUnlockedAudio = true;
 
-            const events = ['touchstart', 'touchend', 'click', 'pointerdown'];
-            events.forEach(evt => {
-                window.removeEventListener(evt, unlockAudioOnFirstInteraction, true);
-            });
+            // Remove event listeners once activated
+            window.removeEventListener('touchstart', unlockAudioOnFirstInteraction, true);
+            window.removeEventListener('click', unlockAudioOnFirstInteraction, true);
+            window.removeEventListener('pointerdown', unlockAudioOnFirstInteraction, true);
         }
 
-        const touchEvents = ['touchstart', 'touchend', 'click', 'pointerdown'];
-        touchEvents.forEach(evt => {
-            window.addEventListener(evt, unlockAudioOnFirstInteraction, { capture: true, passive: true });
-        });
+        // Capture phase listeners targeting touch/tap gestures only
+        window.addEventListener('touchstart', unlockAudioOnFirstInteraction, { capture: true, passive: true });
+        window.addEventListener('click', unlockAudioOnFirstInteraction, { capture: true, passive: true });
+        window.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { capture: true, passive: true });
 
         function toggleBGM() {
             initWebAudio();
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
             const btn = document.getElementById('bgm-toggle-btn');
             if (bgm.paused) {
                 isBgmActive = true;
-                if (currentWeek === 'week-1') {
-                    bgm.play().then(() => {
-                        btn.innerHTML = "🔊 ON";
-                    }).catch(err => console.log("Audio play blocked by browser:", err));
-                }
+                bgm.play().then(() => {
+                    btn.innerHTML = "🔊 ON";
+                }).catch(err => console.log("Audio play blocked by browser:", err));
             } else {
                 isBgmActive = false;
                 bgm.pause();
@@ -451,10 +417,8 @@
         }
 
         async function loadWeek(evt, weekId) {
-            currentWeek = weekId;
-
             if (evt && !hasUnlockedAudio) {
-                unlockAudioOnFirstInteraction(evt);
+                unlockAudioOnFirstInteraction();
             }
 
             const buttons = document.querySelectorAll('.tab-btn');
@@ -465,22 +429,6 @@
             } else {
                 const firstBtn = document.querySelector(`.tab-btn[onclick*="${weekId}"]`);
                 if (firstBtn) firstBtn.classList.add('active');
-            }
-
-            // Handle BGM isolation for Week 1
-            const bgmBtn = document.getElementById('bgm-toggle-btn');
-            if (weekId === 'week-1') {
-                if (bgmBtn) bgmBtn.style.display = 'flex';
-                if (isBgmActive && hasUnlockedAudio) {
-                    if (audioCtx && audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-                    bgm.play().catch(err => console.log("BGM resume blocked:", err));
-                }
-            } else {
-                bgm.pause();
-                bgm.currentTime = 0;
-                if (bgmBtn) bgmBtn.style.display = 'none';
             }
 
             const contentArea = document.getElementById('content-area');
@@ -531,8 +479,7 @@
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    // Maintain BGM if active and on week-1
-                    if (isBgmActive && currentWeek === 'week-1' && bgm.paused) {
+                    if (isBgmActive && bgm.paused) {
                         if (audioCtx && audioCtx.state === 'suspended') {
                             audioCtx.resume();
                         }
@@ -568,6 +515,7 @@
 
                     if (entry.isIntersecting && video && !wrapper.dataset.hasPlayed) {
                         wrapper.dataset.hasPlayed = "true";
+                        // Play automatically only if the user has already touched the screen to unlock audio
                         if (hasUnlockedAudio) {
                             playVideo(wrapper, video, img);
                         }
@@ -593,7 +541,7 @@
                     wrapper.onclick = (e) => {
                         e.stopPropagation();
                         if (!hasUnlockedAudio) {
-                            unlockAudioOnFirstInteraction(e);
+                            unlockAudioOnFirstInteraction();
                         }
                         if (!video.paused && !video.classList.contains('hidden')) {
                             stopAndRevertToImage(video, img);
