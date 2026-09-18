@@ -287,6 +287,8 @@
         }
 
         async function loadWeek(evt, weekId) {
+            window.location.hash = weekId;
+            
             if (evt && !hasUnlockedAudio) {
                 unlockAudioOnFirstInteraction();
             }
@@ -434,9 +436,13 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadWeek(null, 'week-1');
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    // Read #week-X from URL if present; otherwise default to 'week-2'
+    const currentHash = window.location.hash.replace('#', '');
+    const targetWeek = currentHash ? currentHash : 'week-2';
+
+    loadWeek(null, targetWeek);
+});
     </script>
 </body>
 </html>
