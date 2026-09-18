@@ -153,6 +153,13 @@
             animation: fadeIn 0.3s ease;
         }
 
+        /* Prevent images inside loaded content from exceeding container bounds */
+        #content-area img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
         /* --- Team Report Card & Media Styling --- */
         .week-title {
             font-size: 2.2rem;
@@ -471,7 +478,12 @@
                         Array.from(oldScript.attributes).forEach(attr => {
                             newScript.setAttribute(attr.name, attr.value);
                         });
-                        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                        
+                        // Scoping script code inside an IIFE prevents redeclaration errors on reload
+                        if (oldScript.innerHTML) {
+                            newScript.appendChild(document.createTextNode(`(function(){\n${oldScript.innerHTML}\n})();`));
+                        }
+
                         oldScript.parentNode.replaceChild(newScript, oldScript);
                     });
                 } else {
