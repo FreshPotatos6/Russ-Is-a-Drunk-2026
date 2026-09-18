@@ -255,6 +255,8 @@
 </div>
 
 <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz3pL-yyOdgw8Zuv-rOEHIYbp0ltjW5p5DYRRJzcOT0jxyKn30lrJEWBHC1wGvOhBFl/exec";
+
     // Embedded Data directly from Excel Spreadsheet
     const quizQuestions = [
         {
@@ -384,7 +386,7 @@
         const shuffledQuestions = [...quizQuestions];
         shuffleArray(shuffledQuestions);
 
-        shuffledQuestions.forEach((item, cardIdx) => {
+        shuffledQuestions.forEach((item) => {
             const card = document.createElement('div');
             card.className = 'quiz-card';
             card.setAttribute('data-lie-index', item.lieIndex);
@@ -422,6 +424,23 @@
         element.classList.add('selected');
     }
 
+    // Send payload to Google Sheet Web App
+    function submitScoreToGoogleSheet(score, total) {
+        const payload = {
+            score: score,
+            total: total
+        };
+
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain"
+            },
+            body: JSON.stringify(payload)
+        }).catch(err => console.error("Sheet update failed:", err));
+    }
+
     // Grade Quiz and show results modal
     function gradeQuiz() {
         const cards = document.querySelectorAll('.quiz-card');
@@ -457,6 +476,9 @@
                 return;
             }
         }
+
+        // Send results to Google Sheet
+        submitScoreToGoogleSheet(score, totalQuestions);
 
         generateScoreCard(score, totalQuestions);
         document.getElementById('share-modal').classList.add('active');
