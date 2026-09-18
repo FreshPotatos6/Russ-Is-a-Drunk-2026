@@ -31,11 +31,6 @@
         gap: 1.25rem;
     }
 
-    .week-header {
-        text-align: center;
-        padding: 0.5rem 0 1rem;
-    }
-
     .week-title {
         font-size: 2.4rem;
         margin-bottom: 0.25rem;
@@ -56,16 +51,15 @@
         padding-bottom: 0.75rem;
     }
 
-
-    .quiz-description {
-        background: rgba(255, 184, 28, 0.1);
-        border: 1px solid var(--chiefs-gold);
-        border-radius: 10px;
-        padding: 1rem;
-        text-align: center;
+    .week-description {
+        color: #e2e8f0;
         font-size: 0.95rem;
-        line-height: 1.4;
-        color: #f0f0f0;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        background: rgba(0,0,0,0.4);
+        padding: 1rem 1.25rem;
+        border-radius: 8px;
+        border-left: 4px solid #FFB81C;
     }
 
     .quiz-card {
@@ -225,21 +219,18 @@
     }
 </style>
 
-<div class="quiz-container">
-    <div class="week-header">
-        <h2 class="week-title">Week 2</h2>
-        <p class="week-subtitle">Two Truths and a Lie</p>
-    </div>
+<h2 class="week-title">Week 2</h2>
+<div class="week-subtitle">Two Truths and a Lie</div>
 
-    <div class="quiz-description">Week 1 is always full of overreactions-I should know, I got a big ole goose egg from Colston Loveland. I have a lot of thoughts about what happened in Week 1, so I decided to make a quiz for everyone. Each person has two truths and a lie about themselves or their team: you have to figure out what is true and what is not for each team moving forward. Now, I know you may be saying that these are not facts and that these are just my opinions, but I am the commissioner, so what I say goes!<br><br>
-        Read the 3 statements for each team below and <strong>click the statement you believe is a LIE</strong>. Selected answers turn yellow. Hit <strong>Submit Quiz</strong> at the bottom when you are finished!
-    </div>
-
-    <form id="quiz-form" class="quiz-container" onsubmit="event.preventDefault(); gradeQuiz();">
-        <div id="cards-wrapper"></div>
-        <button type="button" class="submit-quiz-btn" onclick="gradeQuiz()">Submit Quiz & Check Results</button>
-    </form>
+<div class="week-description">
+    <p>Week 1 is always full of overreactions—I should know, I got a big ole goose egg from Colston Loveland. I have a lot of thoughts about what happened in Week 1, so I decided to make a quiz for everyone. Each person has two truths and a lie about themselves or their team: you have to figure out what is true and what is not for each team moving forward. Now, I know you may be saying that these are not facts and that these are just my opinions, but I am the commissioner, so what I say goes!</p>
+    <p style="margin-top: 1rem;">Read the 3 statements for each team below and <strong>click the statement you believe is a LIE</strong>. Selected answers turn yellow. Hit <strong>Submit Quiz</strong> at the bottom when you are finished!</p>
 </div>
+
+<form id="quiz-form" class="quiz-container" onsubmit="event.preventDefault(); gradeQuiz();">
+    <div id="cards-wrapper"></div>
+    <button type="button" class="submit-quiz-btn" onclick="gradeQuiz()">Submit Quiz & Check Results</button>
+</form>
 
 <!-- Modal Share Popup -->
 <div id="share-modal" class="modal-overlay">
