@@ -403,18 +403,16 @@
         ctx.lineWidth = 2;
         ctx.strokeRect(16, 16, 568, 368);
 
-        ctx.fillStyle = '#ffb81c';
-        ctx.font = 'bold 22px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText("WEEK 2: 2 TRUTHS & A LIE", 30, 55);
-
+        // White Title Header
         ctx.fillStyle = '#ffffff';
-        ctx.font = '900 18px sans-serif';
-        ctx.fillText("LEAGUE RECAP QUIZ", 30, 82);
+        ctx.font = '900 24px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText("2 Truths & a Lie", 30, 60);
 
+        // Score display
         ctx.fillStyle = '#e31837';
         ctx.font = '900 70px sans-serif';
-        ctx.fillText(`${score} / ${total}`, 30, 180);
+        ctx.fillText(`${score} / ${total}`, 30, 155);
 
         let commentary = "";
         if (score === 12) commentary = "Perfect! You are as smart as Luke.";
@@ -423,9 +421,29 @@
         else if (score >= 1) commentary = "Everyone in the league is now dumber for playing fantasy football with you.";
         else commentary = "Incredible! You got every single one wrong, that is truly impressive.";
 
+        // Commentary with text-wrapping to prevent overlapping the image on the right
         ctx.fillStyle = '#ffb81c';
-        ctx.font = commentary.length > 50 ? 'bold 14px sans-serif' : 'bold 17px sans-serif';
-        ctx.fillText(commentary, 30, 235);
+        ctx.font = 'bold 16px sans-serif';
+
+        const wrapText = (text, x, y, maxWidth, lineHeight) => {
+            const words = text.split(' ');
+            let line = '';
+            let currentY = y;
+
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+                    ctx.fillText(line.trim(), x, currentY);
+                    line = words[n] + ' ';
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line.trim(), x, currentY);
+        };
+
+        wrapText(commentary, 30, 210, 330, 22);
 
         ctx.fillStyle = '#888888';
         ctx.font = 'italic 15px sans-serif';
