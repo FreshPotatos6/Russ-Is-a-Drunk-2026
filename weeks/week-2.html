@@ -1,0 +1,576 @@
+<style>
+    :root {
+        --chiefs-red: #e31837;
+        --chiefs-gold: #ffb81c;
+        --chiefs-gold-light: #ffd166;
+        --bg-dark: #0a0204;
+        --card-bg: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+        --text-muted: #d0d0d0;
+        --accent-green: #22c55e;
+        --accent-red: #ef4444;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: var(--bg-dark);
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        padding: 12px;
+    }
+
+    .quiz-container {
+        max-width: 600px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .week-header {
+        text-align: center;
+        padding: 0.5rem 0 1rem;
+    }
+
+    .week-title {
+        color: var(--chiefs-gold);
+        font-size: 2rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .week-subtitle {
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-top: 0.2rem;
+    }
+
+    .quiz-description {
+        background: rgba(255, 184, 28, 0.1);
+        border: 1px solid var(--chiefs-gold);
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        color: #f0f0f0;
+    }
+
+    .quiz-card {
+        background: var(--card-bg);
+        border: 2px solid var(--chiefs-gold);
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
+
+    .quiz-card h3 {
+        color: #ffffff;
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+    }
+
+    .quiz-prompt {
+        color: var(--chiefs-gold);
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.85rem;
+    }
+
+    .options-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    /* Clickable Answer Option Cards */
+    .option-card {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: #0a0204;
+        border: 2px solid rgba(255, 184, 28, 0.3);
+        padding: 0.9rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        line-height: 1.35;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Active / Selected Yellow State */
+    .option-card.selected {
+        background-color: var(--chiefs-gold) !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
+        border-color: #ffffff !important;
+        box-shadow: 0 0 10px rgba(255, 184, 28, 0.5);
+    }
+
+    /* Result Grading States */
+    .option-card.correct-target {
+        border-color: var(--accent-green) !important;
+        background: rgba(34, 197, 94, 0.25) !important;
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+
+    .option-card.wrong-selection {
+        border-color: var(--accent-red) !important;
+        background: rgba(239, 68, 68, 0.25) !important;
+        color: #ffffff !important;
+        text-decoration: line-through;
+    }
+
+    .submit-quiz-btn {
+        background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
+        color: #000;
+        border: 2px solid #fff;
+        padding: 1.1rem;
+        border-radius: 10px;
+        font-size: 1.15rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .submit-quiz-btn:active {
+        transform: scale(0.98);
+    }
+
+    /* Modal Overlay Styling */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.88);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        padding: 1rem;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-content {
+        background: #120406;
+        border: 2px solid var(--chiefs-gold);
+        border-radius: 12px;
+        padding: 1.25rem;
+        max-width: 440px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+    }
+
+    .modal-content canvas {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--chiefs-gold);
+        margin: 1rem 0;
+    }
+
+    .modal-btn-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .modal-btn {
+        flex: 1;
+        padding: 0.85rem 0.5rem;
+        border-radius: 8px;
+        font-weight: 800;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .share-btn {
+        background: var(--chiefs-gold);
+        color: #000;
+    }
+
+    .close-btn {
+        background: #333;
+        color: #fff;
+    }
+</style>
+
+<div class="quiz-container">
+    <div class="week-header">
+        <h1 class="week-title">Week 2</h1>
+        <p class="week-subtitle">2 Truths and a Lie</p>
+    </div>
+
+    <div class="quiz-description">
+        Read the 3 statements for each team below and <strong>click the statement you believe is a LIE</strong>. Selected answers turn yellow. Hit <strong>Submit Quiz</strong> at the bottom when you are finished!
+    </div>
+
+    <form id="quiz-form" class="quiz-container" onsubmit="event.preventDefault(); gradeQuiz();">
+        <div id="cards-wrapper"></div>
+        <button type="button" class="submit-quiz-btn" onclick="gradeQuiz()">Submit Quiz & Check Results</button>
+    </form>
+</div>
+
+<!-- Modal Share Popup -->
+<div id="share-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="color: var(--chiefs-gold); margin-bottom: 0.25rem;">QUIZ RESULTS</h2>
+        <p style="color: #aaa; font-size: 0.85rem;">Don't be scared, share it with the group</p>
+        
+        <canvas id="score-card-canvas" width="600" height="400"></canvas>
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn share-btn" onclick="shareOrDownload()">Share / Save Card</button>
+            <button class="modal-btn close-btn" onclick="closeModal()">Review Answers</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz3pL-yyOdgw8Zuv-rOEHIYbp0ltjW5p5DYRRJzcOT0jxyKn30lrJEWBHC1wGvOhBFl/exec";
+
+    // Embedded Data directly from Excel Spreadsheet
+    const quizQuestions = [
+        {
+            team: "Rob: Little Chocolate Donuts.",
+            options: [
+                "Christian McCaffrey is now in a timeshare",
+                "Justin Herbert has been overblown by the media for years and is not an elite QB",
+                "When I was younger, I would go to Rob's house and go through 1,000+ pages of sports statistics to quiz him… he would get the vast majority correct."
+            ],
+            lieIndex: 0
+        },
+        {
+            team: "Nick: Taylor's Cardigan",
+            options: [
+                "Ashton Jeanty is a top 5 RB in fantasy football",
+                "The Titans offense is too bad for Carnell Tate to have fantasy football value",
+                "Nick once took a day off work to watch children ride their bikes and play Dungeons and Dragons and claimed it was not a weird thing to do."
+            ],
+            lieIndex: 1
+        },
+        {
+            team: "Chris: Chris's Crazy Team",
+            options: [
+                "Brian Thomas Jr. is a terrible WR with no fantasy football value",
+                "Devonta Smith is too small to be a true alpha in the NFL",
+                "Chris and I once got the never-ending pasta bowl at Olive Garden, but they cut Chris off after 8 bowls due to \"health concerns\" from eating too much."
+            ],
+            lieIndex: 2
+        },
+        {
+            team: "Ross: R's Remarkable Team",
+            options: [
+                "Courtland Sutton has been demoted to WR3 on the Broncos",
+                "Dallas Goedert is a top 5 TE in fantasy football",
+                "Ross once got so drunk in college that he took off his clothes and did a naked lap around the apartment complex… in the middle of winter."
+            ],
+            lieIndex: 2
+        },
+        {
+            team: "Brad: Hampton Inn",
+            options: [
+                "Jalen Coker is a top 10 WR in fantasy football",
+                "Kenneth Walker is a top 5 RB in fantasy football",
+                "At a large gathering of people, Brad's wife was so creeped out by me that she made Brad switch seats with her so she didn’t have to be next to me."
+            ],
+            lieIndex: 0
+        },
+        {
+            team: "Abi: Hamp Stamp",
+            options: [
+                "David Montgomery is a top 5 RB in fantasy football",
+                "DK Metcalf is an incredible physical specimen, but is not a good WR",
+                "The first conversation I had with Abi was about an underground hardcore/punk music festival she had attended called 'Bled Fest'."
+            ],
+            lieIndex: 0
+        },
+        {
+            team: "Jon: Used 2001 Honda Civic",
+            options: [
+                "Drake London is not a top 20 WR in fantasy football",
+                "Quinshon Judkins has very limited fantasy football value on a terrible Browns team",
+                "I was with Jon at a bar when a group of college kids came up and asked if he was \"The\" Jon Castine. Apparently, he started the first anime club at Toledo University and his photo is still on display."
+            ],
+            lieIndex: 2
+        },
+        {
+            team: "Cody: West Canaan Coyotes",
+            options: [
+                "Derrick Henry is a top 5 RB of all time",
+                "George Kittle is no longer the centerpiece of the 49ers passing attack",
+                "At a house party, around 11 when the party was in full swing, Cody decided he was tired. He pulled out the sofa bed in the middle of the living room where everyone was gathered and proclaimed it was bedtime. It was not his house."
+            ],
+            lieIndex: 1
+        },
+        {
+            team: "Dan: Squirtle Squad",
+            options: [
+                "Tyler Allgeier is actually the starting RB and will receive over 50% of the carries",
+                "Bucky Irving is back to being a top 10 RB in fantasy football",
+                "In high school, Dan had a huge afro and loved listening to and reciting gangster rap. He was particularly famous for his rendition of \"My Band\" by D-12."
+            ],
+            lieIndex: 0
+        },
+        {
+            team: "Jeff: Smo's Squad",
+            options: [
+                "Jahmyr Gibbs will get hurt if the Lions keep this workload up",
+                "George Pickens is not a top 15 WR in fantasy football if CeeDee Lamb is healthy",
+                "At work, there was a guy who would blow up the toilet on the 4th floor every day. Jeff led an investigation into who it was by taking a picture of the guy's shoes from the adjacent stall and asking others to find whose feet they were."
+            ],
+            lieIndex: 2
+        },
+        {
+            team: "Karolyn: Not Scott's Brother",
+            options: [
+                "Trey McBride is still the top TE in fantasy football",
+                "James Cook is not a top 10 RB in fantasy football",
+                "I once had an hour-long argument with Karolyn because she refused to back off of her stance that John Mayer is the greatest guitarist of all time."
+            ],
+            lieIndex: 1
+        },
+        {
+            team: "Luke: Brett Mahomes",
+            options: [
+                "Ladd McConkey is a top 10 WR in fantasy football",
+                "Colston Loveland is not a top 5 TE in fantasy football",
+                "When I was a kid, I made up a game which made my Pokemon cards play sports against each other instead of fighting each other. I had rules for baseball, football, basketball, hockey, and soccer."
+            ],
+            lieIndex: 1
+        }
+    ];
+
+    // Fisher-Yates array shuffle algorithm
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Render cards on page load in randomized order
+    function renderQuizCards() {
+        const wrapper = document.getElementById('cards-wrapper');
+        wrapper.innerHTML = '';
+
+        // Shuffle questions
+        const shuffledQuestions = [...quizQuestions];
+        shuffleArray(shuffledQuestions);
+
+        shuffledQuestions.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.setAttribute('data-lie-index', item.lieIndex);
+
+            let optionsHtml = '';
+            item.options.forEach((optText, optIdx) => {
+                optionsHtml += `
+                    <div class="option-card" onclick="selectOption(this)" data-option-index="${optIdx}">
+                        ${optText}
+                    </div>
+                `;
+            });
+
+            card.innerHTML = `
+                <h3>${item.team}</h3>
+                <p class="quiz-prompt">Which statement is a LIE?</p>
+                <div class="options-group">
+                    ${optionsHtml}
+                </div>
+            `;
+
+            wrapper.appendChild(card);
+        });
+    }
+
+    // Toggle yellow selected state on click
+    function selectOption(element) {
+        const parentGroup = element.closest('.options-group');
+        const options = parentGroup.querySelectorAll('.option-card');
+        
+        // Remove selection from all sibling options
+        options.forEach(opt => opt.classList.remove('selected'));
+        
+        // Add selected yellow class to clicked option
+        element.classList.add('selected');
+    }
+
+    // Send payload to Google Sheet Web App
+    function submitScoreToGoogleSheet(score, total) {
+        const payload = {
+            score: score,
+            total: total
+        };
+
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain"
+            },
+            body: JSON.stringify(payload)
+        }).catch(err => console.error("Sheet update failed:", err));
+    }
+
+    // Grade Quiz and show results modal
+    function gradeQuiz() {
+        const cards = document.querySelectorAll('.quiz-card');
+        let totalQuestions = cards.length;
+        let score = 0;
+        let answeredCount = 0;
+
+        cards.forEach((card) => {
+            const lieIndex = parseInt(card.getAttribute('data-lie-index'));
+            const options = card.querySelectorAll('.option-card');
+            const selectedOpt = card.querySelector('.option-card.selected');
+
+            options.forEach(opt => {
+                opt.classList.remove('correct-target', 'wrong-selection');
+            });
+
+            // Always highlight the actual LIE in green
+            options[lieIndex].classList.add('correct-target');
+
+            if (selectedOpt) {
+                answeredCount++;
+                const selectedVal = parseInt(selectedOpt.getAttribute('data-option-index'));
+                if (selectedVal === lieIndex) {
+                    score++;
+                } else {
+                    selectedOpt.classList.add('wrong-selection');
+                }
+            }
+        });
+
+        if (answeredCount < totalQuestions) {
+            if (!confirm(`You answered ${answeredCount} of ${totalQuestions} questions. Submit anyway?`)) {
+                return;
+            }
+        }
+
+        // Send results to Google Sheet
+        submitScoreToGoogleSheet(score, totalQuestions);
+
+        generateScoreCard(score, totalQuestions);
+        document.getElementById('share-modal').classList.add('active');
+    }
+
+    // Generate Dynamic Canvas Result Graphic
+    function generateScoreCard(score, total) {
+        const canvas = document.getElementById('score-card-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Dark gradient background
+        const bgGrad = ctx.createLinearGradient(0, 0, 600, 400);
+        bgGrad.addColorStop(0, '#1e090d');
+        bgGrad.addColorStop(1, '#0a0204');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 600, 400);
+
+        // Chiefs Gold border
+        ctx.strokeStyle = '#ffb81c';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(10, 10, 580, 380);
+
+        // Header
+        ctx.fillStyle = '#ffb81c';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("WEEK 2: 2 TRUTHS & A LIE", 300, 60);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 22px sans-serif';
+        ctx.fillText("LEAGUE RECAP QUIZ", 300, 100);
+
+        // Score display
+        ctx.fillStyle = '#e31837';
+        ctx.font = '900 80px sans-serif';
+        ctx.fillText(`${score} / ${total}`, 300, 210);
+
+        // Score Commentary logic
+        let commentary = "";
+        if (score === 12) {
+            commentary = "Perfect! You are as smart as Luke.";
+        } else if (score >= 9) {
+            commentary = "Wow, you aren't as dumb as you look.";
+        } else if (score >= 6) {
+            commentary = "You passed, but that is not saying much.";
+        } else if (score >= 1) {
+            commentary = "Everyone in the league is now dumber for playing fantasy football with you.";
+        } else {
+            commentary = "Incredible! You got every single one wrong, that is truly impressive.";
+        }
+
+        ctx.fillStyle = '#ffb81c';
+        // Dynamically scale font size so longer messages stay within canvas borders
+        ctx.font = commentary.length > 50 ? 'bold 15px sans-serif' : (commentary.length > 35 ? 'bold 18px sans-serif' : 'bold 22px sans-serif');
+        ctx.fillText(commentary, 300, 280);
+
+        // Footer brand
+        ctx.fillStyle = '#888888';
+        ctx.font = 'italic 16px sans-serif';
+        ctx.fillText("Fantasy League Recap", 300, 350);
+    }
+
+    function shareOrDownload() {
+        const canvas = document.getElementById('score-card-canvas');
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], 'quiz-score.png', { type: 'image/png' });
+            
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'My Fantasy Quiz Score',
+                        text: 'Check out my Week 2 Fantasy Quiz score!'
+                    });
+                    return;
+                } catch (err) {
+                    console.log("Share dismissed");
+                }
+            }
+
+            const link = document.createElement('a');
+            link.download = 'quiz-score.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+
+    function closeModal() {
+        document.getElementById('share-modal').classList.remove('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize randomized cards on page load
+    window.addEventListener('DOMContentLoaded', renderQuizCards);
+</script>
