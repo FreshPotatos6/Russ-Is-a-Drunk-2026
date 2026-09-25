@@ -1,0 +1,1222 @@
+<style>
+    /* Mobile-first base adjustments */
+    :root {
+        --card-radius: 12px;
+    }
+
+    .week-title {
+        font-size: clamp(1.5rem, 5vw, 2.25rem);
+        margin-bottom: 0.25rem;
+    }
+
+    .week-subtitle {
+        font-size: clamp(0.85rem, 3vw, 1.1rem);
+        opacity: 0.85;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Weekly Overview Intro Section */
+    .weekly-overview-card {
+        background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+        border: 2px solid var(--chiefs-gold);
+        border-radius: var(--card-radius);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .weekly-overview-title {
+        font-size: 1rem;
+        font-weight: 900;
+        color: var(--chiefs-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Vertical Mobile-Optimized Report Card Grid */
+    .mini-stock-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+        margin: 1rem 0 1.25rem 0;
+        width: 100%;
+    }
+
+    .mini-stock-item {
+        background: rgba(13, 3, 5, 0.85);
+        border: 1px solid rgba(255, 184, 28, 0.3);
+        border-radius: 8px;
+        padding: 0.6rem 0.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        text-align: center;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .mini-stock-item:hover {
+        border-color: var(--chiefs-gold);
+    }
+
+    .mini-stock-label {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: var(--chiefs-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        line-height: 1;
+    }
+
+    /* Section Heading for Bottom Table */
+    .section-divider-heading {
+        font-size: clamp(1.2rem, 4vw, 1.5rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        margin: 2rem 0 1rem 0;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--chiefs-gold);
+        padding-bottom: 0.5rem;
+    }
+
+    /* Mobile Responsive Stock Market Table */
+    .stock-market-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 2.5rem;
+        border-radius: var(--card-radius);
+        border: 2px solid var(--chiefs-gold);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+        background: #0d0305;
+    }
+
+    .stock-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .stock-table th {
+        background: linear-gradient(180deg, var(--chiefs-gold-light) 0%, var(--chiefs-gold) 100%);
+        color: #111111;
+        padding: 0.75rem 0.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 2px solid #ffffff;
+    }
+
+    .stock-table td {
+        padding: 0.65rem 0.4rem;
+        border-bottom: 1px solid rgba(255, 184, 28, 0.15);
+        color: var(--text-main);
+    }
+
+    .stock-table tr:nth-child(even) {
+        background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .stock-table tr:hover {
+        background-color: rgba(227, 24, 55, 0.2);
+    }
+
+    .team-cell {
+        text-align: left !important;
+        font-weight: 800;
+        padding-left: 0.75rem !important;
+        color: #ffffff;
+        position: sticky;
+        left: 0;
+        background: #0d0305;
+        z-index: 2;
+        border-right: 1px solid rgba(255, 184, 28, 0.2);
+    }
+
+    /* Icon Helper Classes & SVG Styling */
+    .trend-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+    }
+
+    .trend-icon-lg {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+    }
+
+    .trend-icon svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .trend-up {
+        color: #4ade80; /* Bright Green */
+        filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.4));
+    }
+
+    .trend-down {
+        color: #f87171; /* Bright Red */
+        filter: drop-shadow(0 0 4px rgba(248, 113, 113, 0.4));
+    }
+
+    .trend-flat {
+        color: #ffb81c; /* Gold / Yellow */
+        filter: drop-shadow(0 0 4px rgba(255, 184, 28, 0.4));
+    }
+
+    /* Team Breakdown Copy Sections */
+    .team-analysis-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .team-analysis-card {
+        background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+        border: 2px solid var(--chiefs-gold);
+        border-radius: var(--card-radius);
+        padding: 1.25rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        position: relative;
+    }
+
+    .team-analysis-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0.75rem;
+        border-bottom: 2px solid var(--chiefs-red);
+        padding-bottom: 0.65rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .team-analysis-title {
+        font-size: clamp(1.1rem, 3.8vw, 1.4rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+
+    .copy-section {
+        margin-bottom: 0.75rem;
+        line-height: 1.45;
+    }
+
+    .copy-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .copy-label {
+        font-size: 0.8rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.2rem;
+        display: block;
+    }
+
+    .label-summary { color: var(--chiefs-gold); }
+    .label-overachiever { color: #4ade80; } /* Green */
+    .label-underachiever { color: #f87171; } /* Red */
+    .label-unknown { color: #60a5fa; } /* Soft Blue */
+
+    .player-name {
+        display: block;
+        font-weight: 800;
+        color: #ffffff;
+        font-size: 0.95rem;
+        margin-top: 0.15rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .copy-text {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* Responsive Breakpoints for Mobile Viewports */
+    @media (max-width: 640px) {
+        .mini-stock-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .weekly-overview-card,
+        .team-analysis-card {
+            padding: 1rem;
+        }
+
+        .stock-table th, 
+        .stock-table td {
+            padding: 0.5rem 0.35rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .mini-stock-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+</style>
+
+<h2 class="week-title">Week 3 Stock Market</h2>
+<div class="week-subtitle">League Financial Report & Position Grades</div>
+
+<!-- Weekly Overview Description -->
+<div class="weekly-overview-card">
+    <div class="weekly-overview-title">Week 3 Executive Summary</div>
+    <p class="copy-text">
+        [Insert your description here: Highlight key storylines, market shifts, trades, or general thoughts on this week's performances across the league.]
+    </p>
+</div>
+
+<!-- Team Breakdown Cards Section -->
+<div class="team-analysis-grid">
+
+    <!-- Jeff -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Jeff: Smo's Squad</span>
+            <span class="trend-icon trend-icon-lg trend-up" title="Overall Trend: Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Jeff's team looks incredible; the RB's are dominant, 2/3 WRs are monsters, his TE's both look like great draft picks too. The only real question for Jeff is when the bye weeks come. Jeff's bench has been quite disappointing and having to put those players into the starting lineup is a scary prospect. Jeff is a Bears fan though so he is very used to disappointment.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Christian Watson</span>
+                The Packers have always talked about Watson like he was a star, this year is he proving that it is true.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">George Pickens</span>
+                Pickens has looked awful and the real concern is that the Cowboys offense has not been hampered by his poor play.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Justin Jefferson</span>
+                Justin Jefferson has looked awesome this year but that has been with Wentz at QB, how will Kyler's return impact him?
+            </p>
+        </div>
+    </div>
+
+    <!-- Brad -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Brad: Hampton Inn</span>
+            <span class="trend-icon trend-icon-lg trend-up" title="Overall Trend: Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Brad's team is in an interesting situation, pretty much every starter has met or exceeded expectations while almost every bench player has underperformed. Kenneth Walker looks like he will help this team overcome some of their shortcomings, but he could use Love, Williams, or Golden stepping up to truly become elite. Which is eerily similar to the conversations Brad and I would have about DCFC most summers.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Kenneth Walker</span>
+                K9 looks like a top 3 RB in football and the Chiefs offense looks like its back to its pre Matt Nagy form.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Jameson Williams</span>
+                J-Mo's point production has been a disappointment but he has always been a boom or bust player, the real concern is all of his drops.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Tyler Warren</span>
+                Warren's status is being buoyed by having 2 TDs. His target share is great but he isn't even averaging 4 yards a catch.
+            </p>
+        </div>
+    </div>
+
+    <!-- Dan -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Dan: Squirtle Squad</span>
+            <span class="trend-icon trend-icon-lg trend-up" title="Overall Trend: Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Dan's team is 2-0 and if it weren't for a couple of injuries he would look unstoppable. Josh Allen is playing out of his mind, Bucky Irving has bounced back, and he has plenty of depth on his bench. The problem with the injuries is that they are hamstring injuries and those tend to linger. Just like the story from 5th grade lingered about Dan thinking that douchebag was another name for a sandwich.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Dalton Kincaid</span>
+                Kincaid looks like he has taken the step to becoming a truly elite TE and he is making the Allen+Kincaid stack look like magic.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Rome Odunze</span>
+                Rome has done very little this year for the Bears and seems to be the 3rd/4th option for them.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Nico Collins</span>
+                When Nico plays he is a stud and proved that week 1 but every year he seems to have hamstring issues. How quickly will this issue go away?
+            </p>
+        </div>
+    </div>
+
+    <!-- Rob -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Rob: Little Chocolate Donuts.</span>
+            <span class="trend-icon trend-icon-lg trend-up" title="Overall Trend: Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Rob's team is 2-0 and had the 2nd most points scored in week 2. There are big concerns with who his WR2 will be and about his bench in general, however the 2-0 start gives him a bit of a buffer to solve those problem. I have seen him blow buffers before, we used to give him extra lives in Super Smash Bros. and it did not always help.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Kelce</span>
+                Mr. Swift has turned back the clock and looks like a top 3 TE in football again.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Marvin Harrison Jr.</span>
+                MHJ has put up no points and looks disinterested in playing football, but it is possible the Cardinals trade him.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Javonte Williams</span>
+                He put up a big week 1 and a disappointing week 2, the point output is fine but the real concern is he isn't even averaging 3 yards a carry.
+            </p>
+        </div>
+    </div>
+
+    <!-- Nick -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Nick: Taylor's Cardigan</span>
+            <span class="trend-icon trend-icon-lg trend-up" title="Overall Trend: Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Nick's team is 2-0 and it is not because of his WRs. His RBs have been great, his QB is the best in the league, and his TE has been a great surprise while Bowers is hurt. He needs to figure out his WR room, but starting 2-0 with Brock Bowers not playing makes you wonder if his team is better off without Bowers. Our volleyball team also won the league this year without Nick playing which makes you wonder a similar question.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Patrick Mahomes</span>
+                Mahomes is back and looks like the MVP again, he is putting up incredible numbers and is not even back to full speed.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Carnell Tate</span>
+                Maybe Carnell Tate sucks, maybe its Cam Ward. Whatever it is, it needs to get fixed or Tate will be on waivers.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Brock Bowers</span>
+                Bowers has not played yet this year due to a list minute surgery. Some speculate that Bowers' knee is toast, some say it was just a minor cleanup. Which is true?
+            </p>
+        </div>
+    </div>
+
+    <!-- Karolyn -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Karolyn: Not Scott's Brother</span>
+            <span class="trend-icon trend-icon-lg trend-flat" title="Overall Trend: Holding Steady"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Karolyn's team is 1-1 but they lead the league in scoring. Her WR combo of JSN and Amon-Ra may be the best fantasy duo we have ever seen. On the flip side she doesn't have a RB2 you can count on to even get 5 points. This Jekyll & Hyde act her team is putting on is quite similar to Karolyn who is incredibly nice when her boyfriend is around but mean as soon as he leaves.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Jaxon Smith-Njigba</span>
+                It is wild to think JSN could improve over last year especially after losing his OC, but he looks completely unstoppable.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">J.K. Dobbins</span>
+                Dobbins has always been a stud who just can't stay healthy. This year he has not been a stud and already has an injury.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Tre Tucker</span>
+                Tucker had an awesome week 2, but is it sustainable? Bowers is returning soon and will take a lot of targets, but maybe Tucker breaks out this year.
+            </p>
+        </div>
+    </div>
+
+    <!-- Ross -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Ross: R's Remarkable Team</span>
+            <span class="trend-icon trend-icon-lg trend-up" title="Overall Trend: Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Ross is 1-1 and his team is scoring points. He is getting great performances from Olave and Purday while almost everyone else seems to be just average. unfortunately Ross is too stubborn to take Sutton out of his starting lineup despite the fact that Sutton looks awful. Just like how he is too stubborn to admit that dogs are unequivocally better than cats.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Chris Olave</span>
+                Olave looks amazing, a lot of people were high on the Saints offense this offseason and now we are seeing why.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Courtland Sutton</span>
+                Sutton had always been a solid fantasy WR but this year he has fallen off the radar and seems like an afterthought in Denver.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Kyren Williams</span>
+                Kyren looks great running the ball he is clearly in a committee with Corum, can he keep putting up RB1 numbers?
+            </p>
+        </div>
+    </div>
+
+    <!-- Cody -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Cody: West Canaan Coyotes</span>
+            <span class="trend-icon trend-icon-lg trend-down" title="Overall Trend: Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Cody's team is interesting because he is 0-2 despite the fact that he has the best RB's in the league and he has gotten solid play from his WRs. In fact the only thing pulling his team down is horrendous QB play, which goes against everything I believe about fantasy football. He also went against everything I believe about wedding etiquette by crashing with me on my wedding night.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Stefon Diggs</span>
+                Diggs signed with the Commanders extremely late this summer and has looked like a stud for the Commanders even as they have struggled offensively.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Drake Maye</span>
+                This could just as easily have been Bo Nix, but he dropped him. His QB play has been worse than I could have imagined.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Jaylen Waddle</span>
+                Waddle was atrocious in week 1 and awesome in week 2. Which version is the real Waddle? Or will he be hot and cold all season?
+            </p>
+        </div>
+    </div>
+
+    <!-- Abi -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Abi: Hamp Stamp</span>
+            <span class="trend-icon trend-icon-lg trend-down" title="Overall Trend: Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Abi's team deserves to be 1-1, but unfortunately they are 0-2. Her team has a lot of question marks that if answered positively gives her a real shot to turn the season around; Will Schultz continue to look like a star? Will Mike Evans stay healthy? Can her marriage survive her husband drafting a team that gets off to an 0-2 start... again?</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Steelers D</span>
+                It is usually a bad sign when you best performer is your defense but that is the current situation for Abi.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Puka</span>
+                Puka only played week 1 and didn't have a good game then. It especially stings because she drafted Puka over JSN who is the WR1.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">D-Mo</span>
+                David Montgomerey looked incredible week 1 and then looked absolutely abysmal week 2… which version is the real version?
+            </p>
+        </div>
+    </div>
+
+    <!-- Luke -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Luke: Brett Mahomes</span>
+            <span class="trend-icon trend-icon-lg trend-down" title="Overall Trend: Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">My team looks awful, I have gotten worse across the board except for my D/K positions. I have had no true RB2, I have a TE putting up goose eggs, I have injury issues with my WRs and worst of all a QB who cries and has to be carted off because of a hamstring strain! Truly embarrassing. I am embarrassed of my team and now I know how Kathryn feels about me when I take my pants off in public.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Harrison Butker</span>
+                Going from no kicker to having a kickers is always an improvement, but Butker has also looked great. This is also my only position of improvement.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Colston Loveland</span>
+                You would think it would be hard to pick just one worst performer for my team, but Loveland has made it easy by averaging under 0.5 points per game.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Josh Downs</span>
+                Can Josh Downs step up and be a true #1 WR with Alec Pierce injured? If so he could save my season.
+            </p>
+        </div>
+    </div>
+
+    <!-- Chris -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Chris: Chris's Crazy Team</span>
+            <span class="trend-icon trend-icon-lg trend-down" title="Overall Trend: Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Chris has an interesting team because nobody has been a complete disaster but everyone outside of his K has disappointed. He is two weeks in and all of the questions he had from draft night are still there, but now with an 0-2 hole to dig out of. To make matters worse his wife is a fan of the 2-0 Raiders and I sure hope she is letting him hear about how much better the raiders are then his team.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Evan McPherson</span>
+                For a couple of these 0-2 teams the K/D is their best player by default, but for Chris its legitimately true. McPherson is the highest scoring player in his lineup this season.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Jadarian Price</span>
+                Price has been a huge disappointment, he is barely starting and will probably be in a 3 way time share when Charbonnet returns.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Kyler Murray</span>
+                Murray is the starting QB again in Minnesota. Can he be another KOC reclamation project? Or will lost his starting job altogether?
+            </p>
+        </div>
+    </div>
+
+    <!-- Jon -->
+    <div class="team-analysis-card">
+        <div class="team-analysis-header">
+            <span class="team-analysis-title">Jon: Used 2001 Honda Civic</span>
+            <span class="trend-icon trend-icon-lg trend-down" title="Overall Trend: Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+        </div>
+
+        <div class="mini-stock-grid">
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">QB</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">RB</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">WR</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">TE</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">D/K</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Starters</span>
+                <span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span>
+            </div>
+            <div class="mini-stock-item">
+                <span class="mini-stock-label">Bench</span>
+                <span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+            </div>
+        </div>
+
+        <div class="copy-section">
+            <span class="copy-label label-summary">Summary</span>
+            <p class="copy-text">Jon's team is off to an 0-2 start and has the least points scored in the league. His players have not been exceeding expectations, but they aren't completely failing either, usually this leads to an average season. The issue for him is that injuries are breaking his team, similar to the way Jon broke his front porch railing after I drove him home one night.</p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-overachiever">Overachiever</span>
+            <p class="copy-text">
+                <span class="player-name">Jalen Hurts</span>
+                Not a huge improvement for Hurts, but he has proven he can remain a strong fantasy QB without A.J. Brown.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-underachiever">Underachiever</span>
+            <p class="copy-text">
+                <span class="player-name">A.J. Brown</span>
+                This is unfair to A.J. as he got hurt in the first game, but nobody has been awful for Jon. This originally was Drake London but he went off last night.
+            </p>
+        </div>
+        <div class="copy-section">
+            <span class="copy-label label-unknown">Unknown</span>
+            <p class="copy-text">
+                <span class="player-name">Quinshon Judkins</span>
+                Judkins is clearly the Browns lead back but he has not turned those carries into points yet, will that change or will he be completely TD dependent?
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Full League Report Card Section at Bottom -->
+<div class="section-divider-heading">League-Wide Stock Overview</div>
+
+<div class="stock-market-container">
+    <table class="stock-table">
+        <thead>
+            <tr>
+                <th class="team-cell">Team</th>
+                <th>Overall</th>
+                <th>QB</th>
+                <th>RB</th>
+                <th>WR</th>
+                <th>TE</th>
+                <th>D/K</th>
+                <th>Starters</th>
+                <th>Bench</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="team-cell">Jeff: Smo's Squad</td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Brad: Hampton Inn</td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Dan: Squirtle Squad</td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Rob: Little Chocolate Donuts.</td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Nick: Taylor's Cardigan</td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Karolyn: Not Scott's Brother</td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Ross: R's Remarkable Team</td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Cody: West Canaan Coyotes</td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Abi: Hamp Stamp</td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M17 8l4 4-4 4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Luke: Brett Mahomes</td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Chris: Chris's Crazy Team</td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+            </tr>
+            <tr>
+                <td class="team-cell">Jon: Used 2001 Honda Civic</td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+                <td><span class="trend-icon trend-down" title="Declining"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg></span></td>
+                <td><span class="trend-icon trend-up" title="Improving"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
