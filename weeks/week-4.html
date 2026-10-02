@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 - History of the League</title>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --card-radius: 12px;
+        --chiefs-red: #e31837;
+        --chiefs-gold: #ffb81c;
+        --chiefs-gold-light: #ffd166;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --stat-green: #4ade80;
+        --stat-yellow: #facc15;
+        --stat-red: #f87171;
+    }
+
+    body {
+        background-color: #0d0305;
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0.75rem;
+    }
+
+    @media (min-width: 640px) {
+        body {
+            padding: 1.5rem;
+        }
+    }
+
+    .week-title {
+        font-size: clamp(1.4rem, 5vw, 2.25rem);
+        margin-top: 0.5rem;
+        margin-bottom: 0.25rem;
+        text-align: center;
+        color: #ffffff;
+        font-weight: 900;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+
+    .week-subtitle {
+        font-size: clamp(0.85rem, 3vw, 1.1rem);
+        opacity: 0.85;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: var(--chiefs-gold);
+    }
+
+    /* Executive Summary Intro Card */
+    .weekly-overview-card {
+        background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+        border: 2px solid var(--chiefs-gold);
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    @media (min-width: 640px) {
+        .weekly-overview-card {
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .weekly-overview-title {
+        font-size: 1rem;
+        font-weight: 900;
+        color: var(--chiefs-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Team Breakdown Cards Grid */
+    .team-analysis-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-grid {
+            gap: 2rem;
+        }
+    }
+
+    .team-analysis-card {
+        border: 2px solid var(--chiefs-gold);
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-card {
+            padding: 1.25rem;
+        }
+    }
+
+    /* ==========================================================================
+       BACKGROUND PATTERN STYLES (ALTERNATING)
+       ========================================================================== */
+
+    /* Pattern 1: Carbon Hex Grid & Corner Lasers (Idea 1) */
+    .bg-concept-hex {
+        background: 
+            radial-gradient(circle at top right, rgba(227, 24, 55, 0.45), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(255, 184, 28, 0.25), transparent 50%),
+            url("data:image/svg+xml,%3Csvg width='28' height='49' viewBox='0 0 28 49' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.2l10.99 6.35 11-6.35V17.9l-11-6.35L3 17.9z' fill='%23ffb81c' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E"),
+            linear-gradient(135deg, #1e090d 0%, #120406 100%);
+    }
+
+    /* Pattern 2: Triple Crown Gold Flare & Dot-Matrix Texture (Idea 9) */
+    .bg-concept-goldburst {
+        background: 
+            radial-gradient(circle at 30% 30%, rgba(255, 209, 102, 0.28), transparent 55%),
+            url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffb81c' fill-opacity='0.12'/%3E%3C/svg%3E"),
+            linear-gradient(135deg, #2b1a03 0%, #120406 100%);
+    }
+
+    /* Layout Elements */
+    .team-header-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .team-header-container {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+    }
+
+    /* Vertical 4:5 Team Image Box with Distinct Backdrop Styling */
+    .team-image-wrapper {
+        width: 100%;
+        max-width: 180px;
+        aspect-ratio: 4 / 5;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid var(--chiefs-gold);
+        flex-shrink: 0;
+        margin: 0 auto;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), inset 0 0 12px rgba(255, 184, 28, 0.2);
+        position: relative;
+        background: 
+            radial-gradient(circle at 50% 35%, rgba(227, 24, 55, 0.45) 0%, rgba(30, 8, 14, 0.9) 70%),
+            radial-gradient(circle at 50% 90%, rgba(255, 184, 28, 0.25) 0%, transparent 60%),
+            linear-gradient(180deg, #2d0a11 0%, #0d0305 100%);
+    }
+
+    @media (min-width: 768px) {
+        .team-image-wrapper {
+            max-width: 220px;
+            margin: 0;
+        }
+    }
+
+    .team-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+    }
+
+    .team-content-body {
+        flex-grow: 1;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .team-analysis-title {
+        font-size: clamp(1.15rem, 4vw, 1.6rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        line-height: 1.25;
+        border-bottom: 2px solid var(--chiefs-red);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    @media (min-width: 768px) {
+        .team-analysis-title {
+            text-align: left;
+        }
+    }
+
+    /* 7-Stat Grid Header Mobile Adaptive Layout */
+    .mini-stock-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+        margin-bottom: 1.25rem;
+        width: 100%;
+    }
+
+    @media (min-width: 380px) {
+        .mini-stock-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (min-width: 520px) {
+        .mini-stock-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+    }
+
+    @media (min-width: 820px) {
+        .mini-stock-grid {
+            grid-template-columns: repeat(7, 1fr);
+        }
+    }
+
+    .mini-stock-item {
+        background: rgba(13, 3, 5, 0.85);
+        border: 1px solid rgba(255, 184, 28, 0.3);
+        border-radius: 8px;
+        padding: 0.4rem 0.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        text-align: center;
+        min-width: 0;
+    }
+
+    .mini-stock-label {
+        font-size: clamp(0.6rem, 1.8vw, 0.68rem);
+        font-weight: 800;
+        color: var(--chiefs-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .mini-stock-value {
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        font-weight: 900;
+        color: #ffffff;
+        word-break: break-word;
+        line-height: 1.15;
+    }
+
+    /* Stat Color Badge Classes */
+    .stat-green {
+        color: var(--stat-green) !important;
+        text-shadow: 0 0 6px rgba(74, 222, 128, 0.4);
+    }
+
+    .stat-yellow {
+        color: var(--stat-yellow) !important;
+        text-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
+    }
+
+    .stat-red {
+        color: var(--stat-red) !important;
+        text-shadow: 0 0 6px rgba(248, 113, 113, 0.4);
+    }
+
+    /* Written Summary Section */
+    .copy-section {
+        margin-top: 1rem;
+        line-height: 1.55;
+    }
+
+    .copy-label {
+        font-size: 0.85rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.35rem;
+        display: block;
+        color: var(--chiefs-gold);
+    }
+
+    .copy-text {
+        color: #d1d5db;
+        font-size: clamp(0.875rem, 2.5vw, 0.935rem);
+        margin: 0;
+    }
+</style>
+</head>
+<body>
+
+<h2 class="week-title">Week 4: History of the League</h2>
+<div class="week-subtitle">12 Franchise Retrospectives & All-Time Statistical Breakdown</div>
+
+<!-- Weekly Overview Description -->
+<div class="weekly-overview-card">
+    <div class="weekly-overview-title">Executive Summary</div>
+    <p class="copy-text">
+        Welcome to Week 4! This week we take a comprehensive deep dive into the history of all 12 franchises in our league. From foundational dynasty anchors and trade-addicts to championship titles and historic heartbreaks, explore each manager's track record, all-time statistics, key personnel picks, and full written historical retrospectives below.
+    </p>
+</div>
+
+<!-- Team Breakdown Cards Section -->
+<div class="team-analysis-grid">
+
+    <!-- 1. Chris (Hex) -->
+    <div class="team-analysis-card bg-concept-hex">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Chris.png" alt="Chris">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Chris: Chris's Crazy Team</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">14</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">81-106</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-green">5</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-yellow">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-red">2</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Alshon Jeffery</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2024</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Chris has been in this league since its inception and in 2024 he finally won his first championship and promptly followed that up with a last place finish last year. He holds the distinction of being the first person to lose over 100 games in the league but only 3 teams have made the playoffs more than him. He is the definition of hot or cold and has finished the season in every place in the league except 6th and 7th, the two middle places. His best season came in 2024 when he dominated the regular season en route to a 13- 2 record, led the league in points scored, and won the championship; making him just the third triple crown winner in the league. Chris is usually willing to talk trades, but almost never actually trades. His loyalty should be questioned because he is tied for the 2nd most different keepers in league history and the longest he has kept a player is 4 years. The player he kept the longest was Alshon Jeffery, if I kept Alshon for 4 straight years I would probably be jaded too.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Cody (Dot Matrix) -->
+    <div class="team-analysis-card bg-concept-goldburst">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Cody.png" alt="Cody">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Cody: West Canaan Coyotes</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">14</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">94-93</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-yellow">3</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-red">0</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-yellow">7</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Michael Thomas</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2015</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Cody is another OG although he did try quitting a couple of years ago. Including this season Cody has won exactly half of his games.  Him and Dan are in a tight race to become just the third person to win 100 games in the league. Cody is tied for the most years in the league without coming in last place but also holds the record for most years in the league without a championship. His best season was way back in 2015 when went 12-2 and entered the playoffs as the top seed only to get upset by the leagues namesake, Russ Gavin. In Cody's defense that season was marred with in league collusion by the would be champion. Cody will tell you that he hates trading but if you make him a fair offer he is actually open to it. He is very picky about players he likes and his reasoning for liking or hating players often contradicts itself. Cody struggles with loyalty in keeping players he is tied for the 2nd most different keepers in league history and his most kept player is Michael Thomas at just 4 years, although he has kept Jaylen Waddle for 3 years now but it is split in two separate stints, twice in the 9th round and now once in the 5th.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Luke (Hex) -->
+    <div class="team-analysis-card bg-concept-hex">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Luke.png" alt="Luke">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Luke: Brett Mahomes</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">14</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">125-62</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-green">10</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-green">3</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-green">41</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Jamaar Chase</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2018</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">I am  and always have been the commissioner of the league, all of you are here because of me! (except Jeff who Cody conned into joining). My proudest accomplishment is starting this league as a keeper league where you keep the player in the round you drafted them in. When I came up with the idea in the back room at Under Armour I thought it was genius and I was correct. There are other leagues that also do it now but I like to claim that I was the first and am trying to get credit in the Fantasy Football hall of fame. I have wont the triple crown twice in this league but my best season I did not even win the championship. In 2018 I completed the only perfect regular season in league history only to get beaten in the finals by Dan. My favorite season however was 2015 when I started off 1-4 and came storming back to make the playoffs. If you didn't know, I love trading. It is my favorite part of fantasy football and have considered forcing every team to trade at least once every season. If you want to trade I will find something! I am loyal to my players and am one of only 3 teams to have less keepers than years in the league. My longest kept player is Ja'Marr Chase at 5 years finally passing my beloved yet failed keeper from the 2010s Lamar Miller.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Ross (Dot Matrix) -->
+    <div class="team-analysis-card bg-concept-goldburst">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Ross.png" alt="Ross">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Ross: R's Remarkable Team</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">14</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">108-79</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-green">7</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-yellow">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-red">2</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Aaron Jones</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2013</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Ross is also one of the original league members and also the hardest member to find a picture of. Ross has had some of the wildest draft picks in league history, most notably in 2015 and 2016 where he drafted Doug Martin and Thomas Rawls with each first round pick. Those two put up a combined 600 yards and each averaged under 3 yards a carry. In spite of this Ross is one of only two members of the 100 win club, has been to the playoffs second most in league history, and last year finally won his first championship. Last year might be his championship season but our first season, 2013, was his best season. In 2013 he went 11-3 but lost in the inaugural title game. Ross typically does not trade and takes a "wait and see" attitude to trade offers, hopefully that changes. Ross is arguably the most loyal member of the league. Not only has he had the longest kept player in Aaron Jones at 6 years, but he is also one of only three people to have less keepers than years in the league.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Dan (Hex) -->
+    <div class="team-analysis-card bg-concept-hex">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Dan.png" alt="Dan">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Dan: Squirtle Squad</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">13</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">95-78</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-green">7</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-green">2</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-yellow">8</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Antonio Brown</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2019</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Dan is an original member of this league but did take a year off to focus on his studies. He is one of only two players to win multiple championships, has the second highest postseason rate of anyone, and is knocking on the door to becoming just the third member of the 100 win club. In high school Dan and I were in a fantasy football league with our JV soccer coach and he also won the championship that season. Despite having two championships Dan's best season was a year he lost in the playoffs. In 2019 Dan went 10-4 while leading the league in points scored but got upset in the semifinals and ended up in 3rd. Dan has made a decent amount of trades in this league but most of those were in his wild single days. Now that he is a family man  he is much less prone to trading. Dan's most kept player was Antonio Brown who he kept 4 straight years. Antonio Brown was this league's first truly dominant keeper and Dan actually felt bad about having such a big advantage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Rob (Dot Matrix) -->
+    <div class="team-analysis-card bg-concept-goldburst">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Rob.png" alt="Rob">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Rob: Little Chocolate Donuts.</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">13</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">69-104</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Winning Seasons</span>
+                        <span class="mini-stock-value stat-yellow">4</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-red">0</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-green">14</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Patrick Mahomes</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2022</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Rob joined the league in year 2 when it expanded to 12 teams and has not looked back. Rob knows the most about football in the league but he definitely prefers proven veterans to young players. He is in the top half of the league in total wins but has never been able to come home with the championship. Rob has some of the worst luck in the league, just last season he was 4th in the league in points and finished in 11th place while the team with the 7th most points made the playoffs. I credit Rob with helping me get started with fantasy football from him showing me his teams when I was just a teenager. Rob's best season was 2022 when he finished 3rd in points scored and 3rd in point differential. He is a willing trader and has won some of the most lopsided trades in league history. Rob is probably the least loyal keeper in this league. Nobody has kept as many different players as him and the longest he kept anyone for was Patrick Mahomes for just 3 seasons.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Nick (Hex) -->
+    <div class="team-analysis-card bg-concept-hex">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Nick.png" alt="Nick">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Nick: Taylor's Cardigan</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">9</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">66-51</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-yellow">3</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-yellow">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-green">11</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Nick Chubb</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2022</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Nick is a year away from achieving 10 years in the league, he has one of the highest win percentages in the league and is 3rd all time in point differential per season. On top of that Nick has some of the best luck in the league; he consistently ends up with a better record than his points scored would indicate. Nick was one of the first league members to also not care about the QB he drafted but has sense reversed on this and started picking QBs quite early. Nick's best season was in 2022 where he went 11-4, won the championship, and came in 2nd in points scored... just missing out on a triple crown season. He is one of three league members I consider trade friendly. He is always looking for trades no matter how good or bad his team is and is willing to trade picks on top of players. He always seems to have good keepers but his best keeper was also his longest tenured  - Nick Chubb. He had Nick Chubb for 4 seasons in the 16th round and would have had him for longer had it not been for an awful injury.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Brad (Dot Matrix) -->
+    <div class="team-analysis-card bg-concept-goldburst">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Brad.png" alt="Brad">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Brad: Hampton Inn</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">8</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">57-46</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-yellow">3</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-yellow">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-yellow">5</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">CeeDee Lamb</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2023</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Brad has become a mainstay in this league entering his 8th season, for years his wife was also in the league and she actually won a championship before he did. The first year she left the league Brad won the title, I believe she was making him nervous and that is why he couldn't win with her watching. He has been consistently good and is the longest tenured team with under 50 losses. Brad's best season was in 2023 when he went 10-5 and got hot in the playoffs to claim the championship. 2023 also happens to be the last season he made a trade so maybe he should be trading more. Brad is not against trading but I would consider him a cautious trader, he won't make a move unless he feels he needs to. Brad is one of the most loyal guys in the league, he is one of only 3 people to have less keepers than years in the league and also has the 2nd longest tenured keeper in league history at 6 years with CeeDee Lamb. Based on his performance I don't expect to see the end of CeeDee as a keeper any time soon.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Jeff (Hex) -->
+    <div class="team-analysis-card bg-concept-hex">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Jeff.png" alt="Jeff">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Jeff: Smo's Squad</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">7</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">52-37</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-yellow">3</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-yellow">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-red">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Justin Jefferson</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2021</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Jeff came into this league in a terrible spot; someone else had already drafted his team and decided to quit, so Jeff joined after the season started. Luckily for Jeff, Nick drafted Justin Jefferson in the 12th round and immediately dropped him to pick up the Cardinals defense. Jeff promptly picked up Jefferson and has had a franchise cornerstone ever since. He has the second highest win percentage in league history and also the second highest point differential despite only being in the league for half the years. Through all that success his best year was 2021 when he became only the second player to win a triple crown by leading the league in wins, points scored, and capturing the title. Jeff is willing to talk trades but rarely pulls the trigger, I was shocked to see how few trades he has made because we have trade discussions multiple times a year. He is loyal to at least one player, Justin Jefferson, who he has kept every year he has been in the league. The last three years both his keepers have remained unchanged with Gibbs and Jefferson.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Abi (Dot Matrix) -->
+    <div class="team-analysis-card bg-concept-goldburst">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Abi.png" alt="Abi">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Abi: Hamp Stamp</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">6</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">31-44</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-red">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-red">0</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-red">3</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Austin Ekeler</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2023</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Abi is entering her 6th year in the league and is hoping to turn things around. Abi has one of the streakiest teams I have ever seen in her second season she got off to 4-0 start and commented how easy fantasy football was… she then promptly lost 8 games in a row and 10 of her last 11 to finish in 11th place. Her streakiness paid off in 2023 which was her best season. She strung together 7 straight wins near the end of the season to catapult her into the playoffs as the top seed. Unfortunately her luck ran out and she lost in the finals. Trade-wise Abi is not against trading but she is not one to push for trades either. If you put together a fair trade and offer it she is not afraid to accept, just don't expect her to come to you with an offer. There is a case to be made that Abi is the least loyal in the league, nobody averages more different keepers per year than her and her longest tenured keeper was Austin Ekeler and it was only for 3 years</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Jon (Hex) -->
+    <div class="team-analysis-card bg-concept-hex">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Jon.png" alt="Jon">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Jon: Used 2001 Honda Civic</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">5</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">27-33</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-yellow">2</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-red">0</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-red">1</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Tyreek Hill</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2025</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Jon is now in his 5th year in the league and is looking to recreate his hot streak from late last season. He started last season 1-5 before winning 8 of his last 9 to make the playoffs. He has created a pattern where he makes the playoffs during odd numbered years and misses the playoffs in resounding fashion during even numbered years. Last season was his best season, he won 9 games, scored the second most points in the league, and made it to the championship before losing to Ross. Jon is difficult to trade with, you get a couple of drinks in him and trade offers are flowing but when he is sober he rethinks them completely. I tried getting Kyle Pitts off his team for years and I am so glad he rejected all my offers. Jon always seems to have one great keeper his current keeper of Chase Brown in the 8th is tremendous, but he had Tyreek Hill in the 5th for 3 years which is the longest he has had a keeper... at least for now.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Karolyn (Dot Matrix) -->
+    <div class="team-analysis-card bg-concept-goldburst">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Karolyn.png" alt="Karolyn">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Karolyn: Not Scott's Brother</div>
+                
+                <div class="mini-stock-grid">
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Years</span>
+                        <span class="mini-stock-value">2</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Record</span>
+                        <span class="mini-stock-value">8-7</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Playoffs</span>
+                        <span class="mini-stock-value stat-red">0</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Titles</span>
+                        <span class="mini-stock-value stat-red">0</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Trades</span>
+                        <span class="mini-stock-value stat-red">0</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Keeper</span>
+                        <span class="mini-stock-value">Amon-Ra St. Brown</span>
+                    </div>
+                    <div class="mini-stock-item">
+                        <span class="mini-stock-label">Best Season</span>
+                        <span class="mini-stock-value">2025</span>
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Franchise History</span>
+                    <p class="copy-text">Karolyn is the newest member of the league entering just her second season. I was unsure how she would do but she had a really solid first season and is off to a good start in year two. Last year she looked like a clear playoff team before losing her last two games and missing the playoffs due only to point differential. This season could follow suit if she doesn't get more active with waivers and trades! Her best season by default was last season; she posted a winning record, ended up tied for the last playoff spot, and had a positive point differential. Karolyn is the only team in the league who has never made a trade, I am not saying that is why she missed the playoffs last year but it probably played a role. She is too new to the league to truly know how loyal she is to her players but so far she has been incredibly loyal. She has kept the same two keepers each season, but that is easy to do when they are as good as Cook and St. Brown. St. Brown gets the nod as her longest kept player because he was kept the year before she arrived as well.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
