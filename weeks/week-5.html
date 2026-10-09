@@ -305,12 +305,12 @@
         }
     }
 
-    /* Larger Logo / Image Box Styling */
+    /* Standardized Logo / Image Box Dimensions */
     .team-image-wrapper {
-        width: 100%;
-        max-width: 220px;
-        aspect-ratio: 1 / 1;
+        width: 180px;
+        height: 180px;
         border-radius: 12px;
+        border: 2px solid transparent;
         overflow: hidden;
         flex-shrink: 0;
         margin: 0 auto;
@@ -320,12 +320,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0.25rem;
     }
 
     @media (min-width: 768px) {
         .team-image-wrapper {
-            max-width: 240px;
+            width: 200px;
+            height: 200px;
             margin: 0;
         }
     }
@@ -335,6 +335,7 @@
         height: 100%;
         object-fit: contain;
         display: block;
+        padding: 0.5rem;
         filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
     }
 
