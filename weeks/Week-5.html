@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 5 - NFL Equivalents</title>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --card-radius: 12px;
+        --chiefs-red: #e31837;
+        --chiefs-gold: #ffb81c;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+    }
+
+    body {
+        background-color: #0d0305;
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0.75rem;
+    }
+
+    @media (min-width: 640px) {
+        body {
+            padding: 1.5rem;
+        }
+    }
+
+    .week-title {
+        font-size: clamp(1.8rem, 5vw, 2.4rem);
+        margin-bottom: 0.25rem;
+        color: #ffffff;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0px #E31837;
+        text-align: center;
+    }
+
+    @media (min-width: 640px) {
+        .week-title {
+            text-align: left;
+        }
+    }
+
+    .week-subtitle {
+        color: #FFB81C;
+        font-size: clamp(0.9rem, 3vw, 1.05rem);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 2rem;
+        border-bottom: 3px solid #E31837;
+        padding-bottom: 0.75rem;
+        text-align: center;
+    }
+
+    @media (min-width: 640px) {
+        .week-subtitle {
+            text-align: left;
+        }
+    }
+
+    /* Executive Summary Intro Card */
+    .weekly-overview-card {
+        background: linear-gradient(135deg, #1e090d 0%, #120406 100%);
+        border: 2px solid var(--chiefs-gold);
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    @media (min-width: 640px) {
+        .weekly-overview-card {
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .weekly-overview-title {
+        font-size: 1rem;
+        font-weight: 900;
+        color: var(--chiefs-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Team Breakdown Cards Grid */
+    .team-analysis-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-grid {
+            gap: 2rem;
+        }
+    }
+
+    .team-analysis-card {
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-card {
+            padding: 1.25rem;
+        }
+    }
+
+    /* ==========================================================================
+       TEAM-SPECIFIC NFL COLORWAY STYLES
+       ========================================================================== */
+
+    /* 49ers (Jeff) */
+    .nfl-card-49ers {
+        border: 2px solid #B3995D;
+        background: 
+            radial-gradient(circle at top right, rgba(170, 0, 0, 0.45), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(179, 153, 93, 0.25), transparent 50%),
+            linear-gradient(135deg, #1a0303 0%, #0d0202 100%);
+    }
+    .nfl-card-49ers .team-image-wrapper { border-color: #B3995D; }
+    .nfl-card-49ers .team-analysis-title { border-bottom-color: #AA0000; }
+    .nfl-card-49ers .copy-label { color: #B3995D; }
+    .nfl-card-49ers .nfl-badge { background: rgba(170, 0, 0, 0.35); border-left: 4px solid #AA0000; border-right: 1px solid rgba(179, 153, 93, 0.4); }
+    .nfl-card-49ers .nfl-badge-value { color: #E6CA85; }
+
+    /* Vikings (Brad) */
+    .nfl-card-vikings {
+        border: 2px solid #FFC62F;
+        background: 
+            radial-gradient(circle at top right, rgba(79, 38, 131, 0.5), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(255, 198, 47, 0.25), transparent 50%),
+            linear-gradient(135deg, #0e0717 0%, #06030a 100%);
+    }
+    .nfl-card-vikings .team-image-wrapper { border-color: #FFC62F; }
+    .nfl-card-vikings .team-analysis-title { border-bottom-color: #4F2683; }
+    .nfl-card-vikings .copy-label { color: #FFC62F; }
+    .nfl-card-vikings .nfl-badge { background: rgba(79, 38, 131, 0.45); border-left: 4px solid #4F2683; border-right: 1px solid rgba(255, 198, 47, 0.4); }
+    .nfl-card-vikings .nfl-badge-value { color: #FFC62F; }
+
+    /* Seahawks (Karolyn) */
+    .nfl-card-seahawks {
+        border: 2px solid #69BE28;
+        background: 
+            radial-gradient(circle at top right, rgba(0, 34, 68, 0.8), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(105, 190, 40, 0.3), transparent 50%),
+            linear-gradient(135deg, #020f1c 0%, #01070e 100%);
+    }
+    .nfl-card-seahawks .team-image-wrapper { border-color: #69BE28; }
+    .nfl-card-seahawks .team-analysis-title { border-bottom-color: #69BE28; }
+    .nfl-card-seahawks .copy-label { color: #69BE28; }
+    .nfl-card-seahawks .nfl-badge { background: rgba(0, 34, 68, 0.7); border-left: 4px solid #002244; border-right: 1px solid rgba(105, 190, 40, 0.4); }
+    .nfl-card-seahawks .nfl-badge-value { color: #69BE28; }
+
+    /* Giants (Nick) */
+    .nfl-card-giants {
+        border: 2px solid #A71930;
+        background: 
+            radial-gradient(circle at top right, rgba(11, 34, 101, 0.7), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(167, 25, 48, 0.35), transparent 50%),
+            linear-gradient(135deg, #040b1f 0%, #02050e 100%);
+    }
+    .nfl-card-giants .team-image-wrapper { border-color: #A71930; }
+    .nfl-card-giants .team-analysis-title { border-bottom-color: #A71930; }
+    .nfl-card-giants .copy-label { color: #5B82D7; }
+    .nfl-card-giants .nfl-badge { background: rgba(11, 34, 101, 0.65); border-left: 4px solid #0B2265; border-right: 1px solid rgba(167, 25, 48, 0.4); }
+    .nfl-card-giants .nfl-badge-value { color: #FF4D6D; }
+
+    /* Steelers (Cody) */
+    .nfl-card-steelers {
+        border: 2px solid #FFB612;
+        background: 
+            radial-gradient(circle at top right, rgba(255, 182, 18, 0.35), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(16, 24, 32, 0.8), transparent 50%),
+            linear-gradient(135deg, #141103 0%, #0a0801 100%);
+    }
+    .nfl-card-steelers .team-image-wrapper { border-color: #FFB612; }
+    .nfl-card-steelers .team-analysis-title { border-bottom-color: #FFB612; }
+    .nfl-card-steelers .copy-label { color: #FFB612; }
+    .nfl-card-steelers .nfl-badge { background: rgba(255, 182, 18, 0.25); border-left: 4px solid #FFB612; border-right: 1px solid rgba(255, 182, 18, 0.4); }
+    .nfl-card-steelers .nfl-badge-value { color: #FFFFFF; text-shadow: 0 0 4px rgba(255, 182, 18, 0.8); }
+
+    /* Rams (Ross) */
+    .nfl-card-rams {
+        border: 2px solid #FFA300;
+        background: 
+            radial-gradient(circle at top right, rgba(0, 53, 148, 0.75), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(255, 163, 0, 0.35), transparent 50%),
+            linear-gradient(135deg, #020f26 0%, #010714 100%);
+    }
+    .nfl-card-rams .team-image-wrapper { border-color: #FFA300; }
+    .nfl-card-rams .team-analysis-title { border-bottom-color: #FFA300; }
+    .nfl-card-rams .copy-label { color: #FFA300; }
+    .nfl-card-rams .nfl-badge { background: rgba(0, 53, 148, 0.65); border-left: 4px solid #003594; border-right: 1px solid rgba(255, 163, 0, 0.4); }
+    .nfl-card-rams .nfl-badge-value { color: #FFA300; }
+
+    /* Eagles (Rob) */
+    .nfl-card-eagles {
+        border: 2px solid #004C54;
+        background: 
+            radial-gradient(circle at top right, rgba(0, 76, 84, 0.65), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(165, 172, 175, 0.25), transparent 50%),
+            linear-gradient(135deg, #011417 0%, #00090b 100%);
+    }
+    .nfl-card-eagles .team-image-wrapper { border-color: #A5ACAF; }
+    .nfl-card-eagles .team-analysis-title { border-bottom-color: #004C54; }
+    .nfl-card-eagles .copy-label { color: #52B5BF; }
+    .nfl-card-eagles .nfl-badge { background: rgba(0, 76, 84, 0.5); border-left: 4px solid #004C54; border-right: 1px solid rgba(0, 76, 84, 0.6); }
+    .nfl-card-eagles .nfl-badge-value { color: #D1D5D8; }
+
+    /* Bengals (Dan) */
+    .nfl-card-bengals {
+        border: 2px solid #FB4F14;
+        background: 
+            radial-gradient(circle at top right, rgba(251, 79, 20, 0.45), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(0, 0, 0, 0.8), transparent 50%),
+            linear-gradient(135deg, #1a0802 0%, #0d0401 100%);
+    }
+    .nfl-card-bengals .team-image-wrapper { border-color: #FB4F14; }
+    .nfl-card-bengals .team-analysis-title { border-bottom-color: #FB4F14; }
+    .nfl-card-bengals .copy-label { color: #FB4F14; }
+    .nfl-card-bengals .nfl-badge { background: rgba(251, 79, 20, 0.35); border-left: 4px solid #FB4F14; border-right: 1px solid rgba(251, 79, 20, 0.4); }
+    .nfl-card-bengals .nfl-badge-value { color: #FFFFFF; text-shadow: 0 0 5px rgba(251, 79, 20, 0.9); }
+
+    /* Saints (Luke) */
+    .nfl-card-saints {
+        border: 2px solid #D3BC8D;
+        background: 
+            radial-gradient(circle at top right, rgba(211, 188, 141, 0.35), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(16, 24, 32, 0.8), transparent 50%),
+            linear-gradient(135deg, #141109 0%, #0a0804 100%);
+    }
+    .nfl-card-saints .team-image-wrapper { border-color: #D3BC8D; }
+    .nfl-card-saints .team-analysis-title { border-bottom-color: #D3BC8D; }
+    .nfl-card-saints .copy-label { color: #D3BC8D; }
+    .nfl-card-saints .nfl-badge { background: rgba(211, 188, 141, 0.25); border-left: 4px solid #D3BC8D; border-right: 1px solid rgba(211, 188, 141, 0.4); }
+    .nfl-card-saints .nfl-badge-value { color: #FFFFFF; text-shadow: 0 0 4px rgba(211, 188, 141, 0.8); }
+
+    /* Commanders (Jon) */
+    .nfl-card-commanders {
+        border: 2px solid #FFB612;
+        background: 
+            radial-gradient(circle at top right, rgba(90, 20, 20, 0.65), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(255, 182, 18, 0.3), transparent 50%),
+            linear-gradient(135deg, #170505 0%, #0c0202 100%);
+    }
+    .nfl-card-commanders .team-image-wrapper { border-color: #FFB612; }
+    .nfl-card-commanders .team-analysis-title { border-bottom-color: #5A1414; }
+    .nfl-card-commanders .copy-label { color: #FFB612; }
+    .nfl-card-commanders .nfl-badge { background: rgba(90, 20, 20, 0.6); border-left: 4px solid #5A1414; border-right: 1px solid rgba(255, 182, 18, 0.4); }
+    .nfl-card-commanders .nfl-badge-value { color: #FFB612; }
+
+    /* Buccaneers (Abi) */
+    .nfl-card-buccaneers {
+        border: 2px solid #D50A0A;
+        background: 
+            radial-gradient(circle at top right, rgba(213, 10, 10, 0.45), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(255, 121, 0, 0.3), transparent 50%),
+            linear-gradient(135deg, #1a0303 0%, #0d0101 100%);
+    }
+    .nfl-card-buccaneers .team-image-wrapper { border-color: #FF7900; }
+    .nfl-card-buccaneers .team-analysis-title { border-bottom-color: #D50A0A; }
+    .nfl-card-buccaneers .copy-label { color: #FF7900; }
+    .nfl-card-buccaneers .nfl-badge { background: rgba(213, 10, 10, 0.4); border-left: 4px solid #D50A0A; border-right: 1px solid rgba(213, 10, 10, 0.5); }
+    .nfl-card-buccaneers .nfl-badge-value { color: #FF7900; }
+
+    /* Dolphins (Chris) */
+    .nfl-card-dolphins {
+        border: 2px solid #008E97;
+        background: 
+            radial-gradient(circle at top right, rgba(0, 142, 151, 0.55), transparent 55%),
+            radial-gradient(circle at bottom left, rgba(252, 76, 2, 0.35), transparent 50%),
+            linear-gradient(135deg, #011617 0%, #000a0b 100%);
+    }
+    .nfl-card-dolphins .team-image-wrapper { border-color: #FC4C02; }
+    .nfl-card-dolphins .team-analysis-title { border-bottom-color: #FC4C02; }
+    .nfl-card-dolphins .copy-label { color: #00C8D6; }
+    .nfl-card-dolphins .nfl-badge { background: rgba(0, 142, 151, 0.4); border-left: 4px solid #008E97; border-right: 1px solid rgba(0, 142, 151, 0.5); }
+    .nfl-card-dolphins .nfl-badge-value { color: #FC4C02; }
+
+
+    /* Layout Elements */
+    .team-header-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .team-header-container {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+    }
+
+    /* Larger Logo / Image Box Styling */
+    .team-image-wrapper {
+        width: 100%;
+        max-width: 220px;
+        aspect-ratio: 1 / 1;
+        border-radius: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+        margin: 0 auto;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+        position: relative;
+        background: rgba(0, 0, 0, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .team-image-wrapper {
+            max-width: 240px;
+            margin: 0;
+        }
+    }
+
+    .team-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
+    }
+
+    .team-content-body {
+        flex-grow: 1;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .team-analysis-title {
+        font-size: clamp(1.2rem, 4vw, 1.65rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        line-height: 1.25;
+        border-bottom: 2px solid var(--chiefs-red);
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        text-align: center;
+    }
+
+    @media (min-width: 768px) {
+        .team-analysis-title {
+            text-align: left;
+        }
+    }
+
+    /* Single-Line Stylized NFL Team Badge */
+    .nfl-badge {
+        padding: 0.55rem 0.75rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .nfl-badge-label {
+        font-size: clamp(0.65rem, 2.2vw, 0.75rem);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.75);
+        flex-shrink: 0;
+    }
+
+    .nfl-badge-value {
+        font-size: clamp(0.725rem, 2.6vw, 0.925rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Written Summary Section */
+    .copy-section {
+        line-height: 1.55;
+    }
+
+    .copy-label {
+        font-size: 0.825rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.35rem;
+        display: block;
+    }
+
+    .copy-text {
+        color: #d1d5db;
+        font-size: clamp(0.875rem, 2.5vw, 0.935rem);
+        margin: 0;
+    }
+</style>
+</head>
+<body>
+
+<h2 class="week-title">Week 5</h2>
+<div class="week-subtitle">NFL Doppelgängers & Franchise Comparables</div>
+
+<!-- Weekly Overview Description -->
+<div class="weekly-overview-card">
+    <div class="weekly-overview-title">Executive Summary</div>
+    <p class="copy-text">
+        Welcome to Week 5! Every fantasy roster reflects a distinct personality, strategic philosophy, and level of chaos. This week we break down all 12 franchises by pairing each squad with its direct real-world NFL team equivalent. From identical injury bug curses to eerily similar coaching dynamics and QB controversies, see who your team is channeling across the NFL landscape.
+    </p>
+</div>
+
+<!-- Team Breakdown Cards Section -->
+<div class="team-analysis-grid">
+
+    <!-- 1. Jeff (49ers) -->
+    <div class="team-analysis-card nfl-card-49ers">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/49ers.png" alt="San Francisco 49ers Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Jeff: Smo's Squad</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">San Francisco 49ers (4-0)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Jeff and the 49ers are both undefeated and look dominant while doing it. Jeff must also live next to a substation because his players are getting hurt at a rate similar to that of the 49ers players. Luckily for both teams, their true studs are healthy and delivering in a big way. Gibbs is looking like a front-runner for fantasy MVP, and Brock Purdy is a front-runner for NFL MVP. All of these similarities do make me question Jeff as a human, though. Jeff has always seemed like a stand-up guy, but so did Shanahan until the real story of his car crash came out... when will the real story about Jeff come out?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Brad (Vikings) -->
+    <div class="team-analysis-card nfl-card-vikings">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Vikings.png" alt="Minnesota Vikings Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Brad: Hampton Inn</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Minnesota Vikings (4-0)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Comparing Brad to the Vikings may seem like an insult to Brad at first, but I promise it's not! Both teams are loaded with talent, and it feels like every player they have has panned out. The receiving corps is the strength of both teams, with a superstar receiver leading the way. However, the talent of both squads is sometimes overlooked due to a glaring issue on their roster. For the Vikings, that issue is QB play; for Brad, it is target share for his WRs. Is the success sustainable for either team? The real concern is leadership getting cute. KOC is known for getting too cute with his play-calling, and Brad has an inflated ego because his wife is always saying how cute he is... I just don't see it.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Karolyn (Seahawks) -->
+    <div class="team-analysis-card nfl-card-seahawks">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Seahawks.png" alt="Seattle Seahawks Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Karolyn: Not Scott's Brother</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Seattle Seahawks (3-1)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Both teams came into the year with high expectations; the Seahawks are the defending champs, and Karolyn had a great draft. Somehow JSN fell to both teams and is absolutely carrying them despite the fact that their highly touted defenses have slightly underwhelmed. They have looked like dominant teams minus one hiccup of a game. The QB play for each has some question marks around their actual ability, but they are in great systems that cover their weaknesses. The issue with both teams is that they may have the worst running backs in the league. Jadarian Price looks like a bust of a draft pick for the Seahawks and seems as if he plays with his eyes closed, which is another tie-in to Karolyn—because I learned this summer that Karolyn closes her eyes in volleyball when passing and hitting the ball.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Nick (Giants) -->
+    <div class="team-analysis-card nfl-card-giants">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Giants.png" alt="New York Giants Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Nick: Taylor's Cardigan</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">New York Giants (3-1)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Nick moved on to his backup QB after Week 1, and so did the Giants. On top of that, neither team has much going on through the air, with Nick having the worst WRs in the league and the Giants playing without a real starting QB. Somehow, both teams are still off to a 3-1 start. You may think that's due to a dominant run game, but that is not quite true either. The RBs for both teams have been solid, but nothing special. The Giants are 3-1 with a barely positive point differential and the highest-rated "luck" score in the league. Nick's team is somehow 3-1 with the 8th-most points in the league, so I am arbitrarily handing him the highest "luck" score, too. It feels unsustainable for both. The real match for these two, however, is Cam Skattebo and Nick himself: they both have the exact same IQ score.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Cody (Steelers) -->
+    <div class="team-analysis-card nfl-card-steelers">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Steelers.png" alt="Pittsburgh Steelers Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Cody: West Canaan Coyotes</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Pittsburgh Steelers (2-2)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">I hate to do this to Cody because I know he hates Aaron Rodgers, but his team and the Steelers are eerily similar. Each team is 2-2, and you really aren't sure how high their ceiling is, but you know they have a high floor. Both teams rely heavily on their strong RB duo and have some veteran WRs that are inconsistent at best. On top of that, they both have a QB who is garbage, and I don't understand why he is even on the team. Cody has George Kittle, who is a stud at TE, and the Steelers use the TE position a ton, too. Where Cody and the Steelers are really similar is between him and DK Metcalf. Both DK and Cody view themselves as physical juggernauts, even if the numbers say otherwise. Cody joined my volleyball team and claimed he was most confident about two things in life: his running skills and his volleyball skills. He was not invited back after the season and blamed his poor play on a supposed "injury."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Ross (Rams) -->
+    <div class="team-analysis-card nfl-card-rams">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Rams.png" alt="Los Angeles Rams Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Ross: R's Remarkable Team</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Los Angeles Rams (2-2)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Ross is the defending champ and the Rams were the preseason favorites, so expectations were sky-high for both teams. Neither team's record is anything special, but both have flashed potential brilliance, showing they could still live up to the hype. Both teams have Kyren Williams at RB with a solid backup behind him, both rely on their incredible but fragile WR, and both have a pocket passer that can pile on points at any time. The defense for both squads has been disappointing so far, and there are major questions about their passing games if their star WR gets hurt. Puka Nacua on the Rams reminds me of Ross. Both of them seem like nice, friendly dudes, but then you hear or see them in different situations and they're maniacs. Luckily for Ross, most of his maniac-ness happens on the soccer field, whereas Puka's is off the field—but they're still both maniacs nonetheless!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Rob (Eagles) -->
+    <div class="team-analysis-card nfl-card-eagles">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Eagles.png" alt="Philadelphia Eagles Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Rob: Little Chocolate Donuts.</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Philadelphia Eagles (2-2)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Both of these teams came out of the gate hot with a 2-0 record, and people were calling them championship favorites. Then, in the last two games, both teams look like they are falling apart. The question is: which version more accurately matches these teams? Both teams rely heavily on their running game and have a completely untrustworthy receiving corps, with their best receiving option being an aging TE. The real similarity between the two is Vic Fangio, the Eagles' DC. Both Fangio and Rob are football savants, but they also both have had limited success when put in charge of a team.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Dan (Bengals) -->
+    <div class="team-analysis-card nfl-card-bengals">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Bengals.png" alt="Cincinnati Bengals Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Dan: Squirtle Squad</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Cincinnati Bengals (2-2)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">When Dan got off to a 2-0 start, the league took notice and thought his team was for real; the same can be said for the Bengals. Over the last two weeks, however, both teams have looked significantly worse. They each rely heavily on their star QB and their star WR, who has been struggling with injuries this year. The star WR being injured played a role in their losses, and both teams have questions about their ability to run the ball. They each also have a TE who can absolutely go off one week and then get zero catches the next. Dan has the most in common with Joe Burrow. Both Dan and Joe have tried changing their hairstyle to hide from their celebrity look-a-like, but Joe Burrow will forever be Macaulay Culkin, and Dan will forever be Napoleon Dynamite.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Luke (Saints) -->
+    <div class="team-analysis-card nfl-card-saints">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Saints.png" alt="New Orleans Saints Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Luke: Brett Mahomes</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">New Orleans Saints (1-3)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Until this past week, a lot of people thought the Saints were a good football team; likewise, a lot of people (or maybe just me) thought that I also had a good team... it appears neither was true. The Saints rely heavily on their star WR, and I do the same. Both teams are starting Tyler Shough at QB, and he has been mostly solid. So why the terrible records? Small injuries. My WRs are all dealing with nagging injuries that are slowing them down, and the Saints' O-line is dealing with nagging injuries as well. Both teams look destined to start 1-4 with a terrible matchup this week, too. Is this just who these teams are? Or can they turn it around? The biggest similarity between the Saints and me is Spencer Rattler. Spencer Rattler is the most annoying QB in the league with all the nonsense he spews, and I am the most annoying owner in this league with all the trade offers I send.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Jon (Commanders) -->
+    <div class="team-analysis-card nfl-card-commanders">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Commanders.png" alt="Washington Commanders Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Jon: Used 2001 Honda Civic</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Washington Commanders (1-3)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">In Jon's win, he looked like the best team in the league—same with the Commanders' win over the Seahawks. Outside of their wins, however, both teams have looked horrendous. They have similar strengths: solid QB play and talented WRs. They also have similar weaknesses: subpar running games and injured WRs. Both teams have boom-or-bust potential based on how their inconsistent players perform. If Jayden Daniels plays great, the Commanders look great. If Jon's RBs play great, Jon will start winning a lot. Jon and Jayden Daniels have a lot in common: wherever Jayden goes, his mom causes a scene and steals all the attention. For Jon? He has no shot at attention with his wife and daughter around.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Abi (Buccaneers) -->
+    <div class="team-analysis-card nfl-card-buccaneers">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Buccaneers.png" alt="Tampa Bay Buccaneers Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Abi: Hamp Stamp</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Tampa Bay Buccaneers (0-4)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">Abi and the Bucs had disappointing seasons last year and were hoping to turn it around this year. So far, no good. Injuries have been the story for both squads so far, as each team has lost its most important player(s) for extended time already. The real problem is that the depth pieces that needed to fill in for the stars have been equally bad, and neither team seems to have a solution to its broken running game. Luckily, both teams play in the worst division in the league, and there is optimism that once healthy, they can go on a big run. Plus, Baker and Abi are quite similar as people. Baker claims he is all about the team, but he was a huge distraction with his contract stuff this summer. Abi is a longtime vegan, but likes when her veggie burgers are grilled in real meat grease. Are you really team-first if you're a distraction? Are you really a true vegan if you like eating meat grease?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Chris (Dolphins) -->
+    <div class="team-analysis-card nfl-card-dolphins">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Dolphins.png" alt="Miami Dolphins Logo">
+            </div>
+            <div class="team-content-body">
+                <div class="team-analysis-title">Chris: Chris's Crazy Team</div>
+                
+                <div class="nfl-badge">
+                    <span class="nfl-badge-label">NFL Team:</span>
+                    <span class="nfl-badge-value">Miami Dolphins (0-4)</span>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Comparison Analysis</span>
+                    <p class="copy-text">The Dolphins suck. Chris' team has also sucked. There is no sugarcoating it, but they have more in common than just being terrible. Both teams entered the year thinking they could lean on a stud RB, and the stud RB got hurt. Both teams had a WR look like he was breaking through early in the year, until he got hurt. The Dolphins knew they would be bad this year; Chris has had injuries throughout his team that are making him resemble the Dolphins. Five players who would normally be starters are hurt for Chris. Brutal. Another similarity between the Dolphins and Chris is De'von Achane. Achane is one of the Dolphins' captains, but is always hurt. Chris was our soccer team's captain, and he was always hurt, too. The greatest ability is availability, sir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
