@@ -345,7 +345,7 @@
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.35rem;
         display: block;
     }
 
@@ -356,6 +356,26 @@
         font-size: clamp(0.875rem, 2.5vw, 0.975rem);
         font-weight: 800;
         color: #ffffff;
+    }
+
+    /* Multi-line keyword terms layout for mobile */
+    .kw-term {
+        display: block;
+        line-height: 1.35;
+    }
+
+    .kw-bullet {
+        display: none;
+    }
+
+    @media (min-width: 640px) {
+        .kw-term {
+            display: inline;
+            line-height: normal;
+        }
+        .kw-bullet {
+            display: inline;
+        }
     }
 
     .inactive-keyword-line {
@@ -401,7 +421,7 @@
 <!-- Weekly Overview Description -->
 <div class="weekly-overview-card">
     <p class="copy-text">
-        It is week 6 and there is just so much unknown in the fantasy football world, so I decided to take out some tarot cards and see what the future has in store for all of us. For those that do not know (which was me until an hour or so ago) there are 22 main tarot cards. Each tarot card has a meaning, or a range of meanings. Tarot cards do not tell you what has happened but instead what is to come. The orientation in which the card is drawn changes the meaning completely. Reversed cards can be "uprighted" by doing things on the upright side and upright cards can be "reversed" by doing things on the reversed side. This means that while tarot cards do tell the future it is a future that can be altered. Without further ado here is what everyone's future holds...<br><br><br>Quick note: In fear of accidently calling demonic forces I did not actually spiritually draw tarot cards, these readings were done safely and spirit free. 
+        It is week 6 and there is just so much unknown in the fantasy football world, so I decided to take out some tarot cards and see what the future has in store for all of us. For those that do not know (which was me until an hour or so ago) there are 22 main tarot cards. Each tarot card has a meaning, or a range of meanings. Tarot cards do not tell you what has happened but instead what is to come. The orientation in which the card is drawn changes the meaning completely. Reversed cards can be "uprighted" by doing things on the upright side and upright cards can be "reversed" by doing things on the reversed side. This means that while tarot cards do tell the future it is a future that can be altered. Without further ado here is what everyone's future holds...<br><br>Quick note: In fear of accidently calling demonic forces I did not actually spiritually draw tarot cards, these readings were done safely and spirit free. 
     </p>
 </div>
 
@@ -428,7 +448,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-reversed-box">
                         <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
-                        <div class="active-keyword-text">Manipulation • Unfulfilled potential • Illusion</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Manipulation</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Unfulfilled potential</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Illusion</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Upright Meaning:</span> Manifestation • Skill • Resourcefulness
@@ -463,7 +487,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-upright-box">
                         <span class="active-keyword-header header-upright">Drawn Upright:</span>
-                        <div class="active-keyword-text">Tradition • Conformity • Belief systems</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Tradition</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Conformity</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Belief systems</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Reversed Meaning:</span> Rebellion • Unconventionality • New approaches
@@ -498,7 +526,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-upright-box">
                         <span class="active-keyword-header header-upright">Drawn Upright:</span>
-                        <div class="active-keyword-text">Harmony • Good Choices • Alignment</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Harmony</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Good Choices</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Alignment</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Reversed Meaning:</span> Disharmony • Imbalance • Bad choices
@@ -533,7 +565,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-reversed-box">
                         <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
-                        <div class="active-keyword-text">Lack of control • Directionless • Aggression</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Lack of control</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Directionless</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Aggression</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Upright Meaning:</span> Determination • Action • Victory
@@ -568,7 +604,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-reversed-box">
                         <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
-                        <div class="active-keyword-text">Bad luck • Resistance to change • Setbacks</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Bad luck</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Resistance to change</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Setbacks</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Upright Meaning:</span> Good luck • Cycles • Turning points
@@ -603,7 +643,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-upright-box">
                         <span class="active-keyword-header header-upright">Drawn Upright:</span>
-                        <div class="active-keyword-text">Truth • Cause & effect • Accountability</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Truth</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Cause & effect</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Accountability</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Reversed Meaning:</span> Injustice • Lack of accountability • Dishonesty
@@ -638,7 +682,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-upright-box">
                         <span class="active-keyword-header header-upright">Drawn Upright:</span>
-                        <div class="active-keyword-text">Endings • Rebirth • Transformation</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Endings</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Rebirth</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Transformation</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Reversed Meaning:</span> Fear of change • Holding on • Stagnation
@@ -673,7 +721,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-reversed-box">
                         <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
-                        <div class="active-keyword-text">Freedom • Breaking free • Reclaiming power</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Freedom</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Breaking free</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Reclaiming power</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Upright Meaning:</span> Attachment • Restriction • Temptation
@@ -708,7 +760,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-upright-box">
                         <span class="active-keyword-header header-upright">Drawn Upright:</span>
-                        <div class="active-keyword-text">Sudden upheaval • Chaos • Revelation</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Sudden upheaval</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Chaos</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Revelation</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Reversed Meaning:</span> Narrow escape • Delaying disaster • Fear of breakdown
@@ -743,7 +799,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-upright-box">
                         <span class="active-keyword-header header-upright">Drawn Upright:</span>
-                        <div class="active-keyword-text">Healing • Renewal • Inspiration</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Healing</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Renewal</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Inspiration</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Reversed Meaning:</span> Despair • Cynacism • Disconnection
@@ -778,7 +838,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-reversed-box">
                         <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
-                        <div class="active-keyword-text">Sadness • Overly optimistic • Burnout</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Sadness</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Overly optimistic</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Burnout</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Upright Meaning:</span> Joy • Success • Celebration
@@ -813,7 +877,11 @@
                 <div class="keywords-wrapper">
                     <div class="active-keyword-card active-reversed-box">
                         <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
-                        <div class="active-keyword-text">Incompletion • Lack of closure • Shortcuts</div>
+                        <div class="active-keyword-text">
+                            <span class="kw-term">Incompletion</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Lack of closure</span><span class="kw-bullet"> • </span>
+                            <span class="kw-term">Shortcuts</span>
+                        </div>
                     </div>
                     <div class="inactive-keyword-line">
                         <span class="inactive-label">Upright Meaning:</span> Completion • Integration • Accomplishment
