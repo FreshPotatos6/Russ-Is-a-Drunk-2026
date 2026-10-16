@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 6 - Tarot Card Readings</title>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --card-radius: 12px;
+        --gold-bright: #ffda66;
+        --gold-primary: #d4af37;
+        --gold-dark: #3a2a07;
+        --purple-bright: #c084fc;
+        --purple-primary: #a855f7;
+        --purple-dark: #260a3d;
+        --text-main: #f3f4f6;
+        --text-dim: #9ca3af;
+    }
+
+    body {
+        background-color: transparent; /* Seamless integration with index.html */
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0.75rem;
+    }
+
+    @media (min-width: 640px) {
+        body {
+            padding: 1.5rem;
+        }
+    }
+
+    .week-title {
+        font-size: clamp(1.8rem, 5vw, 2.4rem);
+        margin-bottom: 0.25rem;
+        color: var(--gold-bright);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 12px rgba(212, 175, 55, 0.4);
+        text-align: center;
+    }
+
+    @media (min-width: 640px) {
+        .week-title {
+            text-align: left;
+        }
+    }
+
+    .week-subtitle {
+        color: #f3e8ff;
+        font-size: clamp(0.9rem, 3vw, 1.05rem);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--gold-primary);
+        padding-bottom: 0.75rem;
+        text-align: center;
+    }
+
+    @media (min-width: 640px) {
+        .week-subtitle {
+            text-align: left;
+        }
+    }
+
+    /* Executive Summary Intro Card */
+    .weekly-overview-card {
+        color: #f3f4f6;
+        font-size: clamp(0.875rem, 2.5vw, 0.95rem);
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        background: rgba(15, 10, 22, 0.92);
+        padding: 1rem 1.25rem;
+        border-radius: var(--card-radius);
+        border: 2px solid var(--gold-primary);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+    }
+
+    @media (min-width: 640px) {
+        .weekly-overview-card {
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    /* Team Breakdown Cards Grid */
+    .team-analysis-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-grid {
+            gap: 2.25rem;
+        }
+    }
+
+    .team-analysis-card {
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-card {
+            padding: 1.25rem;
+        }
+    }
+
+    /* ==========================================================================
+       DISTINCT CARD STYLING: UPRIGHT vs REVERSED
+       ========================================================================== */
+
+    /* 1. UPRIGHT CARDS: Bold Warm Gold / Parchment Aesthetic */
+    .card-style-upright {
+        border: 2px solid var(--gold-primary);
+        background: linear-gradient(135deg, rgba(45, 30, 5, 0.95) 0%, rgba(20, 13, 2, 0.97) 100%);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.2), 0 10px 30px rgba(0, 0, 0, 0.9);
+    }
+    .card-style-upright .team-image-wrapper { 
+        border: 2px solid var(--gold-primary); 
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    }
+    .card-style-upright .team-title-row { border-bottom-color: rgba(212, 175, 55, 0.4); }
+    .card-style-upright .tarot-headline-banner { 
+        background: rgba(255, 218, 102, 0.12);
+        border: 1px solid rgba(212, 175, 55, 0.5);
+        border-left: 5px solid var(--gold-bright); 
+    }
+    .card-style-upright .copy-label { color: var(--gold-bright); }
+
+    /* 2. REVERSED CARDS: Deep Mystical Violet / Shadow Aesthetic */
+    .card-style-reversed {
+        border: 2px solid var(--purple-primary);
+        background: linear-gradient(135deg, rgba(38, 10, 61, 0.95) 0%, rgba(13, 3, 22, 0.97) 100%);
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.25), 0 10px 30px rgba(0, 0, 0, 0.9);
+    }
+    .card-style-reversed .team-image-wrapper { 
+        border: 2px solid var(--purple-primary); 
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.35);
+    }
+    .card-style-reversed .team-title-row { border-bottom-color: rgba(168, 85, 247, 0.4); }
+    .card-style-reversed .tarot-headline-banner { 
+        background: rgba(168, 85, 247, 0.15);
+        border: 1px solid rgba(168, 85, 247, 0.5);
+        border-left: 5px solid var(--purple-bright); 
+    }
+    .card-style-reversed .copy-label { color: var(--purple-bright); }
+
+
+    /* Layout Elements */
+    .team-header-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .team-header-container {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+    }
+
+    /* Standardized Tarot Image Box Dimensions (2:3 Aspect Ratio) */
+    .team-image-wrapper {
+        width: 180px;
+        height: 270px;
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+        margin: 0 auto;
+        position: relative;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+        .team-image-wrapper {
+            width: 190px;
+            height: 285px;
+            margin: 0;
+        }
+    }
+
+    .team-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        padding: 0.35rem;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.9));
+    }
+
+    .team-content-body {
+        flex-grow: 1;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .team-title-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    @media (min-width: 768px) {
+        .team-title-row {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+    }
+
+    .team-analysis-title {
+        font-size: clamp(1.15rem, 4vw, 1.5rem);
+        font-weight: 800;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        line-height: 1.25;
+        text-align: center;
+    }
+
+    @media (min-width: 768px) {
+        .team-analysis-title {
+            text-align: left;
+        }
+    }
+
+    .team-record-badge {
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: var(--gold-bright);
+        background: rgba(0, 0, 0, 0.6);
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 218, 102, 0.4);
+        white-space: nowrap;
+    }
+
+    /* Tarot Main Banner */
+    .tarot-headline-banner {
+        padding: 0.65rem 0.85rem;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    @media (min-width: 640px) {
+        .tarot-headline-banner {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    .tarot-card-name {
+        font-size: clamp(1.05rem, 3.2vw, 1.25rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .card-positioning-tag {
+        font-size: 0.9rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        display: inline-block;
+        width: fit-content;
+    }
+
+    .tag-upright {
+        color: #1a1002;
+        background: var(--gold-bright);
+        box-shadow: 0 0 10px rgba(255, 218, 102, 0.5);
+    }
+
+    .tag-reversed {
+        color: #ffffff;
+        background: #7e22ce;
+        border: 1px solid var(--purple-bright);
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    }
+
+    /* Feature Active Orientation Keywords Section */
+    .keywords-wrapper {
+        margin-bottom: 1rem;
+    }
+
+    .active-keyword-card {
+        padding: 0.75rem 0.9rem;
+        border-radius: 8px;
+        margin-bottom: 0.4rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .active-upright-box {
+        background: rgba(255, 218, 102, 0.15);
+        border: 1.5px solid var(--gold-primary);
+    }
+
+    .active-reversed-box {
+        background: rgba(168, 85, 247, 0.2);
+        border: 1.5px solid var(--purple-primary);
+    }
+
+    .active-keyword-header {
+        font-size: 0.75rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .header-upright { color: var(--gold-bright); }
+    .header-reversed { color: var(--purple-bright); }
+
+    .active-keyword-text {
+        font-size: clamp(0.875rem, 2.5vw, 0.975rem);
+        font-weight: 800;
+        color: #ffffff;
+    }
+
+    .inactive-keyword-line {
+        font-size: 0.775rem;
+        color: var(--text-dim);
+        padding-left: 0.25rem;
+        border-top: 1px dashed rgba(255, 255, 255, 0.15);
+        padding-top: 0.4rem;
+    }
+
+    .inactive-label {
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #d1d5db;
+    }
+
+    /* Written Reading Section */
+    .copy-section {
+        line-height: 1.6;
+    }
+
+    .copy-label {
+        font-size: 0.825rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.35rem;
+        display: block;
+    }
+
+    .copy-text {
+        color: var(--text-main);
+        font-size: clamp(0.875rem, 2.5vw, 0.935rem);
+        margin: 0;
+    }
+</style>
+</head>
+<body>
+
+<h2 class="week-title">Week 6</h2>
+<div class="week-subtitle">Tarot Card Readings</div>
+
+<!-- Weekly Overview Description -->
+<div class="weekly-overview-card">
+    <p class="copy-text">
+        Welcome to Week 6! This week we are peering into the mystical realm of Tarot to uncover reasons for pessimism among our league's high-fliers and reasons for optimism among those currently dwelling in the cellar. Each team has been drawn a Major Arcana card. Pay close attention to whether your card was drawn <strong>Upright</strong> or <strong>Reversed</strong>—as an inverted card signals blocked energy, hidden warnings, or a destiny waiting to be flipped right-side up.
+    </p>
+</div>
+
+<!-- Team Breakdown Cards Section -->
+<div class="team-analysis-grid">
+
+    <!-- 1. Ross -->
+    <div class="team-analysis-card card-style-reversed">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Magician.png" alt="I. The Magician Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Ross: R's Remarkable Team</div>
+                    <span class="team-record-badge">Record: 3-2</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">I. The Magician</span>
+                    <span class="card-positioning-tag tag-reversed">▼ REVERSED</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-reversed-box">
+                        <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
+                        <div class="active-keyword-text">Manipulation • Unfulfilled potential • Illusion</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Upright Meaning:</span> Manifestation • Skill • Resourcefulness
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Ross and his team look like a true master magician, but his Reversed Magician card says that he may be nothing more than a sidewalk trickster. The reversed Magician warns Ross of his team's success being an illusion, that the early success is manipulating Ross into believing in players he should not believe in, and warns of players on his roster who cannot fulfil the potential he once saw in them. Kyren Williams, Chirs Olave, Brock Purdy, and Jaylen Warren are all off to much better starts than anticipated this is creating an illusion of them being elite, however backup RBs on their own team threaten Warren and William's success, Olave is still injury prone, and Purdy has shown the ability to lay an egg at any time. Ross also has players like Tuten, Burden, Hampton, and Fields that ooze potential- the Magician claims that may remain unfulfilled potential. Has Ross been manipulated to believe his team is great as-is? To escape this fate Ross must use his skill and resourcefulness to bolster his roster and manifest wins.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Rob -->
+    <div class="team-analysis-card card-style-upright">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Hierophant.png" alt="V. The Hierophant Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Rob: Little Chocolate Donuts.</div>
+                    <span class="team-record-badge">Record: 3-2</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">V. The Hierophant</span>
+                    <span class="card-positioning-tag tag-upright">▲ UPRIGHT</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-upright-box">
+                        <span class="active-keyword-header header-upright">Drawn Upright:</span>
+                        <div class="active-keyword-text">Tradition • Conformity • Belief systems</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Reversed Meaning:</span> Rebellion • Unconventionality • New approaches
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">They say tradition is not the worship of ashes, but the preservation of fire- will rob preserve his ashes or keep his fire? The Hierophant is a traditionalist and it claims that Rob will stick with his belief systems, conform to what he knows, and stick with what has traditionally worked for him and his team. Over years in the league it has shown that Rob's belief system centers around the rostering known commodities and his roster reflects this by having old guys all over the place. Travis Kelce, Matt Stafford, Davante Adams, Christian McCaffrey, and Alvin Kamara are all considered "Uncs" in the locker room giving a dependable floor but also a lower ceiling. Rob likes guys that conform to their positions norm, which is probably why he is still rostering big armed Justin Herbert in spite of Herbert's atrocious start. Rob believes in these traditions, but the Hierophant warns that these traditions may need to be broken to make something truly special. Can Rob break some of his traditions to give his team the chance to be truly special? If Rob can buck tradition and instead take new unconventional approaches by rebelling against what has been and reaching for what might be, his team could truly compete for a title. He has shown some signs of this by holding onto Harrison Jr. and signing Tre Harris, but a bigger splash is needed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Chris -->
+    <div class="team-analysis-card card-style-upright">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Lovers.png" alt="VI. The Lovers Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Chris: Chris's Crazy Team</div>
+                    <span class="team-record-badge">Record: 0-5</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">VI. The Lovers</span>
+                    <span class="card-positioning-tag tag-upright">▲ UPRIGHT</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-upright-box">
+                        <span class="active-keyword-header header-upright">Drawn Upright:</span>
+                        <div class="active-keyword-text">Harmony • Good Choices • Alignment</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Reversed Meaning:</span> Disharmony • Imbalance • Bad choices
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Like every 90s cartoon for girls, the only thing that can save Chris is true love. Luckily for him he drew the Lovers card. We have all seen how Chris' bad choices in the draft has led to imbalance and disharmony with his team, hence the 0-5 start, but his Lovers card is upright signaling better times ahead. The bad draft choices have been evident; Brian Thomas Jr.? Bust. Saquon Barkley? Bust. Jadarian Price? Bust. However an even bigger issue maybe the disharmony on his team. Saquon Barkley and Devonta Smith each cut into one another's usage, if they are winning Barkley will get the ball more and Smith will be uninvolved. If they are losing the opposite is true. A similar situation is with Commanders Jayden Daniels and Jacory Croskey-Merritt. Trading one of Barkley/Smith and Daniels/JCM can bring harmony to his roster. Luckily for Chris most of his players still have value, he just needs to make a few good choices in who he moves them for. The Lovers show that with the right roster alignment Chris can still make the playoffs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Nick -->
+    <div class="team-analysis-card card-style-reversed">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Chariot.png" alt="VII. The Chariot Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Nick: Taylor's Cardigan</div>
+                    <span class="team-record-badge">Record: 3-2</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">VII. The Chariot</span>
+                    <span class="card-positioning-tag tag-reversed">▼ REVERSED</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-reversed-box">
+                        <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
+                        <div class="active-keyword-text">Lack of control • Directionless • Aggression</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Upright Meaning:</span> Determination • Action • Victory
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Nick's chariot awaits, but where it leads… nobody knows. Drawing a reversed Chariot card is a scary endeavor, it warns that directionless aggression can lead to a complete lack of control for his team, and could completely derail his season. Nick has been crazy aggressive with his FAB spending this year, he has already spent nearly half of his budget. The confusing part about his spending is that it seems completely directionless, he has spent nearly all of his FAB on RBs and then sat them on his bench. Ignoring players Nick got via FAB bids, he had a healthy Ashton Jeanty and Cam Skattebo as starters, while his bench has a few banged up players; Breece Hall, Kyle Monangai, and Rico Dowdle. Giving him arguably the deepest RB room in the league. His true weakness is at WR where he is starting Devaughn Vele and Carnell Tate, two players who would find themselves on most teams bench. Will this lack of control doom Nick's season like the Chariot card insinuates? Or can Nick's determination and high waiver actions overcome all of this and lead him to victory?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Dan -->
+    <div class="team-analysis-card card-style-reversed">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Fortune.png" alt="X. Wheel of Fortune Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Dan: Squirtle Squad</div>
+                    <span class="team-record-badge">Record: 3-2</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">X. Wheel of Fortune</span>
+                    <span class="card-positioning-tag tag-reversed">▼ REVERSED</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-reversed-box">
+                        <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
+                        <div class="active-keyword-text">Bad luck • Resistance to change • Setbacks</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Upright Meaning:</span> Good luck • Cycles • Turning points
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">If "a great fortune in the hands of a fool is a great misfortune", will Dan prove himself a fool? 5 weeks into the season Dan has had great fortune, he is tied for 4th place despite being 9th in points scored. Dan pulling the reversed Wheel of Fortune card may show that the tides are turning against him. the reversed fortune card warns of bad luck, setbacks, and of a person that is resistant to change. The card knows Dan. Sports data analysts will tell you that luck always evens out and that would mean that there is bad luck coming Dan's way. Fortune however is not all about luck but also about how you handle setbacks, Dan has already encountered some setbacks, but more appear to be coming. Will Harrison eat into Nico Collins' massive target share? Will the Buccaneers bad offense drag Bucky Irving down with them? Can Josh Allen continue his torrid pace with tougher defenses ahead? Dan's resistance to change may be his biggest obstacle, he has only made 2 moves this entire season and he may need change to succeed. If Dan can cycle through the right players, make good moves at vital turning points, and get some good luck then he may be able to upright his Wheel of Fortune card and become a true title threat.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Cody -->
+    <div class="team-analysis-card card-style-upright">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Justice.png" alt="XI. Justice Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Cody: West Canaan Coyotes</div>
+                    <span class="team-record-badge">Record: 2-3</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">XI. Justice</span>
+                    <span class="card-positioning-tag tag-upright">▲ UPRIGHT</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-upright-box">
+                        <span class="active-keyword-header header-upright">Drawn Upright:</span>
+                        <div class="active-keyword-text">Truth • Cause & effect • Accountability</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Reversed Meaning:</span> Injustice • Lack of accountability • Dishonesty
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Justice is more than just the store Cody frequented in high school to pick up girls, it is also the tarot card he drew. The Justice card claims that if Cody can embrace the truth and be accountable then the cause and effect will be more wins for his team. He is currently 2-3 because he has failed to do those things. Right off the bat this year Cody fought the truth by not admitting what a great draft I had for him! Aaron Jones, Garrett Wilson, George Kittle, and Derrick Henry have all far exceeded expectations and I drafted all of them. On top of that his slow start is somewhat due to his lack of accountability. Cody decided to use one of his keepers on Jaylen Waddle, who has been an unmitigated disaster. The cause & effect is simple; if Cody trusts guys just because he like them, his season won't get better. If he trusts the guys the data supports then he can quickly turn his season around. Luckily for Cody the cards believe he will do the right thing and make a playoff push. However, if he continues to blame injustice, not take accountability, and be dishonest with himself about what is going wrong then there may truly be no fixing it.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Abi -->
+    <div class="team-analysis-card card-style-upright">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Death.png" alt="XIII. Death Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Abi: Hamp Stamp</div>
+                    <span class="team-record-badge">Record: 1-4</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">XIII. Death</span>
+                    <span class="card-positioning-tag tag-upright">▲ UPRIGHT</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-upright-box">
+                        <span class="active-keyword-header header-upright">Drawn Upright:</span>
+                        <div class="active-keyword-text">Endings • Rebirth • Transformation</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Reversed Meaning:</span> Fear of change • Holding on • Stagnation
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Will Death become her, or will Abi find rebirth this season? Abi drew the Death card, and it is as scary as it sounds. The Death card tells Abi that if she can admit things she has been doing need to end then her season can have a rebirth and she can transform her team into a playoff contender. The RB experiment for Abi needs to come to it's end, David Montgomery had one good week but has look awful since, Travis Etienne is hurt but was terrible when healthy, and starting Kenny Gainwell and Kimani Vidal is just not a winnable strategy. The nice thing for Abi is that she has good QBs and solid WRs that she can use in trades to completely transform her RB room. If she can do those two things her team will find a rebirth and the playoffs will be reachable. Abi has only made 3 moves while her team has been in turmoil and the Death card says that if she continues to fear change and holds onto her players then her team will stagnate and remain a cellar dweller this season.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Jon -->
+    <div class="team-analysis-card card-style-reversed">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Devil.png" alt="XV. The Devil Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Jon: Used 2001 Honda Civic</div>
+                    <span class="team-record-badge">Record: 1-4</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">XV. The Devil</span>
+                    <span class="card-positioning-tag tag-reversed">▼ REVERSED</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-reversed-box">
+                        <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
+                        <div class="active-keyword-text">Freedom • Breaking free • Reclaiming power</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Upright Meaning:</span> Attachment • Restriction • Temptation
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">The Devil's greatest trick was convincing the world he didn't exist, Jon's greatest trick may be convincing the league his team isn't a threat. Jon drew the Devil, but reversed. The reversed Devil says that Jon needs to break free from players weighing down his roster to give him the freedom to play who he wants and reclaim the power that got him to the championship game last year. The big issue with Jon's team this year has been injuries to his WRs. AJ Brown, DJ Moore, and Jayden Reed were 3 of his top 4 WRs from the draft and they have all been hurt. Jon needs to break free from these injury riddled players. Trading them for less skilled but healthy players will give him more freedom with his roster because it gives him options of who to play. Last year Jon's season turned around after a trade and the reversed Devil implies that another trade could help him reclaim power in this league, just like last season. On the other hand, if the temptation to hold on to his highly skilled but hurt players causes him to be attached to those players then he will continue to struggle with roster restrictions and will continue to find victories hard to come by.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Brad -->
+    <div class="team-analysis-card card-style-upright">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Tower.png" alt="XVI. The Tower Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Brad: Hampton Inn</div>
+                    <span class="team-record-badge">Record: 4-1</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">XVI. The Tower</span>
+                    <span class="card-positioning-tag tag-upright">▲ UPRIGHT</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-upright-box">
+                        <span class="active-keyword-header header-upright">Drawn Upright:</span>
+                        <div class="active-keyword-text">Sudden upheaval • Chaos • Revelation</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Reversed Meaning:</span> Narrow escape • Delaying disaster • Fear of breakdown
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Brad's team towers over most of the league, but can his tower stay standing from the slings and arrows of those gunning for his spot? The Tower card represents sudden upheaval on Brad's roster causing chaos and resulting in a revelation about players on his squad. Brad's team looks great and has the numbers to back up that success but the poor play of Jeremiyah Love mixed with his injuries is causing chaos on Brad's team because he does not have a single RB on his bench. The lack of RB depth and poor play from love will need to turn into sudden upheaval for his roster to stay competitive. Brad's team will need to find a major contributor at RB and he may need to take a risk to land a suitable replacement. The Tower foretells a revelation for Brad's roster but does not say if the revelation is positive or negative. Will this major question mark force Brad to make moves that destroy his roster? Or will this fear of a team breakdown allow him to make a move to delay disaster just long enough to escape with a solid RB2 and prove he is a contender?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Luke -->
+    <div class="team-analysis-card card-style-upright">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Star.png" alt="XVII. The Star Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Luke: Brett Mahomes</div>
+                    <span class="team-record-badge">Record: 1-4</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">XVII. The Star</span>
+                    <span class="card-positioning-tag tag-upright">▲ UPRIGHT</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-upright-box">
+                        <span class="active-keyword-header header-upright">Drawn Upright:</span>
+                        <div class="active-keyword-text">Healing • Renewal • Inspiration</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Reversed Meaning:</span> Despair • Cynacism • Disconnection
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Is my team simply a late blooming shooting star? Or is it just the remaining light from a star that died long ago? I'll be honest, I was feeling discouraged after being the only team in the league to post three straight weeks of 125+ points and still having a 1-4 record... but then I drew The Star. The Star says that healing players can renew my team which will inspire a playoff push. This week it was announced that Caleb Williams has healed. A healthy Caleb not only gives me a solid starting QB but also should make Colston Loveland relevant again. On top of that it appears that Josh Jacobs will be eligible to play starting next week. These moves have inspired me to not give up and to look for some moves to improve my roster. Fortunately for everyone else that means I will be making trade offers to renew my roster and help me make a playoff push. The star does warn about the dangers of a disconnection between how I view a player and their actual value resulting in trades not going through, increasing my cynicism and despair and causing my team to fail completely.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Karolyn -->
+    <div class="team-analysis-card card-style-reversed">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/Sun.png" alt="XIX. The Sun Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Karolyn: Not Scott's Brother</div>
+                    <span class="team-record-badge">Record: 4-1</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">XIX. The Sun</span>
+                    <span class="card-positioning-tag tag-reversed">▼ REVERSED</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-reversed-box">
+                        <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
+                        <div class="active-keyword-text">Sadness • Overly optimistic • Burnout</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Upright Meaning:</span> Joy • Success • Celebration
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Karolyn's team has risen in a bold and vibrant way to start the season, but will the sun set before her season is a success or will she be able to ride off into the sunset as a champion? The Sun can be a great positive card to draw, unfortunately Karolyn drew the reversed Sun. The reversed Sun warns that an overly optimistic attitude to her team can lead to sadness and possibly burnout. Karolyn's team has gotten off to an incredible start due to a great roster; league wrecking WRs in Amon-Ra St. Brown and Jaxson Smith-Njigba, stud TEs in Trey McBride and Sam LaPorta, and a really solid RB in James Cook. The start give her every reason to be optimistic, but she may be a little overly optimistic. Karolyn has not had to deal with injuries this year and has not made a single roster change. When the going gets tough will she make the necessary moves or falter down the stretch, leading to a sad end to the season. If she does falter, will two straight seasons of hot starts and cold finishes lead to burnout? If Karolyn can avoid these pitfalls she may be set up for a season of success bringing both joy and celebration in just her second season in the league.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Jeff -->
+    <div class="team-analysis-card card-style-reversed">
+        <div class="team-header-container">
+            <div class="team-image-wrapper">
+                <img src="images/World.png" alt="XXI. The World Tarot Card">
+            </div>
+            <div class="team-content-body">
+                <div class="team-title-row">
+                    <div class="team-analysis-title">Jeff: Smo's Squad</div>
+                    <span class="team-record-badge">Record: 5-0</span>
+                </div>
+
+                <div class="tarot-headline-banner">
+                    <span class="tarot-card-name">XXI. The World</span>
+                    <span class="card-positioning-tag tag-reversed">▼ REVERSED</span>
+                </div>
+
+                <div class="keywords-wrapper">
+                    <div class="active-keyword-card active-reversed-box">
+                        <span class="active-keyword-header header-reversed">Drawn Reversed:</span>
+                        <div class="active-keyword-text">Incompletion • Lack of closure • Shortcuts</div>
+                    </div>
+                    <div class="inactive-keyword-line">
+                        <span class="inactive-label">Upright Meaning:</span> Completion • Integration • Accomplishment
+                    </div>
+                </div>
+
+                <div class="copy-section">
+                    <span class="copy-label">Tarot Reading</span>
+                    <p class="copy-text">Jeff appears to have the whole world in his hands, but will he capture it or just let it slip? The reversed World is a tough draw, it says Jeff's team will take shortcuts throughout the year, find that too many incompletions lose him too many points, and results in a lack of championship closure by the end of the year. On paper Jeff's team is great, he is leading the league in scoring, set a record for points scored, and is the only undefeated team still standing. What could go wrong? Well, the reversed World warns about the possibilities and Jeff's team may be falling right into what it says. The biggest issue with Jeff's team is the RB position and he had no QB depth, instead of making trades to fix these problems he took a shortcut by overpaying for waivers to fill those gaps. Nobody believes that Kendre Miller is a season long solution and D'Andre Swift has a lot of question marks about usage and health. Another issue for Jeff's team is his WR catch %. Jeff has loaded his team with big play WRs, the risk with his guys is that they don't get a ton of targets, rely on big plays, and have a history of drops. Could incompletions on big plays come back to haunt Jeff? His team has set the bar so high this year that anything but a championship will feel like a lack of closure. If Jeff can integrate actual solutions into his team he could find himself completing the season with the accomplishment of being the champion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
