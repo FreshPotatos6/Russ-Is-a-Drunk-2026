@@ -11,10 +11,10 @@
 
     :root {
         --card-radius: 12px;
-        --gold-bright: #ffda66;
-        --gold-primary: #d4af37;
-        --purple-bright: #08ffff;
-        --purple-primary: #08ffff;
+        --bg-card: linear-gradient(135deg, rgba(22, 22, 26, 0.95) 0%, rgba(12, 12, 15, 0.98) 100%);
+        --border-card: rgba(255, 255, 255, 0.1);
+        --accent-primary: #E31837; /* Chiefs Red */
+        --accent-secondary: #FFB81C; /* Chiefs Gold */
         --text-main: #f3f4f6;
         --text-dim: #9ca3af;
     }
@@ -39,17 +39,17 @@
         color: #ffffff;
         font-weight: 900;
         text-transform: uppercase;
-        text-shadow: 2px 2px 0px #E31837;
+        text-shadow: 2px 2px 0px var(--accent-primary);
     }
 
     .week-subtitle {
-        color: #FFB81C;
+        color: var(--accent-secondary);
         font-size: 1.05rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         margin-bottom: 2rem;
-        border-bottom: 3px solid #E31837;
+        border-bottom: 3px solid var(--accent-primary);
         padding-bottom: 0.75rem;
     }
 
@@ -65,10 +65,13 @@
         font-size: 0.95rem;
         line-height: 1.6;
         margin-bottom: 2rem;
-        background: rgba(0,0,0,0.4);
+        background: rgba(0, 0, 0, 0.4);
         padding: 1rem 1.25rem;
         border-radius: 8px;
-        border-left: 4px solid #FFB81C;
+        border-left: 4px solid var(--accent-secondary);
+        border-top: 1px solid var(--border-card);
+        border-right: 1px solid var(--border-card);
+        border-bottom: 1px solid var(--border-card);
     }
 
     @media (min-width: 640px) {
@@ -76,15 +79,6 @@
             padding: 1.25rem;
             margin-bottom: 2rem;
         }
-    }
-
-    .weekly-overview-title {
-        font-size: 1rem;
-        font-weight: 900;
-        color: #FFB81C;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0.5rem;
     }
 
     /* Team Breakdown Cards Grid */
@@ -106,39 +100,14 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
         position: relative;
         overflow: hidden;
+        border: 1px solid var(--border-card);
+        background: var(--bg-card);
     }
 
     @media (min-width: 640px) {
         .team-analysis-card {
             padding: 1.25rem;
         }
-    }
-
-    /* Card Styling Variants */
-    .card-style-gold {
-        border: 2px solid var(--gold-primary);
-        background: linear-gradient(135deg, rgba(45, 30, 5, 0.95) 0%, rgba(20, 13, 2, 0.97) 100%);
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.2), 0 10px 30px rgba(0, 0, 0, 0.9);
-    }
-    .card-style-gold .team-title-row { border-bottom-color: rgba(212, 175, 55, 0.4); }
-    .card-style-gold .copy-label { color: var(--gold-bright); }
-    .card-style-gold .team-record-badge {
-        color: var(--purple-bright);
-        background: rgba(38, 10, 61, 0.85);
-        border: 1px solid rgba(192, 132, 252, 0.5);
-    }
-
-    .card-style-purple {
-        border: 2px solid var(--purple-primary);
-        background: linear-gradient(135deg, rgba(38, 10, 61, 0.95) 0%, rgba(13, 3, 22, 0.97) 100%);
-        box-shadow: 0 0 20px rgba(168, 85, 247, 0.25), 0 10px 30px rgba(0, 0, 0, 0.9);
-    }
-    .card-style-purple .team-title-row { border-bottom-color: rgba(168, 85, 247, 0.4); }
-    .card-style-purple .copy-label { color: var(--purple-bright); }
-    .card-style-purple .team-record-badge {
-        color: var(--gold-bright);
-        background: rgba(45, 30, 5, 0.85);
-        border: 1px solid rgba(255, 218, 102, 0.5);
     }
 
     .team-content-body {
@@ -151,7 +120,7 @@
         flex-direction: column;
         align-items: center;
         gap: 0.35rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding-bottom: 0.5rem;
         margin-bottom: 0.75rem;
     }
@@ -186,19 +155,13 @@
         padding: 0.25rem 0.65rem;
         border-radius: 6px;
         white-space: nowrap;
+        color: var(--accent-secondary);
+        background: rgba(255, 184, 28, 0.1);
+        border: 1px solid rgba(255, 184, 28, 0.3);
     }
 
     .copy-section {
         line-height: 1.6;
-    }
-
-    .copy-label {
-        font-size: 0.825rem;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 0.35rem;
-        display: block;
     }
 
     .copy-text {
@@ -218,174 +181,163 @@
 <div class="weekly-overview-card">
     <p class="copy-text" style="font-weight: normal;">
         I spent the afternoon in the park trying to feed the pigeons. I guess they all flew west for the winter. And I just had some thoughts that I wanted to share with you people.
+    </p>
 </div>
 
 <!-- Team Breakdown Cards Grid (Randomized Order) -->
 <div class="team-analysis-grid">
 
     <!-- 1. Brad -->
-    <div class="team-analysis-card card-style-gold">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Brad: Hampton Inn</div>
                 <span class="team-record-badge">5-1</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">You have a WR so dumb that he gambled on team property and you are so dumb you paid money to run over 26 miles. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 2. Nick -->
-    <div class="team-analysis-card card-style-purple">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Nick: Taylor's Cardigan</div>
                 <span class="team-record-badge">3-3</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">You have 7 RBs but none are in the top 15 and Fedex is better than UPS. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 3. Abi -->
-    <div class="team-analysis-card card-style-gold">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Abi: Hamp Stamp</div>
                 <span class="team-record-badge">1-5</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">Penny told me she could've drafted a better team than you and said she hates The Sound of Music soundtrack. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 4. Jeff -->
-    <div class="team-analysis-card card-style-purple">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Jeff: Smo's Squad</div>
                 <span class="team-record-badge">6-0</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">You think you are cool because you are undefeated but you wear glasses so you are actually a nerd. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 5. Ross -->
-    <div class="team-analysis-card card-style-gold">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Ross: R's Remarkable Team</div>
                 <span class="team-record-badge">4-2</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">Your team is only good because you haven't had injuries and that’s ironic because you always were injured. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 6. Dan -->
-    <div class="team-analysis-card card-style-purple">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Dan: Squirtle Squad</div>
                 <span class="team-record-badge">3-3</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">You have betrayed UofM by starting mutiple buckeyes yet you are still losing, and you are a fake Yooper. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 7. Luke -->
-    <div class="team-analysis-card card-style-gold">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Luke: Brett Mahomes</div>
                 <span class="team-record-badge">2-4</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">Your K is a misogynist and you're tacky and I hate you. Boom. Roasted</p>
             </div>
         </div>
     </div>
 
     <!-- 8. Chris -->
-    <div class="team-analysis-card card-style-purple">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Chris: Chris's Crazy Team</div>
                 <span class="team-record-badge">0-6</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">You may have the ugliest roster I have ever seen and it is still better looking than you. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 9. Rob -->
-    <div class="team-analysis-card card-style-gold">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Rob: Little Chocolate Donuts.</div>
                 <span class="team-record-badge">3-3</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">You are starting 2 WRs that should be on waivers and Seinfeld isn't that funny. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 10. Karolyn -->
-    <div class="team-analysis-card card-style-purple">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Karolyn: Not Scott's Brother</div>
                 <span class="team-record-badge">5-1</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">You didn't even draft your best players and you're a dia-butthead. Boom. Roasted.</p>
             </div>
         </div>
     </div>
 
     <!-- 11. Cody -->
-    <div class="team-analysis-card card-style-gold">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Cody: West Canaan Coyotes</div>
                 <span class="team-record-badge">3-3</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">Your starting QB is old and you've gotten more speeding tickets than you have brain cells. Boom. Roasted</p>
             </div>
         </div>
     </div>
 
     <!-- 12. Jon -->
-    <div class="team-analysis-card card-style-purple">
+    <div class="team-analysis-card">
         <div class="team-content-body">
             <div class="team-title-row">
                 <div class="team-analysis-title">Jon: Used 2001 Honda Civic</div>
                 <span class="team-record-badge">1-5</span>
             </div>
             <div class="copy-section">
-                
                 <p class="copy-text">Your bench is trash and so is your golf game. Boom. Roasted.</p>
             </div>
         </div>
