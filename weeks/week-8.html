@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 8 - Midlife Crisis Edition</title>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --card-radius: 14px;
+        --chiefs-red: #E31837;
+        --chiefs-gold: #FFB81C;
+        --text-main: #f3f4f6;
+        --text-dim: #9ca3af;
+    }
+
+    body {
+        background-color: transparent; /* Seamless integration with index.html */
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0.5rem;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    @media (min-width: 640px) {
+        body {
+            padding: 1.5rem;
+        }
+    }
+
+    .week-title {
+        font-size: 2.2rem;
+        margin-bottom: 0.2rem;
+        color: #ffffff;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0px var(--chiefs-red);
+    }
+
+    @media (min-width: 640px) {
+        .week-title {
+            font-size: 2.4rem;
+        }
+    }
+
+    .week-subtitle {
+        color: var(--chiefs-gold);
+        font-size: 0.95rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 1.5rem;
+        border-bottom: 3px solid var(--chiefs-red);
+        padding-bottom: 0.6rem;
+    }
+
+    @media (min-width: 640px) {
+        .week-subtitle {
+            font-size: 1.05rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+    }
+
+    /* Executive Summary Intro Card */
+    .weekly-overview-card {
+        color: #e2e8f0;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1.75rem;
+        background: linear-gradient(135deg, rgba(227, 24, 55, 0.15) 0%, rgba(255, 184, 28, 0.08) 100%), rgba(10, 10, 14, 0.95);
+        padding: 1rem;
+        border-radius: var(--card-radius);
+        border-left: 5px solid var(--chiefs-gold);
+        border-top: 1px solid rgba(255, 184, 28, 0.3);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+    }
+
+    @media (min-width: 640px) {
+        .weekly-overview-card {
+            padding: 1.25rem;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .weekly-overview-title {
+        font-size: 1.05rem;
+        font-weight: 900;
+        color: var(--chiefs-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+    }
+
+    /* Team Breakdown Cards Grid */
+    .team-analysis-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-grid {
+            gap: 2.25rem;
+        }
+    }
+
+    /* Distinct Textured Dark Card Background */
+    .team-analysis-card {
+        background-color: #121017;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(135deg, rgba(26, 20, 32, 0.95) 0%, rgba(10, 8, 14, 0.98) 100%);
+        background-size: 16px 16px, 100% 100%;
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.85);
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-card {
+            padding: 1.25rem;
+        }
+    }
+
+    .team-content-body {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .team-title-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        padding-bottom: 0.6rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .team-analysis-title {
+        font-size: clamp(1.05rem, 3.8vw, 1.45rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+
+    .team-record-badge {
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        white-space: nowrap;
+        background: rgba(0, 0, 0, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+    }
+
+    @media (min-width: 640px) {
+        .team-record-badge {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.65rem;
+        }
+    }
+
+    /* Crisis Headline Banner */
+    .crisis-headline-banner {
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .crisis-name {
+        font-size: clamp(0.95rem, 3vw, 1.15rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .crisis-tag {
+        font-size: 0.65rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+    }
+
+    @media (min-width: 640px) {
+        .crisis-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.55rem;
+        }
+    }
+
+    /* Copy Paragraph Section */
+    .copy-section {
+        line-height: 1.6;
+        background: rgba(0, 0, 0, 0.35);
+        padding: 0.85rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    @media (min-width: 640px) {
+        .copy-section {
+            padding: 1rem;
+            border-radius: 10px;
+        }
+    }
+
+    .copy-label {
+        font-size: 0.75rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.3rem;
+        display: block;
+    }
+
+    @media (min-width: 640px) {
+        .copy-label {
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
+        }
+    }
+
+    .copy-text {
+        color: var(--text-main);
+        font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+        margin: 0;
+    }
+
+    /* ==========================================================================
+       AMONG US 12-COLOR DISTINCT PALETTE
+       ========================================================================== */
+
+    /* 1. Jon: Harley (Gray / Steel) */
+    .hue-harley { border-top: 4px solid #8E8E93; }
+    .hue-harley .crisis-headline-banner { background: rgba(142, 142, 147, 0.12); border: 1px solid rgba(142, 142, 147, 0.4); border-left: 5px solid #8E8E93; }
+    .hue-harley .crisis-name, .hue-harley .copy-label { color: #AEAEB2; }
+    .hue-harley .crisis-tag { color: #8E8E93; border: 1px solid #8E8E93; }
+
+    /* 2. Cody: Backpacker (Brown / Tan) */
+    .hue-backpacker { border-top: 4px solid #A2845E; }
+    .hue-backpacker .crisis-headline-banner { background: rgba(162, 132, 94, 0.12); border: 1px solid rgba(162, 132, 94, 0.4); border-left: 5px solid #A2845E; }
+    .hue-backpacker .crisis-name, .hue-backpacker .copy-label { color: #C8A276; }
+    .hue-backpacker .crisis-tag { color: #A2845E; border: 1px solid #A2845E; }
+
+    /* 3. Chris: Crypto (True Yellow) */
+    .hue-crypto { border-top: 4px solid #FFCC00; }
+    .hue-crypto .crisis-headline-banner { background: rgba(255, 204, 0, 0.12); border: 1px solid rgba(255, 204, 0, 0.4); border-left: 5px solid #FFCC00; }
+    .hue-crypto .crisis-name, .hue-crypto .copy-label { color: #FFD60A; }
+    .hue-crypto .crisis-tag { color: #FFCC00; border: 1px solid #FFCC00; }
+
+    /* 4. Brad: Tattoo (Indigo / Dark Blue) */
+    .hue-tattoo { border-top: 4px solid #5856D6; }
+    .hue-tattoo .crisis-headline-banner { background: rgba(88, 86, 214, 0.12); border: 1px solid rgba(88, 86, 214, 0.4); border-left: 5px solid #5856D6; }
+    .hue-tattoo .crisis-name, .hue-tattoo .copy-label { color: #5E5CE6; }
+    .hue-tattoo .crisis-tag { color: #5856D6; border: 1px solid #5856D6; }
+
+    /* 5. Luke: Garage Band (Mint Green / Lime) */
+    .hue-garage { border-top: 4px solid #30D158; }
+    .hue-garage .crisis-headline-banner { background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.4); border-left: 5px solid #30D158; }
+    .hue-garage .crisis-name, .hue-garage .copy-label { color: #34C759; }
+    .hue-garage .crisis-tag { color: #30D158; border: 1px solid #30D158; }
+
+    /* 6. Abi: Divorcee (Pink) */
+    .hue-divorcee { border-top: 4px solid #FF2D55; }
+    .hue-divorcee .crisis-headline-banner { background: rgba(255, 45, 85, 0.12); border: 1px solid rgba(255, 45, 85, 0.4); border-left: 5px solid #FF2D55; }
+    .hue-divorcee .crisis-name, .hue-divorcee .copy-label { color: #FF375F; }
+    .hue-divorcee .crisis-tag { color: #FF2D55; border: 1px solid #FF2D55; }
+
+    /* 7. Jeff: Sommelier (Purple) */
+    .hue-sommelier { border-top: 4px solid #AF52DE; }
+    .hue-sommelier .crisis-headline-banner { background: rgba(175, 82, 222, 0.12); border: 1px solid rgba(175, 82, 222, 0.4); border-left: 5px solid #AF52DE; }
+    .hue-sommelier .crisis-name, .hue-sommelier .copy-label { color: #BF5AF2; }
+    .hue-sommelier .crisis-tag { color: #AF52DE; border: 1px solid #AF52DE; }
+
+    /* 8. Nick: Pickleball (Cyan / Light Blue) */
+    .hue-pickleball { border-top: 4px solid #32ADE6; }
+    .hue-pickleball .crisis-headline-banner { background: rgba(50, 173, 230, 0.12); border: 1px solid rgba(50, 173, 230, 0.4); border-left: 5px solid #32ADE6; }
+    .hue-pickleball .crisis-name, .hue-pickleball .copy-label { color: #64D2FF; }
+    .hue-pickleball .crisis-tag { color: #32ADE6; border: 1px solid #32ADE6; }
+
+    /* 9. Dan: Smoker (Orange) */
+    .hue-smoker { border-top: 4px solid #FF9500; }
+    .hue-smoker .crisis-headline-banner { background: rgba(255, 149, 0, 0.12); border: 1px solid rgba(255, 149, 0, 0.4); border-left: 5px solid #FF9500; }
+    .hue-smoker .crisis-name, .hue-smoker .copy-label { color: #FF9F0A; }
+    .hue-smoker .crisis-tag { color: #FF9500; border: 1px solid #FF9500; }
+
+    /* 10. Ross: Conspiracy (Green) */
+    .hue-conspiracy { border-top: 4px solid #34C759; }
+    .hue-conspiracy .crisis-headline-banner { background: rgba(52, 199, 89, 0.12); border: 1px solid rgba(52, 199, 89, 0.4); border-left: 5px solid #34C759; }
+    .hue-conspiracy .crisis-name, .hue-conspiracy .copy-label { color: #32D74B; }
+    .hue-conspiracy .crisis-tag { color: #34C759; border: 1px solid #34C759; }
+
+    /* 11. Rob: Sportscar (Red) */
+    .hue-sportscar { border-top: 4px solid #FF3B30; }
+    .hue-sportscar .crisis-headline-banner { background: rgba(255, 59, 48, 0.12); border: 1px solid rgba(255, 59, 48, 0.4); border-left: 5px solid #FF3B30; }
+    .hue-sportscar .crisis-name, .hue-sportscar .copy-label { color: #FF6B65; }
+    .hue-sportscar .crisis-tag { color: #FF3B30; border: 1px solid #FF3B30; }
+
+    /* 12. Karolyn: Podcast (Blue) */
+    .hue-podcast { border-top: 4px solid #007AFF; }
+    .hue-podcast .crisis-headline-banner { background: rgba(0, 122, 255, 0.12); border: 1px solid rgba(0, 122, 255, 0.4); border-left: 5px solid #007AFF; }
+    .hue-podcast .crisis-name, .hue-podcast .copy-label { color: #5AC8FA; }
+    .hue-podcast .crisis-tag { color: #007AFF; border: 1px solid #007AFF; }
+</style>
+</head>
+<body>
+
+<h2 class="week-title">Week 8</h2>
+<div class="week-subtitle">The Midlife Crisis Edition</div>
+
+<!-- Executive Summary Intro Card -->
+<div class="weekly-overview-card">
+    <div class="weekly-overview-title">Midseason Diagnosis</div>
+    <p class="copy-text">
+        We have officially reached the halfway mark of the fantasy football season. The initial optimism has faded, the injuries are stacking up, and every manager in the league is coping in their own special way. Welcome to the fantasy midlife crisis: where panic trades, questionable lifestyle changes, and unhinged coping mechanisms reign supreme. Below is the official psychological breakdown of all 12 teams.
+    </p>
+</div>
+
+<!-- Team Breakdown Cards Grid (Randomized Order) -->
+<div class="team-analysis-grid">
+
+    <!-- 1. Jon -->
+    <div class="team-analysis-card hue-harley">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Jon: Used 2001 Honda Civic</div>
+                <span class="team-record-badge">Record: 2-5</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Harley Guy</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Jon seems to be of the mindset that he isn't going to make moves to fix his team and just hopes it gets figured out without him. This is the exact mindset that will lead him to buying a motorcycle. Problems at work? Just go on a ride and forget about it. Problems at home? Hit the open road and pretend it doesn't exist. So far ignoring the injuries to his WRs has not worked out, even with his excess of solid RBs. Will ignoring his team fix his problems? Probably not, but hey at least he gets to enjoy the wind in his hair for a few moments.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Cody -->
+    <div class="team-analysis-card hue-backpacker">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Cody: West Canaan Coyotes</div>
+                <span class="team-record-badge">Record: 3-4</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Backpacker</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Cody is 3-4 but actually has a good team, he is just one game back from 4th place and fully controls his own destiny. The problem is Cody only wants players he likes and he likes players simply based on his gut feeling. I see him getting a gut feeling that he needs to backpack across America when his midlife crisis hits. It is going to financially ruin him and he is going to be in severe pain the majority of the time. He won't tell you the negatives though, just about how incredible it is. You want to bring up a pretty tree you saw while walking your dogs? Cody will be there to one up it. You bought some nice affordable Dr. Scholl's insoles? Cody will be there to tell you about the custom $350 orthotics you actually need. I cannot wait for him to tell me how I need to make the multi-months long trek across the continent, just like he told me that keeping Jaylen Waddle was the right choice. Thanks for the advice bud but I'll pass.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Chris -->
+    <div class="team-analysis-card hue-crypto">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Chris: Chris's Crazy Team</div>
+                <span class="team-record-badge">Record: 0-7</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Crypto Bro</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">This season has just not worked out for Chris, and what I have learned from Crypto bros is that when the economy isn't working for you all you need to do is leave the economy and get into the crypto world. Chris isn't going to try to figure the game out, he is simply going to change the game he is playing. I cannot wait to see him strutting around in his puffer vest telling all of us how stupid we are for keeping our money in stocks while he is flailing in the crypto market. Chris needs a miracle to turn his season around and he will need a miracle to make his impending crypto investments work out too. TO THE MOON!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Brad -->
+    <div class="team-analysis-card hue-tattoo">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Brad: Hampton Inn</div>
+                <span class="team-record-badge">Record: 6-1</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Tattooed Man</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Brad is out here thinking his team is cool, they are 6-1, playoffs look like a done deal, and everything is going his way. The problem? His team is not quite as good as the top two teams. When this happens in his life he is going to make some changes to raise up his coolness. That is where the tattoos come in. He isn't just going to get a small tattoo, he is going to get sleeves. Go big or go home. The problem is that it is too late for tattoos to make you cool and it may be too late for Jordyn Tyson to lift up his team. Like his tattoos, however, his team's direction is permanent. For better or worse.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Luke -->
+    <div class="team-analysis-card hue-garage">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Luke: Brett Mahomes</div>
+                <span class="team-record-badge">Record: 2-5</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Garage Band</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">My team is 2-5 and it seems like I need to take a new approach to get competitive. Am I going to change my approach or double down on my old school thinking? You better believe I am doubling down, just like when I double down on how pop-punk from the early 2000's should have become the dominant genre in music. I like to look for articles that agree with me to confirm my fantasy football logic. Likewise, I will find a few other musically like-minded individuals and we will start a band trying to bring back the glory years. We will play shows for our families who secretly hate us and any unsuspecting pedestrian walking past my garage. When my team and band fail it won't be because they aren't good enough, I will simply blame it on bad luck.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Abi -->
+    <div class="team-analysis-card hue-divorcee">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Abi: Hamp Stamp</div>
+                <span class="team-record-badge">Record: 2-5</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Divorcee</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Abi's team is barely clinging to life, and that's how she is going to view her husband in a few years. Her team has zero running game which is ironic considering how much her husband runs. She is going to want to forget about her team and think about the future in a couple of weeks, how long until that is true about William too? She has already shown an attraction for younger men by marrying William, but he isn't getting any younger. She is going to want to sell her aging players for young assets for next year's draft, how long until she Leonardo DiCaprio's William out of the house too?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Jeff -->
+    <div class="team-analysis-card hue-sommelier">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Jeff: Smo's Squad</div>
+                <span class="team-record-badge">Record: 7-0</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Sommelier</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Jeff thinks he is so much better than everyone else, sitting there at 7-0 with that smug look on his face. This smugness will serve him well as his journey into the wine world begins. He is sitting here talking about yards per route run, EPA, and touchdown regression. Soon he will be telling us about oaky notes, tannins, and the rich body of wine. You want to shut him up but you can't because his resume says he knows what he is talking about. All it takes is one slip up in the playoffs for his season to fall apart and one wrong flavor profile to put this snob in his place.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Nick -->
+    <div class="team-analysis-card hue-pickleball">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Nick: Taylor's Cardigan</div>
+                <span class="team-record-badge">Record: 3-4</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Pickleballer</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Nick's team is sitting at 3-4 and they are struggling but they are still afloat. His team needs changes and this will lead to him trying to make moves and referring to his players as "Grinders" or mention your players have a major "Touchdown Regression" coming. He needs to make some moves and he is going to hustle to make them. Just like how he will be hustling on the pickleball court in a few years and talking about his "Third shot strategy" and his "Dink game". You think you guys are going to the bar for a drink to relax? Wrong-O! He is going to talk about pickleball the whole time, critique your form, and tell you why he thinks his new groundshot approach is going to push him pro. Be ready for every conversation to revolve around a trade idea today and in a few years it will always revolve around pickleball.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Dan -->
+    <div class="team-analysis-card hue-smoker">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Dan: Squirtle Squad</div>
+                <span class="team-record-badge">Record: 3-4</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Smoker Snob</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Dan's team is sitting at 3-4 and he really has not made many moves to improve, he is a patient man. I see this patience leading to him getting into the smoking/grilling game. Why would Dan drop Roman Wilson when he will be a top 50 WR in 6 weeks. Why would he trade TreVeyon Henderson when he is the future starting RB of the Patriots. Sure those players haven't panned out yet and are taking longer than expected, but when they are ready it will be glorious. When he has the smoker he might tell you dinner is at 6, but what a surprise it is taking longer than usual and sorry kids looks like dinner has been pushed back 4 hours. Don't worry though when his players pan out and that pork butt is done it is going to be glorious. Or maybe it will be completely overcooked and worthless. Me? I would rather grab some KFC and eat at 6, thanks.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Ross -->
+    <div class="team-analysis-card hue-conspiracy">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Ross: R's Remarkable Team</div>
+                <span class="team-record-badge">Record: 4-3</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Conspiracy Theorist</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Ross has his team in the playoffs if they were to start today with a record of 4-3, however there are a ton of teams nipping at his heels for the final playoff spot. The concern for Ross is the grueling schedule he has ahead. This schedule will lead to him believing the league is out to get him just because he is the defending champ. He will think it's a conspiracy that his division has 3 of the top 4 teams in it. This thinking will snowball into his personal life. Are birds real? Have we ever been to the moon? Is Earth actually round? Ross will have answers to all of these questions and will back them up with next to zero evidence. I cannot wait to hear the theories of why his team stumbles down the stretch and misses the playoffs.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Rob -->
+    <div class="team-analysis-card hue-sportscar">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Rob: Little Chocolate Donuts.</div>
+                <span class="team-record-badge">Record: 4-3</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The New Sportscar</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Rob's team is good, they are 4-3, but they aren't great, and probably need to make a move to jump into the playoffs. Rob probably needs to make a safe move, add a reliable WR or two, shore up his QB, etc. But will Rob go the safe route? I say no, this guy isn't going the safe route in fantasy football and he isn't going the safe route in life. This guy may need a reliable crossover for his daily commuter but that sexy little red Camaro is calling his name. Goodbye safety, practicality, and stability and hello speed, high insurance, and repairs. Rob might need a Michael Wilson or Ladd McConkey but he is going to overpay for a Puka Nacua instead. Just like a splashy trade, his car will get attention, but I am not sure it gets the job done.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Karolyn -->
+    <div class="team-analysis-card hue-podcast">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Karolyn: Not Scott's Brother</div>
+                <span class="team-record-badge">Record: 6-1</span>
+            </div>
+            <div class="crisis-headline-banner">
+                <span class="crisis-name">The Podcast</span>
+                <span class="crisis-tag">MIDLIFE DIAGNOSIS</span>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Prognosis</span>
+                <p class="copy-text">Karolyn's sitting here at 6-1 ready to give advice to people with lesser records because obviously she knows better and obviously they want her input. This type of confidence is going to lead to her starting a podcast where she gives life advice on anything and everything. You want to know how to fix your injured WRs? You should've just drafted JSN. You want to know how to keep a balanced budget with unexpected home repairs? You should've just gotten a job where you make more money. Her friends and family will assure her they love her podcast and listen to every episode. What they don't tell her is that they play it on mute and make fun of it behind her back, just like we are making fun of her abysmal RB2.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
