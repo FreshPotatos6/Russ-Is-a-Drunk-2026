@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 10 - Mode of Transportation Edition</title>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --card-radius: 14px;
+        --chiefs-red: #E31837;
+        --chiefs-gold: #FFB81C;
+        --text-main: #f3f4f6;
+        --text-dim: #9ca3af;
+    }
+
+    body {
+        background-color: transparent;
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0.5rem;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: hidden;
+    }
+
+    @media (min-width: 640px) {
+        body {
+            padding: 1.5rem;
+        }
+    }
+
+    .week-title {
+        font-size: 2rem;
+        margin-bottom: 0.2rem;
+        color: #ffffff;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0px var(--chiefs-red);
+        word-break: break-word;
+    }
+
+    @media (min-width: 640px) {
+        .week-title {
+            font-size: 2.4rem;
+        }
+    }
+
+    .week-subtitle {
+        color: var(--chiefs-gold);
+        font-size: 0.9rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 1.25rem;
+        border-bottom: 3px solid var(--chiefs-red);
+        padding-bottom: 0.6rem;
+    }
+
+    @media (min-width: 640px) {
+        .week-subtitle {
+            font-size: 1.05rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+    }
+
+    /* Executive Summary Intro Card */
+    .weekly-overview-card {
+        color: #e2e8f0;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, rgba(227, 24, 55, 0.15) 0%, rgba(255, 184, 28, 0.08) 100%), rgba(10, 10, 14, 0.95);
+        padding: 0.85rem;
+        border-radius: var(--card-radius);
+        border-left: 5px solid var(--chiefs-gold);
+        border-top: 1px solid rgba(255, 184, 28, 0.3);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+        word-break: break-word;
+    }
+
+    @media (min-width: 640px) {
+        .weekly-overview-card {
+            padding: 1.25rem;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .weekly-overview-title {
+        font-size: 1rem;
+        font-weight: 900;
+        color: var(--chiefs-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+    }
+
+    /* Team Breakdown Cards Grid */
+    .team-analysis-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-grid {
+            gap: 2.25rem;
+        }
+    }
+
+    /* Distinct Textured Dark Card Background */
+    .team-analysis-card {
+        background-color: #121017;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(135deg, rgba(26, 20, 32, 0.95) 0%, rgba(10, 8, 14, 0.98) 100%);
+        background-size: 16px 16px, 100% 100%;
+        border-radius: var(--card-radius);
+        padding: 0.85rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.85);
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-card {
+            padding: 1.25rem;
+        }
+    }
+
+    .team-content-body {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .team-title-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        padding-bottom: 0.6rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .team-analysis-title {
+        font-size: clamp(0.95rem, 3.6vw, 1.4rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .team-record-badge {
+        font-size: 0.72rem;
+        font-weight: 800;
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        white-space: nowrap;
+        background: rgba(0, 0, 0, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+    }
+
+    @media (min-width: 640px) {
+        .team-record-badge {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.65rem;
+        }
+    }
+
+    /* Main Draw: Image + Mode of Transportation Hero Showcase */
+    .transport-showcase {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.65rem;
+        padding: 1rem 0.75rem;
+        border-radius: 10px;
+        margin-bottom: 0.85rem;
+        position: relative;
+    }
+
+    @media (min-width: 640px) {
+        .transport-showcase {
+            flex-direction: row;
+            text-align: left;
+            padding: 1rem 1.25rem;
+            gap: 1.25rem;
+        }
+    }
+
+    .transport-img-wrapper {
+        width: 110px;
+        height: 110px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .transport-img-wrapper {
+            width: 120px;
+            height: 120px;
+            padding: 0.5rem;
+        }
+    }
+
+    .transport-img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        display: block;
+        background-color: #ffffff;
+    }
+
+    .transport-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.35rem;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .transport-name {
+        font-size: clamp(1.15rem, 5vw, 1.85rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 1.15;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    /* Copy Paragraph Section */
+    .copy-section {
+        line-height: 1.6;
+        background: rgba(0, 0, 0, 0.35);
+        padding: 0.85rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
+    @media (min-width: 640px) {
+        .copy-section {
+            padding: 1rem;
+            border-radius: 10px;
+        }
+    }
+
+    .copy-label {
+        font-size: 0.75rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.3rem;
+        display: block;
+    }
+
+    @media (min-width: 640px) {
+        .copy-label {
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
+        }
+    }
+
+    .copy-text {
+        color: var(--text-main);
+        font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+        margin: 0;
+    }
+
+    /* ==========================================================================
+       AMONG US 12-COLOR DISTINCT PALETTE
+       ========================================================================== */
+
+    /* 1. Chris: On Feet (True Yellow) */
+    .hue-chris { border-top: 4px solid #FFCC00; }
+    .hue-chris .transport-showcase { background: rgba(255, 204, 0, 0.12); border: 1px solid rgba(255, 204, 0, 0.4); border-left: 5px solid #FFCC00; }
+    .hue-chris .transport-name, .hue-chris .copy-label { color: #FFD60A; }
+    .hue-chris .team-analysis-title { color: #FFD60A; }
+    .hue-chris .team-record-badge { color: #FFD60A; border-color: #FFCC00; background: rgba(0, 0, 0, 0.7); }
+
+    /* 2. Jeff: Teleportation (Purple) */
+    .hue-jeff { border-top: 4px solid #AF52DE; }
+    .hue-jeff .transport-showcase { background: rgba(175, 82, 222, 0.12); border: 1px solid rgba(175, 82, 222, 0.4); border-left: 5px solid #AF52DE; }
+    .hue-jeff .transport-name, .hue-jeff .copy-label { color: #BF5AF2; }
+    .hue-jeff .team-analysis-title { color: #BF5AF2; }
+    .hue-jeff .team-record-badge { color: #BF5AF2; border-color: #AF52DE; background: rgba(0, 0, 0, 0.7); }
+
+    /* 3. Jon: Row Boat (Gray / Steel) */
+    .hue-jon { border-top: 4px solid #8E8E93; }
+    .hue-jon .transport-showcase { background: rgba(142, 142, 147, 0.12); border: 1px solid rgba(142, 142, 147, 0.4); border-left: 5px solid #8E8E93; }
+    .hue-jon .transport-name, .hue-jon .copy-label { color: #AEAEB2; }
+    .hue-jon .team-analysis-title { color: #AEAEB2; }
+    .hue-jon .team-record-badge { color: #AEAEB2; border-color: #8E8E93; background: rgba(0, 0, 0, 0.7); }
+
+    /* 4. Karolyn: Private Plane (Blue) */
+    .hue-karolyn { border-top: 4px solid #007AFF; }
+    .hue-karolyn .transport-showcase { background: rgba(0, 122, 255, 0.12); border: 1px solid rgba(0, 122, 255, 0.4); border-left: 5px solid #007AFF; }
+    .hue-karolyn .transport-name, .hue-karolyn .copy-label { color: #5AC8FA; }
+    .hue-karolyn .team-analysis-title { color: #5AC8FA; }
+    .hue-karolyn .team-record-badge { color: #5AC8FA; border-color: #007AFF; background: rgba(0, 0, 0, 0.7); }
+
+    /* 5. Abi: Horse & Buggy (Pink) */
+    .hue-abi { border-top: 4px solid #FF2D55; }
+    .hue-abi .transport-showcase { background: rgba(255, 45, 85, 0.12); border: 1px solid rgba(255, 45, 85, 0.4); border-left: 5px solid #FF2D55; }
+    .hue-abi .transport-name, .hue-abi .copy-label { color: #FF375F; }
+    .hue-abi .team-analysis-title { color: #FF375F; }
+    .hue-abi .team-record-badge { color: #FF375F; border-color: #FF2D55; background: rgba(0, 0, 0, 0.7); }
+
+    /* 6. Ross: Bullet Train (Green) */
+    .hue-ross { border-top: 4px solid #34C759; }
+    .hue-ross .transport-showcase { background: rgba(52, 199, 89, 0.12); border: 1px solid rgba(52, 199, 89, 0.4); border-left: 5px solid #34C759; }
+    .hue-ross .transport-name, .hue-ross .copy-label { color: #32D74B; }
+    .hue-ross .team-analysis-title { color: #32D74B; }
+    .hue-ross .team-record-badge { color: #32D74B; border-color: #34C759; background: rgba(0, 0, 0, 0.7); }
+
+    /* 7. Dan: River Boat (Orange) */
+    .hue-dan { border-top: 4px solid #FF9500; }
+    .hue-dan .transport-showcase { background: rgba(255, 149, 0, 0.12); border: 1px solid rgba(255, 149, 0, 0.4); border-left: 5px solid #FF9500; }
+    .hue-dan .transport-name, .hue-dan .copy-label { color: #FF9F0A; }
+    .hue-dan .team-analysis-title { color: #FF9F0A; }
+    .hue-dan .team-record-badge { color: #FF9F0A; border-color: #FF9500; background: rgba(0, 0, 0, 0.7); }
+
+    /* 8. Brad: Steam Engine (Indigo / Dark Blue) */
+    .hue-brad { border-top: 4px solid #5856D6; }
+    .hue-brad .transport-showcase { background: rgba(88, 86, 214, 0.12); border: 1px solid rgba(88, 86, 214, 0.4); border-left: 5px solid #5856D6; }
+    .hue-brad .transport-name, .hue-brad .copy-label { color: #5E5CE6; }
+    .hue-brad .team-analysis-title { color: #5E5CE6; }
+    .hue-brad .team-record-badge { color: #5E5CE6; border-color: #5856D6; background: rgba(0, 0, 0, 0.7); }
+
+    /* 9. Cody: Blimp (Brown / Tan) */
+    .hue-cody { border-top: 4px solid #A2845E; }
+    .hue-cody .transport-showcase { background: rgba(162, 132, 94, 0.12); border: 1px solid rgba(162, 132, 94, 0.4); border-left: 5px solid #A2845E; }
+    .hue-cody .transport-name, .hue-cody .copy-label { color: #C8A276; }
+    .hue-cody .team-analysis-title { color: #C8A276; }
+    .hue-cody .team-record-badge { color: #C8A276; border-color: #A2845E; background: rgba(0, 0, 0, 0.7); }
+
+    /* 10. Rob: Car (Red) */
+    .hue-rob { border-top: 4px solid #FF3B30; }
+    .hue-rob .transport-showcase { background: rgba(255, 59, 48, 0.12); border: 1px solid rgba(255, 59, 48, 0.4); border-left: 5px solid #FF3B30; }
+    .hue-rob .transport-name, .hue-rob .copy-label { color: #FF6B65; }
+    .hue-rob .team-analysis-title { color: #FF6B65; }
+    .hue-rob .team-record-badge { color: #FF6B65; border-color: #FF3B30; background: rgba(0, 0, 0, 0.7); }
+
+    /* 11. Luke: Rocket Ship (Mint Green / Lime) */
+    .hue-luke { border-top: 4px solid #30D158; }
+    .hue-luke .transport-showcase { background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.4); border-left: 5px solid #30D158; }
+    .hue-luke .transport-name, .hue-luke .copy-label { color: #34C759; }
+    .hue-luke .team-analysis-title { color: #34C759; }
+    .hue-luke .team-record-badge { color: #34C759; border-color: #30D158; background: rgba(0, 0, 0, 0.7); }
+
+    /* 12. Nick: Helicopter (Cyan / Light Blue) */
+    .hue-nick { border-top: 4px solid #32ADE6; }
+    .hue-nick .transport-showcase { background: rgba(50, 173, 230, 0.12); border: 1px solid rgba(50, 173, 230, 0.4); border-left: 5px solid #32ADE6; }
+    .hue-nick .transport-name, .hue-nick .copy-label { color: #64D2FF; }
+    .hue-nick .team-analysis-title { color: #64D2FF; }
+    .hue-nick .team-record-badge { color: #64D2FF; border-color: #32ADE6; background: rgba(0, 0, 0, 0.7); }
+
+    @media (max-width: 360px) {
+        .team-title-row {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h2 class="week-title">Week 10</h2>
+<div class="week-subtitle">Mode of Transportation Edition</div>
+
+<!-- Executive Summary Intro Card (Placeholder ready for your description) -->
+<div class="weekly-overview-card">
+    <div class="weekly-overview-title">League Fleet Report</div>
+    <p class="copy-text">
+        [Insert your Week 10 intro description here]
+    </p>
+</div>
+
+<!-- Team Breakdown Cards Grid -->
+<div class="team-analysis-grid">
+
+    <!-- 1. Chris -->
+    <div class="team-analysis-card hue-chris">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Chris: Chris's Crazy Team</div>
+                <span class="team-record-badge">Record: 0-9</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Foot.png" alt="On Feet" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">On Feet</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">Anybody that uses walking as their primary form of transportation is either down on their luck or living in the city. Chris is basically a country bumpkin so I guess it’s the former. One look at his team and you can stop guessing and start confirming… this guy cannot catch a break. The good thing for anyone who walks everywhere is that they get in good shape, which Chris' team is going to need after all the injury issues he has endured.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Jeff -->
+    <div class="team-analysis-card hue-jeff">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Jeff: Smo's Squad</div>
+                <span class="team-record-badge">Record: 9-0</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Teleportation.png" alt="Teleportation" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Teleportation</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">Does a teleportation device exist yet? No. Would it be the best mode of transportation if it did? Obviously. Jeff's team is transporting average players into great players this season. Most of his players have outperformed expectations this year, but those that have not? Well they just happened to teleport fixes in at the trade deadline; Jefferson got a competent QB, Pickens is healthy, and Downs got traded to the best team in the NFL. Jeff obviously went to the future and brought back a teleportation device, but if he went to the future how is he still a fan of the Bears? Everyone knows they are going to choke.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Jon -->
+    <div class="team-analysis-card hue-jon">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Jon: Used 2001 Honda Civic</div>
+                <span class="team-record-badge">Record: 2-7</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Boat.png" alt="Row Boat" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Row Boat</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">There are so many good forms of water transportation. A row boat is not one of them. Everyone on the lake sees a row boat and automatically loses all respect for the person in it, at least get a kayak or canoe instead. Jon's team is a row boat with nobody rowing. He has valuable pieces on his roster but he has not attempted to turn them into players that can help him win now. This guy is just floating down the river with bags of cash but every time he sees a jet ski store he decides to wait for a "better offer". Basically he is Brad Holmes but with zero success in the draft.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Karolyn -->
+    <div class="team-analysis-card hue-karolyn">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Karolyn: Not Scott's Brother</div>
+                <span class="team-record-badge">Record: 8-1</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Jet.png" alt="Private Plane" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Private Plane</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">When you are on a private train you get to be on autopilot. You don't need to worry about flying it, that’s what the pilot is for. All the work for the private jet was done ahead of time to allow the ride to afford the Jet. Karolyn drafted an incredible team and has been on autopilot ever sense. She has been incredibly inactive on the waiver wire, she has not even attempted to fix her RB situation, but her flight is going smoothly and she is comfortable. Her only real concern now is that one of her vile burps knocks out the pilot and her plane is left plummeting towards the earth.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Abi -->
+    <div class="team-analysis-card hue-abi">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Abi: Hamp Stamp</div>
+                <span class="team-record-badge">Record: 2-7</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Buggy.png" alt="Horse & Buggy" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Horse & Buggy</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">I guess a horse & buggy was cool at one point, but now when you see one you just think the people in it are weirdos. Abi is a weirdo so in her case it is true. The thing with Horse and buggies is that they never were proactive enough to see that cars were coming and completely replacing them. Abi, likewise, has not been proactive. She has had horrible RBs all year and figured they would fix themselves. She has a valuable asset in Puka all season but refused to trade him to  improve her team and now he is hurt. Much like the horse and buggy her teams is on the outs. Also, I've gotta say that I find the Amish to be more normal than vegans like Abi.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Ross -->
+    <div class="team-analysis-card hue-ross">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Ross: R's Remarkable Team</div>
+                <span class="team-record-badge">Record: 6-3</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Bullet.png" alt="Bullet Train" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Bullet Train</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">When you hear about a train as a mode of transportation it doesn't sound that great, but then you get on a bullet train. It doesn't just get the job down, but you get to travel at remarkable speeds and in quite a bit of comfort. Some people in this league have been questioning Ross' team because it doesn't appear that great, but his team really is like a bullet train. Once you get past your first impressions you realize just how nice his team really is. Most bullet trains are sleek looking, unfortunately Ross is not.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Dan -->
+    <div class="team-analysis-card hue-dan">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Dan: Squirtle Squad</div>
+                <span class="team-record-badge">Record: 3-6</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="River.png" alt="River Boat" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">River Boat</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">A river boat doesn't really have much use, it just kind of floats down the river. But it certainly does look cool. Most river boats are just full of drunks making poor decisions. Dan has a season full of bad decisions as he keeps his good players on his bench and players on bye in his starting lineup. Dan's team is just floating through the season with no real ambition. But, everyone knows that Squirtle with sunglasses does look cool.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Brad -->
+    <div class="team-analysis-card hue-brad">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Brad: Hampton Inn</div>
+                <span class="team-record-badge">Record: 6-3</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Train.png" alt="Steam Engine" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Steam Engine</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">A steam engine is an iconic form of transportation but it isn't used much today because it is a rickety ride, slow, and it is just going to get robbed. Brad's team has had a rickety ride who is holding onto the olden days when they were 6-1. The ricketiness is setting in for Brad and he is realizing that his team is slowly falling apart and now finds himself with back to back losses. Plus, he got robbed by me when he traded me Golden! Like an old steam engine, Brad is constantly blowing smoke about his team but maybe his best  days are behind him this year.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Cody -->
+    <div class="team-analysis-card hue-cody">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Cody: West Canaan Coyotes</div>
+                <span class="team-record-badge">Record: 3-6</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Blimp.png" alt="Blimp" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Blimp</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">A blimp is fun, everyone sees a blimp and loves the blimp, nobody wants to use a blimp for transportation. Cody's team is full of fan players but they really don't have much of a purpose, both of his RBs are on teams trying to lose and nobody actually believes Kirk Cousins is good again. The only real use for a blimp these days is to advertise Goodyear, which really doesn’t make much sense. Goodyear is a tire company, blimps don’t have tires, it just doesn't make sense. The irony for Cody is that his team really has had the opposite of a Good Year.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Rob -->
+    <div class="team-analysis-card hue-rob">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Rob: Little Chocolate Donuts.</div>
+                <span class="team-record-badge">Record: 6-3</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Car.png" alt="Car" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Car</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">When you see a car you don't think much of it and when you see Rob's team you don’t think much of it. But both are decently effective and surprisingly efficient forms of transportation. Rob isn't out there driving around in a Rolls Royce, he is in a used Ford Tauros driving exactly the speed limit. His team may not be exciting but it certainly is getting the job done, just like Rob himself.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Luke -->
+    <div class="team-analysis-card hue-luke">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Luke: Brett Mahomes</div>
+                <span class="team-record-badge">Record: 4-5</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Rocket.png" alt="Rocket Ship" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Rocket Ship</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">Rocket ships are cool, anyone who tells you otherwise is a fool. If you didn't know, rocket ships also happen to be incredibly fast. A cool and fast mode of transportation  sounds great until you realize there is nowhere to land the thing and it really is not practical. You would think having a team with Bijan Robinson, Jamaar Chase, Matthew Golden, Malik Nabers, and Chuba Hubbard would be great, until you realize they have a losing record. Also, nobody believes a rocket  ship is a good form of transportation and nobody believes me anymore when I try to convince them Brett Favre is the greatest QB of all time.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Nick -->
+    <div class="team-analysis-card hue-nick">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Nick: Taylor's Cardigan</div>
+                <span class="team-record-badge">Record: 5-4</span>
+            </div>
+            <div class="transport-showcase">
+                <div class="transport-img-wrapper">
+                    <img src="Helicopter.png" alt="Helicopter" class="transport-img">
+                </div>
+                <div class="transport-info">
+                    <div class="transport-name">Helicopter</div>
+                </div>
+            </div>
+            <div class="copy-section">
+                <span class="copy-label">The Why</span>
+                <p class="copy-text">At first glance a helicopter seems like a great mode of transportation, but in reality it is just a worse version of a plane, what is the point? Sure it is ok over short distances but there are way better options for long distances. Nick's team is similar. His team is fine, it probably will get the job done in the short term, but is it a true championship competitor? I don't think so. Also, if Nick is a helicopter it makes me really question what he has against Kobe Bryant.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
