@@ -135,7 +135,9 @@
     .team-title-row {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
         gap: 0.45rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         padding-bottom: 0.65rem;
@@ -147,6 +149,7 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            text-align: left;
             gap: 0.75rem;
         }
     }
@@ -158,10 +161,17 @@
         text-transform: uppercase;
         letter-spacing: 0.02em;
         line-height: 1.2;
+        text-align: center;
         word-break: break-word;
         overflow-wrap: break-word;
         flex: 1;
         min-width: 0;
+    }
+
+    @media (min-width: 520px) {
+        .team-analysis-title {
+            text-align: left;
+        }
     }
 
     .team-record-badge {
@@ -452,7 +462,7 @@
                 <span class="team-record-badge">Record: 3-7</span>
             </div>
             <div class="meme-showcase">
-                <img src="images/scratch.png" alt="Cody: West Canaan Coyotes Playoff Odds Meme" class="meme-img">
+                <img src="images/Scratch.png" alt="Cody: West Canaan Coyotes Playoff Odds Meme" class="meme-img">
             </div>
             <div class="playoff-odds-callout">
                 <span class="playoff-odds-label">Playoff Odds</span>
@@ -512,7 +522,7 @@
                 <span class="team-record-badge">Record: 6-4</span>
             </div>
             <div class="meme-showcase">
-                <img src="images/Pass.png" alt="Nick: Taylor's Cardigan Playoff Odds Meme" class="meme-img">
+                <img src="images/LOTR.png" alt="Nick: Taylor's Cardigan Playoff Odds Meme" class="meme-img">
             </div>
             <div class="playoff-odds-callout">
                 <span class="playoff-odds-label">Playoff Odds</span>
