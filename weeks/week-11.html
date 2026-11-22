@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 11 - Playoff Odds Edition</title>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --card-radius: 14px;
+        --chiefs-red: #E31837;
+        --chiefs-gold: #FFB81C;
+        --text-main: #f3f4f6;
+        --text-dim: #9ca3af;
+    }
+
+    body {
+        background-color: transparent;
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0.5rem;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: hidden;
+    }
+
+    @media (min-width: 640px) {
+        body {
+            padding: 1.5rem;
+        }
+    }
+
+    .week-title {
+        font-size: 2rem;
+        margin-bottom: 0.2rem;
+        color: #ffffff;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0px var(--chiefs-red);
+        word-break: break-word;
+    }
+
+    @media (min-width: 640px) {
+        .week-title {
+            font-size: 2.4rem;
+        }
+    }
+
+    .week-subtitle {
+        color: var(--chiefs-gold);
+        font-size: 0.9rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 1.25rem;
+        border-bottom: 3px solid var(--chiefs-red);
+        padding-bottom: 0.6rem;
+    }
+
+    @media (min-width: 640px) {
+        .week-subtitle {
+            font-size: 1.05rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+    }
+
+    /* Executive Summary Intro Card */
+    .weekly-overview-card {
+        color: #e2e8f0;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, rgba(227, 24, 55, 0.15) 0%, rgba(255, 184, 28, 0.08) 100%), rgba(10, 10, 14, 0.95);
+        padding: 0.85rem;
+        border-radius: var(--card-radius);
+        border-left: 5px solid var(--chiefs-gold);
+        border-top: 1px solid rgba(255, 184, 28, 0.3);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+        word-break: break-word;
+    }
+
+    @media (min-width: 640px) {
+        .weekly-overview-card {
+            padding: 1.25rem;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    /* Team Breakdown Cards Grid */
+    .team-analysis-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-grid {
+            gap: 2.25rem;
+        }
+    }
+
+    /* Distinct Textured Dark Card Background */
+    .team-analysis-card {
+        background-color: #121017;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(135deg, rgba(26, 20, 32, 0.95) 0%, rgba(10, 8, 14, 0.98) 100%);
+        background-size: 16px 16px, 100% 100%;
+        border-radius: var(--card-radius);
+        padding: 0.85rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.85);
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .team-analysis-card {
+            padding: 1.25rem;
+        }
+    }
+
+    .team-content-body {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .team-title-row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.45rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        padding-bottom: 0.65rem;
+        margin-bottom: 0.85rem;
+    }
+
+    @media (min-width: 520px) {
+        .team-title-row {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+    }
+
+    .team-analysis-title {
+        font-size: clamp(1rem, 4vw, 1.4rem);
+        font-weight: 900;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .team-record-badge {
+        font-size: 0.74rem;
+        font-weight: 800;
+        padding: 0.22rem 0.55rem;
+        border-radius: 6px;
+        white-space: nowrap;
+        background: rgba(0, 0, 0, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        flex-shrink: 0;
+    }
+
+    @media (min-width: 640px) {
+        .team-record-badge {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.65rem;
+        }
+    }
+
+    /* Centered Playoff Odds Callout Banner */
+    .playoff-odds-callout {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.55rem;
+        width: 100%;
+        padding: 0.55rem 0.9rem;
+        margin-bottom: 0.85rem;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        text-align: center;
+    }
+
+    .playoff-odds-label {
+        font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-dim);
+    }
+
+    .playoff-odds-value {
+        font-size: clamp(1.05rem, 3.5vw, 1.3rem);
+        font-weight: 900;
+        letter-spacing: 0.03em;
+    }
+
+    /* Meme Image Showcase */
+    .meme-showcase {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.65rem;
+        border-radius: 10px;
+        margin-bottom: 0.85rem;
+    }
+
+    @media (min-width: 640px) {
+        .meme-showcase {
+            padding: 1rem;
+        }
+    }
+
+    .meme-img {
+        max-width: 100%;
+        max-height: 300px;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        display: block;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
+    }
+
+    @media (min-width: 640px) {
+        .meme-img {
+            max-height: 360px;
+        }
+    }
+
+    /* Copy Paragraph Section */
+    .copy-section {
+        line-height: 1.6;
+        background: rgba(0, 0, 0, 0.35);
+        padding: 0.85rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
+    @media (min-width: 640px) {
+        .copy-section {
+            padding: 1rem;
+            border-radius: 10px;
+        }
+    }
+
+    .copy-text {
+        color: var(--text-main);
+        font-size: clamp(0.88rem, 2.5vw, 0.96rem);
+        margin: 0;
+    }
+
+    /* ==========================================================================
+       AMONG US 12-COLOR DISTINCT PALETTE
+       ========================================================================== */
+
+    /* 1. Chris (True Yellow) */
+    .hue-chris { border-top: 4px solid #FFCC00; }
+    .hue-chris .meme-showcase { background: rgba(255, 204, 0, 0.12); border: 1px solid rgba(255, 204, 0, 0.4); border-left: 5px solid #FFCC00; }
+    .hue-chris .team-analysis-title { color: #FFD60A; }
+    .hue-chris .team-record-badge { color: #FFD60A; border-color: #FFCC00; background: rgba(0, 0, 0, 0.7); }
+    .hue-chris .playoff-odds-callout { border-color: #FFD60A; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-chris .playoff-odds-value { color: #FFD60A; }
+
+    /* 2. Jeff (Purple) */
+    .hue-jeff { border-top: 4px solid #AF52DE; }
+    .hue-jeff .meme-showcase { background: rgba(175, 82, 222, 0.12); border: 1px solid rgba(175, 82, 222, 0.4); border-left: 5px solid #AF52DE; }
+    .hue-jeff .team-analysis-title { color: #BF5AF2; }
+    .hue-jeff .team-record-badge { color: #BF5AF2; border-color: #AF52DE; background: rgba(0, 0, 0, 0.7); }
+    .hue-jeff .playoff-odds-callout { border-color: #BF5AF2; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-jeff .playoff-odds-value { color: #BF5AF2; }
+
+    /* 3. Jon (Gray / Steel) */
+    .hue-jon { border-top: 4px solid #8E8E93; }
+    .hue-jon .meme-showcase { background: rgba(142, 142, 147, 0.12); border: 1px solid rgba(142, 142, 147, 0.4); border-left: 5px solid #8E8E93; }
+    .hue-jon .team-analysis-title { color: #AEAEB2; }
+    .hue-jon .team-record-badge { color: #AEAEB2; border-color: #8E8E93; background: rgba(0, 0, 0, 0.7); }
+    .hue-jon .playoff-odds-callout { border-color: #AEAEB2; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-jon .playoff-odds-value { color: #AEAEB2; }
+
+    /* 4. Karolyn (Blue) */
+    .hue-karolyn { border-top: 4px solid #007AFF; }
+    .hue-karolyn .meme-showcase { background: rgba(0, 122, 255, 0.12); border: 1px solid rgba(0, 122, 255, 0.4); border-left: 5px solid #007AFF; }
+    .hue-karolyn .team-analysis-title { color: #5AC8FA; }
+    .hue-karolyn .team-record-badge { color: #5AC8FA; border-color: #007AFF; background: rgba(0, 0, 0, 0.7); }
+    .hue-karolyn .playoff-odds-callout { border-color: #5AC8FA; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-karolyn .playoff-odds-value { color: #5AC8FA; }
+
+    /* 5. Abi (Pink) */
+    .hue-abi { border-top: 4px solid #FF2D55; }
+    .hue-abi .meme-showcase { background: rgba(255, 45, 85, 0.12); border: 1px solid rgba(255, 45, 85, 0.4); border-left: 5px solid #FF2D55; }
+    .hue-abi .team-analysis-title { color: #FF375F; }
+    .hue-abi .team-record-badge { color: #FF375F; border-color: #FF2D55; background: rgba(0, 0, 0, 0.7); }
+    .hue-abi .playoff-odds-callout { border-color: #FF375F; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-abi .playoff-odds-value { color: #FF375F; }
+
+    /* 6. Ross (Green) */
+    .hue-ross { border-top: 4px solid #34C759; }
+    .hue-ross .meme-showcase { background: rgba(52, 199, 89, 0.12); border: 1px solid rgba(52, 199, 89, 0.4); border-left: 5px solid #34C759; }
+    .hue-ross .team-analysis-title { color: #32D74B; }
+    .hue-ross .team-record-badge { color: #32D74B; border-color: #34C759; background: rgba(0, 0, 0, 0.7); }
+    .hue-ross .playoff-odds-callout { border-color: #32D74B; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-ross .playoff-odds-value { color: #32D74B; }
+
+    /* 7. Dan (Orange) */
+    .hue-dan { border-top: 4px solid #FF9500; }
+    .hue-dan .meme-showcase { background: rgba(255, 149, 0, 0.12); border: 1px solid rgba(255, 149, 0, 0.4); border-left: 5px solid #FF9500; }
+    .hue-dan .team-analysis-title { color: #FF9F0A; }
+    .hue-dan .team-record-badge { color: #FF9F0A; border-color: #FF9500; background: rgba(0, 0, 0, 0.7); }
+    .hue-dan .playoff-odds-callout { border-color: #FF9F0A; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-dan .playoff-odds-value { color: #FF9F0A; }
+
+    /* 8. Brad (Indigo / Dark Blue) */
+    .hue-brad { border-top: 4px solid #5856D6; }
+    .hue-brad .meme-showcase { background: rgba(88, 86, 214, 0.12); border: 1px solid rgba(88, 86, 214, 0.4); border-left: 5px solid #5856D6; }
+    .hue-brad .team-analysis-title { color: #5E5CE6; }
+    .hue-brad .team-record-badge { color: #5E5CE6; border-color: #5856D6; background: rgba(0, 0, 0, 0.7); }
+    .hue-brad .playoff-odds-callout { border-color: #5E5CE6; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-brad .playoff-odds-value { color: #5E5CE6; }
+
+    /* 9. Cody (Brown / Tan) */
+    .hue-cody { border-top: 4px solid #A2845E; }
+    .hue-cody .meme-showcase { background: rgba(162, 132, 94, 0.12); border: 1px solid rgba(162, 132, 94, 0.4); border-left: 5px solid #A2845E; }
+    .hue-cody .team-analysis-title { color: #C8A276; }
+    .hue-cody .team-record-badge { color: #C8A276; border-color: #A2845E; background: rgba(0, 0, 0, 0.7); }
+    .hue-cody .playoff-odds-callout { border-color: #C8A276; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-cody .playoff-odds-value { color: #C8A276; }
+
+    /* 10. Rob (Red) */
+    .hue-rob { border-top: 4px solid #FF3B30; }
+    .hue-rob .meme-showcase { background: rgba(255, 59, 48, 0.12); border: 1px solid rgba(255, 59, 48, 0.4); border-left: 5px solid #FF3B30; }
+    .hue-rob .team-analysis-title { color: #FF6B65; }
+    .hue-rob .team-record-badge { color: #FF6B65; border-color: #FF3B30; background: rgba(0, 0, 0, 0.7); }
+    .hue-rob .playoff-odds-callout { border-color: #FF6B65; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-rob .playoff-odds-value { color: #FF6B65; }
+
+    /* 11. Luke (Mint Green / Lime) */
+    .hue-luke { border-top: 4px solid #30D158; }
+    .hue-luke .meme-showcase { background: rgba(48, 209, 88, 0.12); border: 1px solid rgba(48, 209, 88, 0.4); border-left: 5px solid #30D158; }
+    .hue-luke .team-analysis-title { color: #34C759; }
+    .hue-luke .team-record-badge { color: #34C759; border-color: #30D158; background: rgba(0, 0, 0, 0.7); }
+    .hue-luke .playoff-odds-callout { border-color: #34C759; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-luke .playoff-odds-value { color: #34C759; }
+
+    /* 12. Nick (Cyan / Light Blue) */
+    .hue-nick { border-top: 4px solid #32ADE6; }
+    .hue-nick .meme-showcase { background: rgba(50, 173, 230, 0.12); border: 1px solid rgba(50, 173, 230, 0.4); border-left: 5px solid #32ADE6; }
+    .hue-nick .team-analysis-title { color: #64D2FF; }
+    .hue-nick .team-record-badge { color: #64D2FF; border-color: #32ADE6; background: rgba(0, 0, 0, 0.7); }
+    .hue-nick .playoff-odds-callout { border-color: #64D2FF; background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.45) 100%); box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+    .hue-nick .playoff-odds-value { color: #64D2FF; }
+</style>
+</head>
+<body>
+
+<h2 class="week-title">Week 11</h2>
+<div class="week-subtitle">Playoff Odds Edition</div>
+
+<!-- Executive Summary Intro Card (Placeholder ready for your description) -->
+<div class="weekly-overview-card">
+    <p class="copy-text">
+        [Insert your Week 11 intro description here]
+    </p>
+</div>
+
+<!-- Team Breakdown Cards Grid -->
+<div class="team-analysis-grid">
+
+    <!-- 1. Chris -->
+    <div class="team-analysis-card hue-chris">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Chris: Chris's Crazy Team</div>
+                <span class="team-record-badge">Record: 0-10</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Fined.png" alt="Chris: Chris's Crazy Team Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">0%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Unfortunately for Chris he has found himself without a shot at making the playoffs, but he is still here putting in the work, and that is respectable. The lesson learned? Never put your trust in the Eagles. The real fine Chris is trying to avoid is embarrassment from a winless season.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Jon -->
+    <div class="team-analysis-card hue-jon">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Jon: Used 2001 Honda Civic</div>
+                <span class="team-record-badge">Record: 2-8</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Chance.png" alt="Jon: Used 2001 Honda Civic Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">1%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Statistically Jon is still alive, if he wins out and everyone in front of him starts losing he could sneak into the playoffs. Does his roster make it seem possible? No. But, he did something similar last year so I guess I am telling him there is a chance.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Abi -->
+    <div class="team-analysis-card hue-abi">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Abi: Hamp Stamp</div>
+                <span class="team-record-badge">Record: 2-8</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Dead.png" alt="Abi: Hamp Stamp Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">1%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Everyone thinks Abi's team is dead, including Abi herself, but Montgomery is healthy and just had a big week. Technically Abi still has a shot at the playoffs, its just that everything needs to go perfectly the rest of the season. So she is only mostly dead.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Cody -->
+    <div class="team-analysis-card hue-cody">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Cody: West Canaan Coyotes</div>
+                <span class="team-record-badge">Record: 3-7</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/scratch.png" alt="Cody: West Canaan Coyotes Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">10%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Cody is stubborn, I know he believes his team still has a shot and technically he is correct. The thing I like about Cody is that he is still fighting, each loss has removed a limb from his playoff hunt but he is still alive and willing to fight. Will someone put him out of his misery or will this limbless fool prove it truly is just a scratch?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Dan -->
+    <div class="team-analysis-card hue-dan">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Dan: Squirtle Squad</div>
+                <span class="team-record-badge">Record: 4-6</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Cotton.png" alt="Dan: Squirtle Squad Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">10%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Dan's team is not out of the playoffs, not by a long shot, but he keeps leaving injured players and players on bye in his lineup. It is a bold strategy and it has to be frustrating for the teams below him who have put in the effort only to watch him win more games. Let's see if it does pay off for him.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Luke -->
+    <div class="team-analysis-card hue-luke">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Luke: Brett Mahomes</div>
+                <span class="team-record-badge">Record: 5-5</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Odds.png" alt="Luke: Brett Mahomes Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">33%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Don't tell me that my team is in 7th place and needs to leapfrog 4 teams to make the playoffs. Don't tell me that I have better odds at being bottom 4 than top 4. Don't tell me the odds, let my overblown confidence allow me to believe that I have a great team that is a true title contender. Hey, it worked for Han Solo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Nick -->
+    <div class="team-analysis-card hue-nick">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Nick: Taylor's Cardigan</div>
+                <span class="team-record-badge">Record: 6-4</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Pass.png" alt="Nick: Taylor's Cardigan Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">40%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Nick's team is on the outside of the playoffs right now, but he is right on the doorstep. The issue? I don't think the other teams fighting for the playoffs are going to let him pass into the top 4. Maybe Carnell Tate is stronger than the Balrog though and Nick will indeed pass.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Ross -->
+    <div class="team-analysis-card hue-ross">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Ross: R's Remarkable Team</div>
+                <span class="team-record-badge">Record: 6-4</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Snip.png" alt="Ross: R's Remarkable Team Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">50%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Snip. One week Ross is in the playoffs. Snap. The next he is out. It has been a roller coaster of a season for him and the frustration is something Michael Scott can relate to, but I think Ross' situation is more frustrating than multiple vasectomy reversals.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Brad -->
+    <div class="team-analysis-card hue-brad">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Brad: Hampton Inn</div>
+                <span class="team-record-badge">Record: 7-3</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Fine.png" alt="Brad: Hampton Inn Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">40%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Brad's team is in the playoffs right now. Brad's team got a win last week. So sure, everything is fine. Except he scored only 84 points in his win last week and he has not scored over 100 points in a win since week 4. There are more questions than answers with his team, but everything is fine.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Rob -->
+    <div class="team-analysis-card hue-rob">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Rob: Little Chocolate Donuts.</div>
+                <span class="team-record-badge">Record: 7-3</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Punk.png" alt="Rob: Little Chocolate Donuts. Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">40%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Rob's team is similar to Dirty Harry; just a regular looking non imposing dude. But like Dirty Harry he always finds a way to wind up on top… Or at least he has so far. Rob's team has had luck on his side so far, so when you play him you will have to answer the question. Do you feel lucky punk?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Karolyn -->
+    <div class="team-analysis-card hue-karolyn">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Karolyn: Not Scott's Brother</div>
+                <span class="team-record-badge">Record: 8-2</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/King.png" alt="Karolyn: Not Scott's Brother Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">80%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Karolyn's team is rolling, even when they lose they look good. Like Simba, her team has known no adversity, will she respond better than Simba when it occurs? I doubt it. At the end of the day, she may need to kill the king to become king.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Jeff -->
+    <div class="team-analysis-card hue-jeff">
+        <div class="team-content-body">
+            <div class="team-title-row">
+                <div class="team-analysis-title">Jeff: Smo's Squad</div>
+                <span class="team-record-badge">Record: 10-0</span>
+            </div>
+            <div class="meme-showcase">
+                <img src="images/Money.png" alt="Jeff: Smo's Squad Playoff Odds Meme" class="meme-img">
+            </div>
+            <div class="playoff-odds-callout">
+                <span class="playoff-odds-label">Playoff Odds</span>
+                <span class="playoff-odds-value">95%</span>
+            </div>
+            <div class="copy-section">
+                <p class="copy-text">Jeff's team is boring, they just keep winning. Each week I have to watch this guy win and nobody has done anything to stop it! He is thinking that he has this season in the bag but I am really hoping someone puts an end to his tyranny. I don't want to show him his money!</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
